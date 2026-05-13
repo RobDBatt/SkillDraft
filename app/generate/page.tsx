@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { WordMark } from "@/components/WordMark";
 import { categories, type Category } from "@/lib/questions";
 import type { PlatformId } from "@/lib/platforms";
 import type { Answers } from "@/lib/buildMessage";
@@ -13,41 +14,45 @@ import SkillOutput from "@/components/SkillOutput";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
-// ─── Progress indicator ────────────────────────────────────────────────────────
+// ─── Progress bar ──────────────────────────────────────────────────────────────
 
 const STEP_LABELS = ["Category", "Platform", "Questions", "Generating", "Output"];
 
 function ProgressBar({ step }: { step: Step }) {
+  const progress = ((step - 1) / (STEP_LABELS.length - 1)) * 100;
   return (
     <div className="border-b border-[#1a1d20]">
+      {/* Continuous amber fill track */}
+      <div className="relative h-[2px] bg-[#141618]">
+        <div
+          className="absolute left-0 top-0 h-full bg-[#e8c87a] motion-safe:transition-all motion-safe:duration-500"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      {/* Step labels */}
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
-        <div className="flex items-center h-9 gap-1 overflow-x-auto no-scrollbar">
+        <div className="flex items-center h-8">
           {STEP_LABELS.map((label, i) => {
             const n = i + 1;
             const active = n === step;
             const done = n < step;
             return (
-              <div key={n} className="flex items-center shrink-0">
+              <div
+                key={n}
+                className="flex-1 flex justify-center first:justify-start last:justify-end"
+              >
                 <span
-                  className={`text-[9px] tracking-[0.14em] tabular-nums whitespace-nowrap transition-colors ${
+                  className={`text-[9px] tracking-[0.1em] uppercase motion-safe:transition-colors motion-safe:duration-300 ${
                     active
                       ? "text-[#eceef0]"
                       : done
-                      ? "text-[#6e7478]"
-                      : "text-[#3a4048]"
+                      ? "text-[#3a4048]"
+                      : "text-[#1e2226]"
                   }`}
                   style={{ fontFamily: "var(--font-mono)" }}
                 >
-                  {String(n).padStart(2, "0")}·{label.toUpperCase()}
+                  {label}
                 </span>
-                {i < STEP_LABELS.length - 1 && (
-                  <span
-                    className="mx-3 text-[#3a4048] text-[9px]"
-                    aria-hidden="true"
-                  >
-                    /
-                  </span>
-                )}
               </div>
             );
           })}
@@ -123,20 +128,20 @@ export default function GeneratePage() {
 
   return (
     <div className="bg-[#0a0a0a] min-h-screen">
-      {/* Nav */}
-      <nav className="border-b border-[#1a1a1a]">
+
+      {/* ── Nav — sticky with backdrop blur ──────────────────────────── */}
+      <nav
+        className="sticky top-0 z-50 border-b border-[#1a1d20] backdrop-blur-md"
+        style={{ background: "rgba(10,10,10,0.82)" }}
+      >
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-14 flex items-center justify-between">
-          <Link
-            href="/"
-            className="gradient-silver-text text-xl font-bold tracking-tight"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
-            SkillDraft
+          <Link href="/" aria-label="SkillDraft home">
+            <WordMark />
           </Link>
           {step > 1 && (
             <button
               onClick={handleStartOver}
-              className="text-[#444] hover:text-[#9ea2a6] text-xs transition-colors"
+              className="text-[#4a5056] hover:text-[#9ea2a6] text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-[#9ea2a6]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Start over
@@ -145,10 +150,10 @@ export default function GeneratePage() {
         </div>
       </nav>
 
-      {/* Progress bar — always visible */}
+      {/* ── Progress bar — always visible ────────────────────────────── */}
       <ProgressBar step={step} />
 
-      {/* Main content */}
+      {/* ── Main content ─────────────────────────────────────────────── */}
       <main
         className={
           step === 5
@@ -159,7 +164,7 @@ export default function GeneratePage() {
         {step === 1 && (
           <div>
             <p
-              className="text-[#e8c87a] text-[10px] uppercase tracking-[0.18em] mb-8"
+              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-8"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Step 1 of 5 — Choose a category
@@ -168,10 +173,10 @@ export default function GeneratePage() {
               className="text-[#eceef0] text-4xl font-black leading-tight mb-2"
               style={{ fontFamily: "var(--font-serif)" }}
             >
-              What are you building?
+              What are you building a skill for?
             </h1>
             <p
-              className="text-[#888] text-sm mb-10"
+              className="text-[#6e7478] text-sm mb-10"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Pick the closest category. Each has its own question set.

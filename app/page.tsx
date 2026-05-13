@@ -3,6 +3,7 @@
 // Visual anchor: hero → code preview | how-it-works → amber step numbers | footer → headline
 
 import Link from "next/link";
+import { SiteNav } from "@/components/SiteNav";
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 
@@ -115,59 +116,13 @@ function SkillPreview() {
   );
 }
 
-// ─── WordMark ──────────────────────────────────────────────────────────────────
-
-/**
- * Wordmark: minimal .md file icon + split serif/mono typography.
- * Icon lines use amber to echo YAML key coloring in the code preview.
- */
-function WordMark() {
-  return (
-    <span className="flex items-center">
-      {/* Minimalist .md file icon — three amber lines in a dark box */}
-      {/* Split typography: editorial serif 'Skill' + technical mono 'Draft' */}
-      <span className="flex items-baseline">
-        <span
-          className="gradient-silver-text text-xl font-black tracking-tight leading-none"
-          style={{ fontFamily: "var(--font-serif)" }}
-        >
-          Skill
-        </span>
-        <span
-          className="text-[#6e7478] text-base font-medium tracking-wide leading-none"
-          style={{ fontFamily: "var(--font-mono)" }}
-        >
-          Draft
-        </span>
-      </span>
-    </span>
-  );
-}
-
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   return (
     <div className="bg-[#0a0a0a]">
 
-      {/* ── Nav — sticky with backdrop blur ──────────────────────────── */}
-      <nav
-        className="sticky top-0 z-50 border-b border-[#1a1d20] backdrop-blur-md"
-        style={{ background: "rgba(10,10,10,0.82)" }}
-      >
-        <div className="max-w-6xl mx-auto px-6 lg:px-10 h-14 flex items-center justify-between">
-          <Link href="/" aria-label="SkillDraft home">
-            <WordMark />
-          </Link>
-          <Link
-            href="/generate"
-            className="gradient-silver-btn text-xs font-semibold px-4 py-2 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-            style={{ fontFamily: "var(--font-mono)" }}
-          >
-            Generate →
-          </Link>
-        </div>
-      </nav>
+      <SiteNav />
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="border-b border-[#1a1d20] relative overflow-hidden">
