@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+/* ─── SkillDraft Design Tokens ───────────────────────────────────────────── */
+@theme {
+  /* Palette */
+  --color-ink:          #0a0a0a; /* page bg */
+  --color-surface:      #0f1214; /* section / card bg */
+  --color-code-bg:      #0d1014; /* code block bg */
+  --color-code-header:  #0a0d10; /* code block header bar */
+  --color-cream:        #f5f0e8; /* legacy — avoid on bg; use for outline only */
+  --color-headline:     #eceef0; /* primary headline text */
+  --color-silver-hi:    #e0e2e4; /* silver gradient highlight */
+  --color-silver-mid:   #9ea2a6; /* silver gradient mid */
+  --color-silver-lo:    #cdd0d3; /* silver gradient shadow */
+  --color-silver-muted: #6e7478; /* secondary body text */
+  --color-amber:        #e8c87a; /* accent — eyebrow, YAML keys, step numbers */
+  --color-muted:        #888888; /* body text on dark */
+  --color-border-dark:  #1a1d20; /* default border */
+  --color-border-dark2: #252a2e; /* secondary border */
+  --color-green:        #5a9e6f; /* success indicator */
+
+  /* Typography */
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-sans:  var(--font-inter), system-ui, sans-serif;
+  --font-mono:  var(--font-jetbrains), 'Courier New', monospace;
+
+  /* Border radius */
+  --radius-sm: 2px;
+  --radius:    4px;
+}
+
+/* ─── Base Resets ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ink);
+  color: var(--color-muted);
+  min-height: 100dvh;
+}
+
+/* ─── Typography Utilities ───────────────────────────────────────────────── */
+.font-serif  { font-family: var(--font-serif); }
+.font-sans   { font-family: var(--font-sans); }
+.font-mono   { font-family: var(--font-mono); }
+
+/* ─── Gradient Utilities ─────────────────────────────────────────────────── */
+.gradient-silver-text {
+  background: linear-gradient(135deg, #e0e2e4 0%, #9ea2a6 50%, #cdd0d3 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-silver-btn {
+  background: linear-gradient(135deg, #c8ccce 0%, #a4a8ac 40%, #b8bcbe 100%);
+  color: #0a0a0a;
+}
+.gradient-silver-btn:hover {
+  background: linear-gradient(135deg, #d4d8da 0%, #b0b4b8 40%, #c4c8ca 100%);
+}
+
+/* ─── Selection ──────────────────────────────────────────────────────────── */
+::selection {
+  background-color: #e8c87a;
+  color: #0a0a0a;
+}
