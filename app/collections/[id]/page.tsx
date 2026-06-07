@@ -60,7 +60,7 @@ export default function CollectionPage() {
         .select("skill_id, position, skills(id, name, category, agent_targets, quality_score, copy_count, save_count, author_display_name, content)")
         .eq("collection_id", id)
         .order("position");
-      setSkills((cs as CollectionSkill[]) ?? []);
+      setSkills((cs as unknown as CollectionSkill[]) ?? []);
       setLoading(false);
     })();
   }, [id, router]);
