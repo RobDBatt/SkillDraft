@@ -35,6 +35,7 @@ export default function SkillsPage() {
   const [copied, setCopied] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [credits, setCredits] = useState<number | null>(null);
+  const [toggling, setToggling] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -84,6 +85,21 @@ export default function SkillsPage() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+
+  async function handleTogglePublic(skill: SkillRow) {
+    setToggling(skill.id);
+    const newVal = !skill.is_public;
+    const { error } = await supabase
+      .from("skills")
+      .update({ is_public: newVal })
+      .eq("id", skill.id);
+    if (!error) {
+      setSkills(prev =>
+        prev.map(s => s.id === skill.id ? { ...s, is_public: newVal } : s)
+      );
+    }
+    setToggling(null);
   }
 
   async function handleSignOut() {
@@ -194,7 +210,7 @@ export default function SkillsPage() {
           {skills.map((skill) => {
             const isExpanded = expanded === skill.id;
             const isDeleting = deleting === skill.id;
-            const isCopied = copied === skill.id;
+            const isCopied   = copied   === skill.id;
             const categoryLabel = CATEGORY_LABELS[skill.category] ?? skill.category;
 
             return (
@@ -230,7 +246,7 @@ export default function SkillsPage() {
 
                   {/* Actions */}
                   <div
-                    className="flex items-center gap-4 shrink-0 text-xs"
+                    className="flex items-center gap-4 shrink-0 text-xs flex-wrap justify-end"
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
                     <button
@@ -253,6 +269,19 @@ export default function SkillsPage() {
                       className="text-silver-dim hover:text-silver-mid motion-safe:transition-colors focus-visible:outline-none"
                     >
                       {isExpanded ? "Collapse" : "View"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleTogglePublic(skill)}
+                      disabled={toggling === skill.id}
+                      title={skill.is_public ? "Remove from Explore gallery" : "Share to Explore gallery"}
+                      className={`motion-safe:transition-colors focus-visible:outline-none disabled:opacity-40 ${
+                        skill.is_public
+                          ? "text-amber hover:text-amber/70"
+                          : "text-silver-dim hover:text-silver-mid"
+                      }`}
+                    >
+                      {toggling === skill.id ? "…" : skill.is_public ? "Shared ✓" : "Share"}
                     </button>
                     <button
                       type="button"

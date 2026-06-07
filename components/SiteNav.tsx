@@ -18,6 +18,13 @@ export function SiteNav() {
           {/* Hide on xs, show on sm+ to prevent overflow */}
           <div className="hidden sm:flex items-center gap-5 lg:gap-6">
             <Link
+              href="/explore"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Explore
+            </Link>
+            <Link
               href="/pricing"
               className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
               style={{ fontFamily: "var(--font-mono)" }}

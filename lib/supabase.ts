@@ -13,6 +13,7 @@ export type SkillRow = {
   platform: string | null;
   content: string;
   source: "generate" | "improve";
+  is_public: boolean;
   created_at: string;
 };
 
