@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SiteNav } from "@/components/SiteNav";
 import { supabase, extractSkillName } from "@/lib/supabase";
@@ -13,7 +13,7 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 const MAX_INPUT = 10_000;
 const DELIMITER = "---NOTES---";
 
-export default function ImprovePage() {
+function ImprovePageInner() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const [phase,        setPhase]        = useState<Phase>("input");
@@ -443,5 +443,13 @@ export default function ImprovePage() {
 
       </main>
     </div>
+  );
+}
+
+export default function ImprovePage() {
+  return (
+    <Suspense fallback={null}>
+      <ImprovePageInner />
+    </Suspense>
   );
 }
