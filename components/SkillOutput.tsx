@@ -7,6 +7,7 @@ import type { PlatformId } from "@/lib/platforms";
 import { getPlatformById } from "@/lib/platforms";
 import { supabase, extractSkillName } from "@/lib/supabase";
 import { AgentTargetSelector } from "@/components/AgentTargets";
+import { scoreSkill } from "@/lib/scoreSkill";
 
 interface SkillOutputProps {
   content: string;
@@ -90,6 +91,7 @@ export default function SkillOutput({
       return;
     }
 
+    const { score } = scoreSkill(content);
     const { error } = await supabase.from("skills").insert({
       user_id: user.id,
       name: extractSkillName(content) || category,
@@ -98,6 +100,7 @@ export default function SkillOutput({
       content,
       source: "generate",
       agent_targets: agentTargets,
+      quality_score: score,
     });
 
     if (error) {

@@ -46,6 +46,20 @@ export function SiteNav() {
               My Skills
             </Link>
             <Link
+              href="/collections"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Collections
+            </Link>
+            <Link
+              href="/teams"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Teams
+            </Link>
+            <Link
               href="/install"
               className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
               style={{ fontFamily: "var(--font-mono)" }}

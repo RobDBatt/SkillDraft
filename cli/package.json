@@ -1,0 +1,17 @@
+{
+  "name": "skilldraft",
+  "version": "0.1.0",
+  "description": "CLI installer for SkillDraft — browse and install SKILL.md files for Claude Code, Cursor, Windsurf, Codex CLI and more.",
+  "keywords": ["claude-code", "cursor", "windsurf", "skill", "agent-skills", "skilldraft"],
+  "homepage": "https://skilldraft.io",
+  "repository": "https://github.com/RobDBatt/SkillDraft",
+  "license": "MIT",
+  "bin": {
+    "skilldraft": "./bin/skilldraft.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "type": "module",
+  "dependencies": {}
+}

@@ -91,20 +91,34 @@ export default function SkillsPage() {
   async function handleTogglePublic(skill: SkillRow) {
     setToggling(skill.id);
     const newVal = !skill.is_public;
-    const patch: Record<string, unknown> = { is_public: newVal };
-    // Snapshot display name whenever sharing
-    if (newVal && email) patch.author_display_name = email.split("@")[0];
-    const { error } = await supabase
-      .from("skills")
-      .update(patch)
-      .eq("id", skill.id);
-    if (!error) {
+
+    // Use the share API so it runs security scan + quality score on publish
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+    if (!token) { setToggling(null); return; }
+
+    const res = await fetch(`/api/skills/${skill.id}/share`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      body: JSON.stringify({ is_public: newVal }),
+    });
+
+    if (res.ok) {
+      const body = await res.json().catch(() => ({}));
       setSkills(prev =>
         prev.map(s => s.id === skill.id
-          ? { ...s, is_public: newVal, ...(newVal && email ? { author_display_name: email.split("@")[0] } : {}) }
+          ? {
+              ...s,
+              is_public: newVal,
+              ...(newVal && email ? { author_display_name: email.split("@")[0] } : {}),
+              ...(body.quality_score != null ? { quality_score: body.quality_score } : {}),
+            }
           : s
         )
       );
+    } else if (res.status === 422) {
+      const body = await res.json().catch(() => ({}));
+      alert(`Security scan failed: ${body.reason ?? "Unknown issue"}\n\nPlease revise the skill before sharing.`);
     }
     setToggling(null);
   }
@@ -248,6 +262,20 @@ export default function SkillsPage() {
                       <span className="text-silver-faint text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
                         {skill.source === "improve" ? "improved" : "generated"} · {formatDate(skill.created_at)}
                       </span>
+                      {skill.quality_score != null && (
+                        <span
+                          className={`text-[10px] px-2 py-0.5 rounded-[2px] border ${
+                            skill.quality_score >= 80
+                              ? "bg-green-950/40 border-green-900/60 text-green-400"
+                              : skill.quality_score >= 60
+                              ? "bg-amber/10 border-amber/30 text-amber"
+                              : "bg-surface border-border-dark text-silver-dim"
+                          }`}
+                          style={{ fontFamily: "var(--font-mono)" }}
+                        >
+                          {skill.quality_score}/100
+                        </span>
+                      )}
                       {skill.saved_from_id && (
                         <span className="text-[10px] px-2 py-0.5 rounded-[2px] bg-surface border border-border-dark text-silver-dim" style={{ fontFamily: "var(--font-mono)" }}>
                           community

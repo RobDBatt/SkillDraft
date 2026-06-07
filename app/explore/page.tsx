@@ -20,6 +20,8 @@ type PublicSkill = {
   save_count: number;
   agent_targets: string[];
   author_display_name: string | null;
+  quality_score: number | null;
+  is_official: boolean;
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -87,7 +89,7 @@ export default function ExplorePage() {
     setLoading(true);
     let query = supabase
       .from("skills")
-      .select("id, name, category, platform, content, source, created_at, copy_count, save_count, agent_targets, author_display_name")
+      .select("id, name, category, platform, content, source, created_at, copy_count, save_count, agent_targets, author_display_name, quality_score, is_official")
       .eq("is_public", true)
       .order(s, { ascending: false })
       .limit(60);
@@ -280,12 +282,34 @@ export default function ExplorePage() {
                   >
                     {/* Meta */}
                     <div className="flex-1 min-w-0">
-                      <p
-                        className="text-headline text-sm font-semibold truncate"
-                        style={{ fontFamily: "var(--font-sans)" }}
-                      >
-                        {skill.name}
-                      </p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p
+                          className="text-headline text-sm font-semibold truncate"
+                          style={{ fontFamily: "var(--font-sans)" }}
+                        >
+                          {skill.name}
+                        </p>
+                        {skill.is_official && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-[2px] bg-amber/15 text-amber border border-amber/30 shrink-0" style={{ fontFamily: "var(--font-mono)" }}>
+                            ★ Official
+                          </span>
+                        )}
+                        {skill.quality_score != null && (
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded-[2px] border shrink-0 ${
+                              skill.quality_score >= 80
+                                ? "bg-green-950/40 border-green-900/60 text-green-400"
+                                : skill.quality_score >= 60
+                                ? "bg-amber/10 border-amber/30 text-amber"
+                                : "bg-surface border-border-dark text-silver-dim"
+                            }`}
+                            style={{ fontFamily: "var(--font-mono)" }}
+                            title="Quality score"
+                          >
+                            {skill.quality_score}/100
+                          </span>
+                        )}
+                      </div>
                       <div className="flex items-center gap-3 mt-1 flex-wrap">
                         <span className="text-silver-muted text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
                           {catLabel}{skill.platform ? ` · ${skill.platform}` : ""}
@@ -342,10 +366,11 @@ export default function ExplorePage() {
                         {isSaving ? "…" : isSaved ? "Saved ✓" : "Save"}
                       </button>
                       <Link
-                        href="/generate"
+                        href={`/improve?from=${skill.id}`}
                         className="text-amber hover:text-amber/80 motion-safe:transition-colors"
+                        title="Fork and customise this skill"
                       >
-                        Make mine →
+                        Fork →
                       </Link>
                     </div>
                   </div>

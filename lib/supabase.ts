@@ -19,6 +19,11 @@ export type SkillRow = {
   agent_targets: string[];
   author_display_name: string | null;
   saved_from_id: string | null;
+  quality_score: number | null;
+  security_flagged: boolean;
+  security_flag_reason: string | null;
+  is_official: boolean;
+  org_id: string | null;
   created_at: string;
 };
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SiteNav } from "@/components/SiteNav";
 import { supabase, extractSkillName } from "@/lib/supabase";
 import { AgentTargetSelector } from "@/components/AgentTargets";
+import { scoreSkill } from "@/lib/scoreSkill";
 
 type Phase = "input" | "streaming" | "done";
 type SaveState = "idle" | "saving" | "saved" | "error";
@@ -13,15 +14,33 @@ const MAX_INPUT = 10_000;
 const DELIMITER = "---NOTES---";
 
 export default function ImprovePage() {
-  const router = useRouter();
-  const [phase, setPhase] = useState<Phase>("input");
-  const [inputText, setInputText] = useState("");
-  const [rawAccum, setRawAccum] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const router       = useRouter();
+  const searchParams = useSearchParams();
+  const [phase,        setPhase]        = useState<Phase>("input");
+  const [inputText,    setInputText]    = useState("");
+  const [rawAccum,     setRawAccum]     = useState("");
+  const [error,        setError]        = useState<string | null>(null);
+  const [copied,       setCopied]       = useState(false);
+  const [saveState,    setSaveState]    = useState<SaveState>("idle");
   const [agentTargets, setAgentTargets] = useState<string[]>([]);
+  const [forkName,     setForkName]     = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // Pre-fill from ?from=<skill-id> (fork flow)
+  useEffect(() => {
+    const fromId = searchParams.get("from");
+    if (!fromId) return;
+    fetch(`/api/skills/${fromId}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data?.content) {
+          setInputText(data.content.slice(0, MAX_INPUT));
+          setForkName(data.name ?? null);
+          if (data.agent_targets?.length) setAgentTargets(data.agent_targets);
+        }
+      })
+      .catch(() => null);
+  }, [searchParams]);
 
   // Split accumulated stream on the delimiter
   const delimIdx = rawAccum.indexOf(DELIMITER);
@@ -126,6 +145,7 @@ export default function ImprovePage() {
       return;
     }
 
+    const { score } = scoreSkill(skillContent);
     const { error: err } = await supabase.from("skills").insert({
       user_id: user.id,
       name: extractSkillName(skillContent) || "Improved Skill",
@@ -134,6 +154,7 @@ export default function ImprovePage() {
       content: skillContent,
       source: "improve",
       agent_targets: agentTargets,
+      quality_score: score,
     });
 
     if (err) {
@@ -178,6 +199,13 @@ export default function ImprovePage() {
                 exactly what changed.
               </p>
             </div>
+
+            {forkName && (
+              <div className="mb-5 flex items-center gap-2 text-[11px] text-silver-dim border border-border-dark rounded-[4px] px-4 py-2.5 bg-surface" style={{ fontFamily: "var(--font-mono)" }}>
+                <span className="text-amber">⑂</span>
+                <span>Forking: <strong className="text-silver-mid">{forkName}</strong> — edit then improve.</span>
+              </div>
+            )}
 
             {error && (
               <div className="mb-5 text-sm text-red-400 bg-red-950/40 border border-red-900/60 rounded-[4px] px-4 py-3">
