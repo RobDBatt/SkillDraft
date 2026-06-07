@@ -34,7 +34,9 @@ export default function TeamsPage() {
         .select("org_id, organizations(id, name, slug, plan, created_at)")
         .eq("user_id", u.id)
         .then(({ data }) => {
-          const orgList = (data ?? []).map((r: { organizations: Org }) => r.organizations).filter(Boolean);
+          const orgList = ((data ?? []) as unknown as { organizations: Org }[])
+            .map(r => r.organizations)
+            .filter(Boolean);
           setOrgs(orgList as Org[]);
           setLoading(false);
         });
