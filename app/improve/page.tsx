@@ -51,17 +51,24 @@ export default function ImprovePage() {
     abortRef.current = controller;
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) headers["Authorization"] = `Bearer ${session.access_token}`;
+
       const res = await fetch("/api/improve", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ skill: inputText }),
         signal: controller.signal,
       });
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        const msg = (data as { error?: string }).error ?? `Error ${res.status}`;
-        setError(msg);
+        const d = data as { error?: string; creditsEmpty?: boolean };
+        setError(d.creditsEmpty
+          ? "You're out of credits. Visit /pricing to top up."
+          : d.error ?? `Error ${res.status}`
+        );
         setPhase("input");
         return;
       }

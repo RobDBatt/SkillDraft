@@ -11,6 +11,7 @@ import PlatformSelect from "@/components/PlatformSelect";
 import QuestionForm from "@/components/QuestionForm";
 import GeneratingState from "@/components/GeneratingState";
 import SkillOutput from "@/components/SkillOutput";
+import { supabase } from "@/lib/supabase";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -128,9 +129,13 @@ export default function GeneratePage() {
     setError(null);
     setSkillContent("");
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) headers["Authorization"] = `Bearer ${session.access_token}`;
+
       const res = await fetch("/api/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           category: selectedCategory,
           platform: selectedPlatform,
@@ -138,8 +143,12 @@ export default function GeneratePage() {
         }),
       });
       if (!res.ok) {
-        const data: { error?: string } = await res.json();
-        setError(data.error ?? "Generation failed. Please try again.");
+        const data: { error?: string; creditsEmpty?: boolean } = await res.json();
+        if (data.creditsEmpty) {
+          setError("You're out of credits. [Top up on the pricing page](/pricing).");
+        } else {
+          setError(data.error ?? "Generation failed. Please try again.");
+        }
         setStep(3);
         return;
       }

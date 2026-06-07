@@ -34,6 +34,7 @@ export default function SkillsPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
+  const [credits, setCredits] = useState<number | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -42,6 +43,12 @@ export default function SkillsPage() {
         return;
       }
       setEmail(user.email ?? null);
+      supabase
+        .from("profiles")
+        .select("credits")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => { if (data) setCredits(data.credits); });
       supabase
         .from("skills")
         .select("*")
@@ -164,6 +171,11 @@ export default function SkillsPage() {
             </h1>
           </div>
           <div className="flex items-center gap-5 pt-1" style={{ fontFamily: "var(--font-mono)" }}>
+            {credits !== null && (
+              <Link href="/pricing" className="text-silver-faint text-[11px] hover:text-silver-dim motion-safe:transition-colors hidden sm:block" style={{ fontFamily: "var(--font-mono)" }}>
+                {credits} {credits === 1 ? "credit" : "credits"}
+              </Link>
+            )}
             {email && (
               <span className="text-silver-faint text-[11px] hidden sm:block">{email}</span>
             )}

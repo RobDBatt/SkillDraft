@@ -8,6 +8,7 @@ import { buildUserMessage, type Answers } from "@/lib/buildMessage";
 import type { Category } from "@/lib/questions";
 import type { PlatformId } from "@/lib/platforms";
 import { getClientIp, checkRateLimit } from "@/lib/rateLimit";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
 export async function POST(request: NextRequest): Promise<NextResponse | Response> {
@@ -19,17 +20,30 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     );
   }
 
-  const ip = getClientIp(request);
+  // ── Auth check: logged-in users spend credits; anonymous users are rate-limited
+  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
 
-  const { allowed, remaining } = checkRateLimit(ip);
-  if (!allowed) {
-    return NextResponse.json(
-      { error: "Rate limit exceeded. Try again tomorrow." },
-      {
-        status: 429,
-        headers: { "X-RateLimit-Remaining": "0" },
-      }
-    );
+  if (token) {
+    const { data: { user } } = await supabaseAdmin.auth.getUser(token);
+    if (!user) {
+      return NextResponse.json({ error: "Invalid token." }, { status: 401 });
+    }
+    const { data: remaining } = await supabaseAdmin.rpc("deduct_credit", { p_user_id: user.id });
+    if (remaining === -1) {
+      return NextResponse.json(
+        { error: "No credits remaining. Visit /pricing to top up.", creditsEmpty: true },
+        { status: 402 }
+      );
+    }
+  } else {
+    const ip = getClientIp(request);
+    const { allowed } = checkRateLimit(ip);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Sign in and buy credits for unlimited access." },
+        { status: 429, headers: { "X-RateLimit-Remaining": "0" } }
+      );
+    }
   }
 
   let body: { category: Category; platform: PlatformId | null; answers: Answers };
@@ -94,10 +108,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     });
 
     return new Response(readable, {
-      headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "X-RateLimit-Remaining": String(remaining),
-      },
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   } catch (err) {
     console.error("[/api/generate] Anthropic error:", err);
