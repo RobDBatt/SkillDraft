@@ -14,6 +14,11 @@ export type SkillRow = {
   content: string;
   source: "generate" | "improve";
   is_public: boolean;
+  copy_count: number;
+  save_count: number;
+  agent_targets: string[];
+  author_display_name: string | null;
+  saved_from_id: string | null;
   created_at: string;
 };
 

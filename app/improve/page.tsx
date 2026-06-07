@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { SiteNav } from "@/components/SiteNav";
 import { supabase, extractSkillName } from "@/lib/supabase";
+import { AgentTargetSelector } from "@/components/AgentTargets";
 
 type Phase = "input" | "streaming" | "done";
 type SaveState = "idle" | "saving" | "saved" | "error";
@@ -19,6 +20,7 @@ export default function ImprovePage() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [agentTargets, setAgentTargets] = useState<string[]>([]);
   const abortRef = useRef<AbortController | null>(null);
 
   // Split accumulated stream on the delimiter
@@ -131,6 +133,7 @@ export default function ImprovePage() {
       platform: null,
       content: skillContent,
       source: "improve",
+      agent_targets: agentTargets,
     });
 
     if (err) {
@@ -294,6 +297,18 @@ export default function ImprovePage() {
                   {skillContent || (isStreaming ? " " : "")}
                 </pre>
               </div>
+            </div>
+
+            {/* Agent targets */}
+            <div className="mt-5 pt-5 border-t border-border-dark">
+              <AgentTargetSelector
+                selected={agentTargets}
+                onChange={setAgentTargets}
+                label="Target agents"
+              />
+              <p className="text-silver-faint text-[10px] mt-2 leading-snug" style={{ fontFamily: "var(--font-sans)" }}>
+                Shown as badges if you share this skill to Explore.
+              </p>
             </div>
 
             {/* Action buttons */}

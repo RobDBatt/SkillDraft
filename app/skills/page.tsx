@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { SiteNav } from "@/components/SiteNav";
 import { supabase, type SkillRow } from "@/lib/supabase";
+import { AgentBadges } from "@/components/AgentTargets";
 
 type Category = string;
 
@@ -90,13 +91,19 @@ export default function SkillsPage() {
   async function handleTogglePublic(skill: SkillRow) {
     setToggling(skill.id);
     const newVal = !skill.is_public;
+    const patch: Record<string, unknown> = { is_public: newVal };
+    // Snapshot display name whenever sharing
+    if (newVal && email) patch.author_display_name = email.split("@")[0];
     const { error } = await supabase
       .from("skills")
-      .update({ is_public: newVal })
+      .update(patch)
       .eq("id", skill.id);
     if (!error) {
       setSkills(prev =>
-        prev.map(s => s.id === skill.id ? { ...s, is_public: newVal } : s)
+        prev.map(s => s.id === skill.id
+          ? { ...s, is_public: newVal, ...(newVal && email ? { author_display_name: email.split("@")[0] } : {}) }
+          : s
+        )
       );
     }
     setToggling(null);
@@ -241,7 +248,15 @@ export default function SkillsPage() {
                       <span className="text-silver-faint text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
                         {skill.source === "improve" ? "improved" : "generated"} · {formatDate(skill.created_at)}
                       </span>
+                      {skill.saved_from_id && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-[2px] bg-surface border border-border-dark text-silver-dim" style={{ fontFamily: "var(--font-mono)" }}>
+                          community
+                        </span>
+                      )}
                     </div>
+                    {skill.agent_targets && skill.agent_targets.length > 0 && (
+                      <AgentBadges targets={skill.agent_targets} className="mt-2" />
+                    )}
                   </div>
 
                   {/* Actions */}

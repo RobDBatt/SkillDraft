@@ -6,6 +6,7 @@ import type { Category } from "@/lib/questions";
 import type { PlatformId } from "@/lib/platforms";
 import { getPlatformById } from "@/lib/platforms";
 import { supabase, extractSkillName } from "@/lib/supabase";
+import { AgentTargetSelector } from "@/components/AgentTargets";
 
 interface SkillOutputProps {
   content: string;
@@ -64,6 +65,7 @@ export default function SkillOutput({
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [agentTargets, setAgentTargets] = useState<string[]>([]);
 
   const platformConfig = platform ? getPlatformById(platform) : null;
   const installPath = platformConfig?.installPath ?? GENERIC_PATH;
@@ -95,6 +97,7 @@ export default function SkillOutput({
       platform: platform ?? null,
       content,
       source: "generate",
+      agent_targets: agentTargets,
     });
 
     if (error) {
@@ -236,7 +239,7 @@ export default function SkillOutput({
           </div>
         </div>
 
-        {/* ── Right — Tips panel ────────────────────────────────────── */}
+        {/* ── Right — Panel ────────────────────────────────────── */}
         <div className="border border-border-dark rounded-[4px] p-6 flex flex-col gap-7">
 
           {/* What makes it good */}
@@ -293,6 +296,21 @@ export default function SkillOutput({
                   value in the frontmatter.
                 </>
               )}
+            </p>
+          </div>
+
+          {/* Agent targets */}
+          <div>
+            <AgentTargetSelector
+              selected={agentTargets}
+              onChange={setAgentTargets}
+              label="Target agents"
+            />
+            <p
+              className="text-silver-faint text-[10px] mt-2 leading-snug"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              Shown as badges on your card if you share it to Explore.
             </p>
           </div>
 
