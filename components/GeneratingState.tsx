@@ -53,19 +53,19 @@ export default function GeneratingState() {
   return (
     <div>
       <p
-        className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-8"
+        className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-8"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         Step 4 of 5 — Generating
       </p>
       <h1
-        className="text-[#eceef0] text-4xl font-black leading-tight mb-2"
+        className="text-headline text-4xl font-black leading-tight mb-2"
         style={{ fontFamily: "var(--font-serif)" }}
       >
         Building your skill.
       </h1>
       <p
-        className="text-[#6e7478] text-sm mb-10"
+        className="text-silver-muted text-sm mb-10"
         style={{ fontFamily: "var(--font-sans)" }}
       >
         {MESSAGES[msgIndex]}
@@ -79,14 +79,14 @@ export default function GeneratingState() {
         {/* Header bar */}
         <div
           className="px-4 py-2.5 flex items-center gap-2.5"
-          style={{ background: "#0a0d10", borderBottom: "1px solid rgba(245,240,232,0.06)" }}
+          style={{ background: "var(--color-code-header)", borderBottom: "1px solid rgba(245,240,232,0.06)" }}
         >
           <span
-            className="w-2 h-2 rounded-full bg-[#5a9e6f] animate-pulse flex-shrink-0"
+            className="w-2 h-2 rounded-full bg-green animate-pulse flex-shrink-0"
             aria-hidden="true"
           />
           <span
-            className="text-[#4a5056] text-[11px]"
+            className="text-silver-dim text-[11px]"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             SKILL.md
@@ -94,7 +94,7 @@ export default function GeneratingState() {
         </div>
 
         {/* Typed content */}
-        <div className="bg-[#0d1014] px-5 py-5 min-h-[280px]">
+        <div className="bg-code-bg px-5 py-5 min-h-[280px]">
           <code
             className="text-[12.5px] leading-[1.8] block"
             style={{ fontFamily: "var(--font-mono)" }}

@@ -12,7 +12,7 @@ export function WordMark() {
         Skill
       </span>
       <span
-        className="text-[#6e7478] text-base font-medium tracking-wide leading-none"
+        className="text-silver-muted text-base font-medium tracking-wide leading-none"
         style={{ fontFamily: "var(--font-mono)" }}
       >
         Draft

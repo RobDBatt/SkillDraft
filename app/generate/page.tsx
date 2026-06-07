@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { WordMark } from "@/components/WordMark";
 import { categories, type Category } from "@/lib/questions";
@@ -21,11 +21,11 @@ const STEP_LABELS = ["Category", "Platform", "Questions", "Generating", "Output"
 function ProgressBar({ step }: { step: Step }) {
   const progress = ((step - 1) / (STEP_LABELS.length - 1)) * 100;
   return (
-    <div className="border-b border-[#1a1d20]">
+    <div className="border-b border-border-dark">
       {/* Continuous amber fill track */}
       <div className="relative h-[2px] bg-[#141618]">
         <div
-          className="absolute left-0 top-0 h-full bg-[#e8c87a] motion-safe:transition-all motion-safe:duration-500"
+          className="absolute left-0 top-0 h-full bg-amber motion-safe:transition-all motion-safe:duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -44,9 +44,9 @@ function ProgressBar({ step }: { step: Step }) {
                 <span
                   className={`text-[9px] tracking-[0.1em] uppercase motion-safe:transition-colors motion-safe:duration-300 ${
                     active
-                      ? "text-[#eceef0]"
+                      ? "text-headline"
                       : done
-                      ? "text-[#3a4048]"
+                      ? "text-silver-faint"
                       : "text-[#1e2226]"
                   }`}
                   style={{ fontFamily: "var(--font-mono)" }}
@@ -71,8 +71,39 @@ export default function GeneratePage() {
   const [answers, setAnswers] = useState<Answers>({});
   const [skillContent, setSkillContent] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const category = categories.find((c) => c.id === selectedCategory);
+
+  // Restore wizard draft on mount
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("skilldraft-draft");
+      if (!saved) return;
+      const draft = JSON.parse(saved);
+      if (draft.selectedCategory) setSelectedCategory(draft.selectedCategory);
+      if (draft.selectedPlatform) setSelectedPlatform(draft.selectedPlatform);
+      if (draft.answers) setAnswers(draft.answers);
+      // Only restore steps 1–3 — never resume a generating or output state
+      if (draft.step >= 1 && draft.step <= 3) setStep(draft.step);
+    } catch {}
+  }, []);
+
+  // Persist draft whenever form state changes
+  useEffect(() => {
+    if (isGenerating) return;
+    try {
+      sessionStorage.setItem(
+        "skilldraft-draft",
+        JSON.stringify({
+          selectedCategory,
+          selectedPlatform,
+          answers,
+          step: step <= 3 ? step : 3,
+        })
+      );
+    } catch {}
+  }, [selectedCategory, selectedPlatform, answers, step, isGenerating]);
 
   function handleCategorySelect(id: Category) {
     setSelectedCategory(id);
@@ -91,8 +122,11 @@ export default function GeneratePage() {
   }
 
   async function generate() {
+    if (isGenerating) return;
+    setIsGenerating(true);
     setStep(4);
     setError(null);
+    setSkillContent("");
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
@@ -103,21 +137,30 @@ export default function GeneratePage() {
           answers,
         }),
       });
-      const data: { skill?: string; error?: string } = await res.json();
       if (!res.ok) {
+        const data: { error?: string } = await res.json();
         setError(data.error ?? "Generation failed. Please try again.");
         setStep(3);
         return;
       }
-      setSkillContent(data.skill ?? "");
       setStep(5);
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        setSkillContent((prev) => prev + decoder.decode(value, { stream: true }));
+      }
     } catch {
       setError("Network error. Please try again.");
       setStep(3);
+    } finally {
+      setIsGenerating(false);
     }
   }
 
   function handleStartOver() {
+    try { sessionStorage.removeItem("skilldraft-draft"); } catch {}
     setStep(1);
     setSelectedCategory(null);
     setSelectedPlatform(null);
@@ -127,11 +170,11 @@ export default function GeneratePage() {
   }
 
   return (
-    <div className="bg-[#0a0a0a] min-h-screen">
+    <div className="bg-ink min-h-screen">
 
       {/* ── Nav — sticky with backdrop blur ──────────────────────────── */}
       <nav
-        className="sticky top-0 z-50 border-b border-[#1a1d20] backdrop-blur-md"
+        className="sticky top-0 z-50 border-b border-border-dark backdrop-blur-md"
         style={{ background: "rgba(10,10,10,0.82)" }}
       >
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-14 flex items-center justify-between">
@@ -141,7 +184,7 @@ export default function GeneratePage() {
           {step > 1 && (
             <button
               onClick={handleStartOver}
-              className="text-[#4a5056] hover:text-[#9ea2a6] text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-[#9ea2a6]"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Start over
@@ -164,24 +207,24 @@ export default function GeneratePage() {
         {step === 1 && (
           <div>
             <p
-              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-8"
+              className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-8"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Step 1 of 5 — Choose a category
             </p>
             <h1
-              className="text-[#eceef0] text-4xl font-black leading-tight mb-2"
+              className="text-headline text-4xl font-black leading-tight mb-2"
               style={{ fontFamily: "var(--font-serif)" }}
             >
               What are you building a skill for?
             </h1>
             <p
-              className="text-[#6e7478] text-sm mb-10"
+              className="text-silver-muted text-sm mb-10"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Pick the closest category. Each has its own question set.
             </p>
-            <div className="border-t border-[#1a1d20]">
+            <div className="border-t border-border-dark">
               {categories.map((cat, i) => (
                 <CategoryCard
                   key={cat.id}
@@ -223,6 +266,7 @@ export default function GeneratePage() {
             platform={selectedPlatform}
             onRegenerate={generate}
             onStartOver={handleStartOver}
+            isGenerating={isGenerating}
           />
         )}
       </main>

@@ -84,7 +84,7 @@ function InstallItem({
   }
 
   return (
-    <div className="border-b border-[#1a1d20]">
+    <div className="border-b border-border-dark">
       <button
         type="button"
         onClick={() => setOpen((s) => !s)}
@@ -92,14 +92,14 @@ function InstallItem({
         aria-expanded={open}
       >
         <span
-          className="text-[#cdd0d3] text-lg font-bold leading-snug group-hover:text-[#eceef0] motion-safe:transition-colors"
+          className="text-silver-lo text-lg font-bold leading-snug group-hover:text-headline motion-safe:transition-colors"
           style={{ fontFamily: "var(--font-serif)" }}
         >
           {name}
         </span>
         <span
           className={`text-xl leading-none shrink-0 motion-safe:transition-all motion-safe:duration-200 ${
-            open ? "rotate-45 text-[#9ea2a6]" : "text-[#4a5056] group-hover:text-[#6e7478]"
+            open ? "rotate-45 text-silver-mid" : "text-silver-dim group-hover:text-silver-muted"
           }`}
           aria-hidden="true"
         >
@@ -117,12 +117,12 @@ function InstallItem({
             <div
               className="px-4 py-2 flex items-center justify-between gap-4"
               style={{
-                background: "#0a0d10",
+                background: "var(--color-code-header)",
                 borderBottom: "1px solid rgba(245,240,232,0.04)",
               }}
             >
               <span
-                className="text-[#3a4048] text-[10px] uppercase tracking-[0.1em]"
+                className="text-silver-faint text-[10px] uppercase tracking-[0.1em]"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 {path ? "install path" : "settings path"}
@@ -130,16 +130,16 @@ function InstallItem({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="text-[#4a5056] hover:text-[#9ea2a6] text-[10px] shrink-0 motion-safe:transition-colors focus-visible:outline-none"
+                className="text-silver-dim hover:text-silver-mid text-[10px] shrink-0 motion-safe:transition-colors focus-visible:outline-none"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 {copied ? "copied ✓" : "copy"}
               </button>
             </div>
-            <div className="bg-[#0d1014] px-4 py-3">
+            <div className="bg-code-bg px-4 py-3">
               <code
                 className={`text-[12.5px] leading-relaxed break-all ${
-                  path ? "text-[#5a9e6f]" : "text-[#6e7478]"
+                  path ? "text-green" : "text-silver-muted"
                 }`}
                 style={{ fontFamily: "var(--font-mono)" }}
               >
@@ -149,7 +149,7 @@ function InstallItem({
           </div>
 
           <p
-            className="text-[#6e7478] text-sm leading-relaxed max-w-xl"
+            className="text-silver-muted text-sm leading-relaxed max-w-xl"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             {note}
@@ -164,33 +164,33 @@ function InstallItem({
 
 export default function InstallPage() {
   return (
-    <div className="bg-[#0a0a0a] min-h-screen">
+    <div className="bg-ink min-h-screen">
       <SiteNav />
 
       <main className="max-w-3xl mx-auto px-6 pt-20 pb-24">
 
         {/* Section header */}
         <p
-          className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
+          className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           Installation guide
         </p>
         <h1
-          className="text-[#eceef0] text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] mb-4"
+          className="text-headline text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] mb-4"
           style={{ fontFamily: "var(--font-serif)" }}
         >
           Install your SKILL.md
         </h1>
         <p
-          className="text-[#6e7478] text-[1rem] leading-relaxed mb-16 max-w-xl"
+          className="text-silver-muted text-[1rem] leading-relaxed mb-16 max-w-xl"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           You generated your file. Here's exactly where to put it — for every major AI agent.
         </p>
 
         {/* Accordion */}
-        <div className="border-t border-[#1a1d20]">
+        <div className="border-t border-border-dark">
           {PLATFORMS.map((p) => (
             <InstallItem
               key={p.id}
@@ -211,17 +211,17 @@ export default function InstallPage() {
           }}
         >
           <span
-            className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.14em] shrink-0 mt-0.5"
+            className="text-amber text-[10px] font-semibold uppercase tracking-[0.14em] shrink-0 mt-0.5"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             Tip
           </span>
           <p
-            className="text-[#6e7478] text-sm leading-relaxed"
+            className="text-silver-muted text-sm leading-relaxed"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             The{" "}
-            <code className="text-[#9ea2a6]" style={{ fontFamily: "var(--font-mono)" }}>
+            <code className="text-silver-mid" style={{ fontFamily: "var(--font-mono)" }}>
               name:
             </code>{" "}
             value in the frontmatter must match your folder or file name exactly. If they
@@ -230,16 +230,16 @@ export default function InstallPage() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-16 pt-10 border-t border-[#1a1d20]">
+        <div className="mt-16 pt-10 border-t border-border-dark">
           <p
-            className="text-[#6e7478] text-sm mb-5"
+            className="text-silver-muted text-sm mb-5"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             Don't have a skill yet?
           </p>
           <Link
             href="/generate"
-            className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+            className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             Build one free →
@@ -249,12 +249,12 @@ export default function InstallPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#1a1d20] py-6">
+      <footer className="border-t border-border-dark py-6">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 flex items-center justify-between flex-wrap gap-4">
-          <span className="text-[#3a4048] text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
+          <span className="text-silver-faint text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
             © 2026 SkillDraft.io
           </span>
-          <span className="text-[#3a4048] text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
+          <span className="text-silver-faint text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
             agentskills.io standard
           </span>
         </div>

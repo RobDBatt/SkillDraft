@@ -5,7 +5,7 @@ import { WordMark } from "./WordMark";
 export function SiteNav() {
   return (
     <nav
-      className="sticky top-0 z-50 border-b border-[#1a1d20] backdrop-blur-md"
+      className="sticky top-0 z-50 border-b border-border-dark backdrop-blur-md"
       style={{ background: "rgba(10,10,10,0.82)" }}
     >
       <div className="max-w-6xl mx-auto px-6 lg:px-10 h-14 flex items-center justify-between gap-4">
@@ -18,15 +18,29 @@ export function SiteNav() {
           {/* Hide on xs, show on sm+ to prevent overflow */}
           <div className="hidden sm:flex items-center gap-5 lg:gap-6">
             <Link
+              href="/improve"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Improve
+            </Link>
+            <Link
+              href="/skills"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              My Skills
+            </Link>
+            <Link
               href="/install"
-              className="text-[#4a5056] hover:text-[#9ea2a6] text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-[#9ea2a6]"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Install
             </Link>
             <Link
               href="/faq"
-              className="text-[#4a5056] hover:text-[#9ea2a6] text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-[#9ea2a6]"
+              className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               FAQ
@@ -37,7 +51,7 @@ export function SiteNav() {
         {/* Right: Generate CTA */}
         <Link
           href="/generate"
-          className="gradient-silver-btn text-xs font-semibold px-4 py-2 rounded-[4px] shrink-0 motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+          className="gradient-silver-btn text-xs font-semibold px-4 py-2 rounded-[4px] shrink-0 motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           Generate →

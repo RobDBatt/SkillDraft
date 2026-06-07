@@ -72,7 +72,7 @@ const SKILLDRAFT_FAQS = [
 function FaqItem({ id, q, a }: { id: string; q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border-b border-[#1a1d20]">
+    <div className="border-b border-border-dark">
       <button
         type="button"
         id={`faq-btn-${id}`}
@@ -82,14 +82,14 @@ function FaqItem({ id, q, a }: { id: string; q: string; a: string }) {
         aria-controls={`faq-ans-${id}`}
       >
         <span
-          className="text-[#cdd0d3] text-[0.95rem] font-semibold leading-snug group-hover:text-[#eceef0] motion-safe:transition-colors"
+          className="text-silver-lo text-[0.95rem] font-semibold leading-snug group-hover:text-headline motion-safe:transition-colors"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           {q}
         </span>
         <span
           className={`text-lg leading-none shrink-0 mt-0.5 motion-safe:transition-all motion-safe:duration-200 ${
-            open ? "rotate-45 text-[#9ea2a6]" : "text-[#4a5056] group-hover:text-[#6e7478]"
+            open ? "rotate-45 text-silver-mid" : "text-silver-dim group-hover:text-silver-muted"
           }`}
           aria-hidden="true"
         >
@@ -100,7 +100,7 @@ function FaqItem({ id, q, a }: { id: string; q: string; a: string }) {
       {open && (
         <div id={`faq-ans-${id}`} className="pb-5">
           <p
-            className="text-[#6e7478] text-sm leading-relaxed"
+            className="text-silver-muted text-sm leading-relaxed"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             {a}
@@ -115,7 +115,7 @@ function FaqItem({ id, q, a }: { id: string; q: string; a: string }) {
 
 export default function FaqPage() {
   return (
-    <div className="bg-[#0a0a0a] min-h-screen">
+    <div className="bg-ink min-h-screen">
       <SiteNav />
 
       <main className="max-w-6xl mx-auto px-6 lg:px-10 pt-20 pb-24">
@@ -123,19 +123,19 @@ export default function FaqPage() {
         {/* Section header */}
         <div className="max-w-2xl mb-16">
           <p
-            className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
+            className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             FAQ
           </p>
           <h1
-            className="text-[#eceef0] text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] mb-4"
+            className="text-headline text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] mb-4"
             style={{ fontFamily: "var(--font-serif)" }}
           >
             Frequently asked questions
           </h1>
           <p
-            className="text-[#6e7478] text-[1rem] leading-relaxed"
+            className="text-silver-muted text-[1rem] leading-relaxed"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             Everything you need to know about SKILL.md files and SkillDraft.
@@ -148,7 +148,7 @@ export default function FaqPage() {
           {/* Left — About SKILL.md */}
           <div>
             <p
-              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-1 pb-4 border-b border-[#1a1d20]"
+              className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-1 pb-4 border-b border-border-dark"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               About SKILL.md
@@ -161,7 +161,7 @@ export default function FaqPage() {
           {/* Right — About SkillDraft */}
           <div className="mt-12 md:mt-0">
             <p
-              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-1 pb-4 border-b border-[#1a1d20]"
+              className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-1 pb-4 border-b border-border-dark"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               About SkillDraft
@@ -174,16 +174,16 @@ export default function FaqPage() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-20 pt-10 border-t border-[#1a1d20] flex flex-col sm:flex-row sm:items-center gap-6 justify-between">
+        <div className="mt-20 pt-10 border-t border-border-dark flex flex-col sm:flex-row sm:items-center gap-6 justify-between">
           <div>
             <p
-              className="text-[#eceef0] text-lg font-bold mb-1"
+              className="text-headline text-lg font-bold mb-1"
               style={{ fontFamily: "var(--font-serif)" }}
             >
               Ready to build your first skill?
             </p>
             <p
-              className="text-[#6e7478] text-sm"
+              className="text-silver-muted text-sm"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Free, no account required. Takes under two minutes.
@@ -191,7 +191,7 @@ export default function FaqPage() {
           </div>
           <Link
             href="/generate"
-            className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] shrink-0 motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+            className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] shrink-0 motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             style={{ fontFamily: "var(--font-sans)" }}
           >
             Build a Skill →
@@ -201,12 +201,12 @@ export default function FaqPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#1a1d20] py-6">
+      <footer className="border-t border-border-dark py-6">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 flex items-center justify-between flex-wrap gap-4">
-          <span className="text-[#3a4048] text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
+          <span className="text-silver-faint text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
             © 2026 SkillDraft.io
           </span>
-          <span className="text-[#3a4048] text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
+          <span className="text-silver-faint text-[11px]" style={{ fontFamily: "var(--font-mono)" }}>
             agentskills.io standard
           </span>
         </div>

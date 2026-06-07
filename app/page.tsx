@@ -71,47 +71,47 @@ function GrainOverlay({ id }: { id: string }) {
 function SkillPreview() {
   return (
     <code className="font-mono block whitespace-pre text-[12.5px] leading-[1.7]">
-      <span className="text-[#3a4048]">---{"\n"}</span>
-      <span className="text-[#e8c87a]">name</span>
-      <span className="text-[#3a4048]">: </span>
-      <span className="text-[#eceef0]">ts-code-review{"\n"}</span>
-      <span className="text-[#e8c87a]">description</span>
-      <span className="text-[#3a4048]">: </span>
-      <span className="text-[#9ea2a6]">Reviews TypeScript and Next.js{"\n"}</span>
-      <span className="text-[#9ea2a6]">{"  "}code for type safety, naming{"\n"}</span>
-      <span className="text-[#9ea2a6]">{"  "}conventions, and project rules.{"\n"}</span>
-      <span className="text-[#9ea2a6]">{"  "}Triggers on "review this" or{"\n"}</span>
-      <span className="text-[#9ea2a6]">{"  "}"check this PR".{"\n"}</span>
-      <span className="text-[#e8c87a]">triggers</span>
-      <span className="text-[#3a4048]">:{"\n"}</span>
-      <span className="text-[#3a4048]">{"  "}- </span>
-      <span className="text-[#9ea2a6]">review this{"\n"}</span>
-      <span className="text-[#3a4048]">{"  "}- </span>
-      <span className="text-[#9ea2a6]">check this PR{"\n"}</span>
-      <span className="text-[#3a4048]">{"  "}- </span>
-      <span className="text-[#9ea2a6]">audit my code{"\n"}</span>
-      <span className="text-[#3a4048]">---{"\n\n"}</span>
-      <span className="text-[#eceef0] font-bold"># TypeScript Code Review{"\n\n"}</span>
-      <span className="text-[#e8c87a]">## What to check{"\n"}</span>
-      <span className="text-[#6e7478]">- No implicit </span>
-      <span className="text-[#eceef0]">`any`</span>
-      <span className="text-[#6e7478]"> — use proper generics{"\n"}</span>
-      <span className="text-[#6e7478]">- Named exports only (no defaults in lib/){"\n"}</span>
-      <span className="text-[#6e7478]">- Conventional Commits for all messages{"\n"}</span>
-      <span className="text-[#6e7478]">- No direct DOM manipulation in React{"\n\n"}</span>
-      <span className="text-[#e8c87a]">## Hard stops{"\n"}</span>
-      <span className="text-[#6e7478]">- Never modify </span>
-      <span className="text-[#eceef0]">__tests__/</span>
-      <span className="text-[#6e7478]"> or </span>
-      <span className="text-[#eceef0]">*.test.ts</span>
-      <span className="text-[#6e7478]"> files{"\n"}</span>
-      <span className="text-[#6e7478]">- Never disable TypeScript strict mode{"\n"}</span>
-      <span className="text-[#6e7478]">- Never commit directly to main{"\n\n"}</span>
-      <span className="text-[#e8c87a]">## Output format{"\n"}</span>
-      <span className="text-[#6e7478]">Return a summary with:{"\n"}</span>
-      <span className="text-[#6e7478]">- Issues found (severity: warn/error){"\n"}</span>
-      <span className="text-[#6e7478]">- Suggested fix for each issue{"\n"}</span>
-      <span className="text-[#6e7478]">- Conventional Commit message draft</span>
+      <span className="text-silver-faint">---{"\n"}</span>
+      <span className="text-amber">name</span>
+      <span className="text-silver-faint">: </span>
+      <span className="text-headline">ts-code-review{"\n"}</span>
+      <span className="text-amber">description</span>
+      <span className="text-silver-faint">: </span>
+      <span className="text-silver-mid">Reviews TypeScript and Next.js{"\n"}</span>
+      <span className="text-silver-mid">{"  "}code for type safety, naming{"\n"}</span>
+      <span className="text-silver-mid">{"  "}conventions, and project rules.{"\n"}</span>
+      <span className="text-silver-mid">{"  "}Triggers on "review this" or{"\n"}</span>
+      <span className="text-silver-mid">{"  "}"check this PR".{"\n"}</span>
+      <span className="text-amber">triggers</span>
+      <span className="text-silver-faint">:{"\n"}</span>
+      <span className="text-silver-faint">{"  "}- </span>
+      <span className="text-silver-mid">review this{"\n"}</span>
+      <span className="text-silver-faint">{"  "}- </span>
+      <span className="text-silver-mid">check this PR{"\n"}</span>
+      <span className="text-silver-faint">{"  "}- </span>
+      <span className="text-silver-mid">audit my code{"\n"}</span>
+      <span className="text-silver-faint">---{"\n\n"}</span>
+      <span className="text-headline font-bold"># TypeScript Code Review{"\n\n"}</span>
+      <span className="text-amber">## What to check{"\n"}</span>
+      <span className="text-silver-muted">- No implicit </span>
+      <span className="text-headline">`any`</span>
+      <span className="text-silver-muted"> — use proper generics{"\n"}</span>
+      <span className="text-silver-muted">- Named exports only (no defaults in lib/){"\n"}</span>
+      <span className="text-silver-muted">- Conventional Commits for all messages{"\n"}</span>
+      <span className="text-silver-muted">- No direct DOM manipulation in React{"\n\n"}</span>
+      <span className="text-amber">## Hard stops{"\n"}</span>
+      <span className="text-silver-muted">- Never modify </span>
+      <span className="text-headline">__tests__/</span>
+      <span className="text-silver-muted"> or </span>
+      <span className="text-headline">*.test.ts</span>
+      <span className="text-silver-muted"> files{"\n"}</span>
+      <span className="text-silver-muted">- Never disable TypeScript strict mode{"\n"}</span>
+      <span className="text-silver-muted">- Never commit directly to main{"\n\n"}</span>
+      <span className="text-amber">## Output format{"\n"}</span>
+      <span className="text-silver-muted">Return a summary with:{"\n"}</span>
+      <span className="text-silver-muted">- Issues found (severity: warn/error){"\n"}</span>
+      <span className="text-silver-muted">- Suggested fix for each issue{"\n"}</span>
+      <span className="text-silver-muted">- Conventional Commit message draft</span>
     </code>
   );
 }
@@ -120,12 +120,12 @@ function SkillPreview() {
 
 export default function HomePage() {
   return (
-    <div className="bg-[#0a0a0a]">
+    <div className="bg-ink">
 
       <SiteNav />
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="border-b border-[#1a1d20] relative overflow-hidden">
+      <section className="border-b border-border-dark relative overflow-hidden">
         <GrainOverlay id="hero-grain" />
         <div className="max-w-6xl mx-auto px-6 lg:px-16 pt-16 pb-20 lg:pt-24 lg:pb-28 relative" style={{ zIndex: 2 }}>
           <div className="grid lg:grid-cols-[3fr_2fr] gap-12 lg:gap-20 items-start">
@@ -149,7 +149,7 @@ export default function HomePage() {
 
               <div className="relative" style={{ zIndex: 1 }}>
                 <span
-                  className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em]"
+                  className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em]"
                   style={{ fontFamily: "var(--font-mono)" }}
                 >
                   SKILL.md generator
@@ -160,19 +160,19 @@ export default function HomePage() {
                 className="leading-[1.04] tracking-tight relative"
                 style={{ fontFamily: "var(--font-serif)", zIndex: 1 }}
               >
-                <span className="block text-[#eceef0] text-5xl lg:text-[4.5rem] font-black">
+                <span className="block text-headline text-5xl lg:text-[4.5rem] font-black">
                   Your agent.
                 </span>
-                <span className="block text-[#eceef0] text-5xl lg:text-[4.5rem] font-black">
+                <span className="block text-headline text-5xl lg:text-[4.5rem] font-black">
                   Your rules.
                 </span>
-                <span className="block text-[#6e7478] text-5xl lg:text-[4.5rem] font-black italic">
+                <span className="block text-silver-muted text-5xl lg:text-[4.5rem] font-black italic">
                   Every session.
                 </span>
               </h1>
 
               <p
-                className="text-[#6e7478] text-[1.05rem] leading-[1.75] max-w-[360px]"
+                className="text-silver-muted text-[1.05rem] leading-[1.75] max-w-[360px]"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 Answer a few targeted questions about your workflow.
@@ -182,13 +182,13 @@ export default function HomePage() {
               <div className="flex items-center gap-4">
                 <Link
                   href="/generate"
-                  className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                  className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
                   Build a Skill →
                 </Link>
                 <span
-                  className="text-[#4a5056] text-xs"
+                  className="text-silver-dim text-xs"
                   style={{ fontFamily: "var(--font-mono)" }}
                 >
                   Free · No login
@@ -200,7 +200,7 @@ export default function HomePage() {
                 {PLATFORMS.map((p) => (
                   <span
                     key={p}
-                    className="text-[#4a5056] text-[10px] border border-[#1e2428] px-2.5 py-1 rounded-[2px] motion-safe:transition-colors motion-safe:duration-150 hover:border-[#2e3438] hover:text-[#6e7478]"
+                    className="text-silver-dim text-[10px] border border-[#1e2428] px-2.5 py-1 rounded-[2px] motion-safe:transition-colors motion-safe:duration-150 hover:border-[#2e3438] hover:text-silver-muted"
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
                     {p}
@@ -219,30 +219,30 @@ export default function HomePage() {
                 <div
                   className="px-4 py-2.5 flex items-center gap-2.5"
                   style={{
-                    background: "#0a0d10",
+                    background: "var(--color-code-header)",
                     borderBottom: "1px solid rgba(245,240,232,0.06)",
                   }}
                 >
                   <span
-                    className="w-2 h-2 rounded-full bg-[#5a9e6f] flex-shrink-0"
+                    className="w-2 h-2 rounded-full bg-green flex-shrink-0"
                     aria-hidden="true"
                   />
                   <span
-                    className="text-[#4a5056] text-[11px]"
+                    className="text-silver-dim text-[11px]"
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
                     skill.md
                   </span>
                 </div>
                 {/* Code */}
-                <div className="bg-[#0d1014] px-5 py-5 overflow-x-auto">
+                <div className="bg-code-bg px-5 py-5 overflow-x-auto">
                   <SkillPreview />
                 </div>
               </div>
 
               {/* Caption */}
               <p
-                className="text-[#3a4048] text-[10px] mt-3 pl-1"
+                className="text-silver-faint text-[10px] mt-3 pl-1"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 Example output · TypeScript / code review
@@ -254,25 +254,25 @@ export default function HomePage() {
       </section>
 
       {/* ── How it works ─────────────────────────────────────────────── */}
-      <section className="bg-[#0f1214]">
+      <section className="bg-surface">
         <div className="max-w-6xl mx-auto px-6 lg:px-10 pt-20 pb-24">
 
           {/* Section header — eyebrow + headline + supporting description */}
           <div className="mb-16">
             <p
-              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
+              className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               The process
             </p>
             <h2
-              className="text-[#eceef0] text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] mb-4"
+              className="text-headline text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] mb-4"
               style={{ fontFamily: "var(--font-serif)" }}
             >
               How it works.
             </h2>
             <p
-              className="text-[#6e7478] text-[0.95rem] leading-relaxed max-w-md"
+              className="text-silver-muted text-[0.95rem] leading-relaxed max-w-md"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Five steps. Under two minutes. The specificity of the questions is
@@ -281,7 +281,7 @@ export default function HomePage() {
           </div>
 
           {/* Steps — hover: amber left accent, bg shift, text brightens, number scales */}
-          <div className="divide-y divide-[#1a1d20]">
+          <div className="divide-y divide-border-dark">
             {STEPS.map((step) => (
               <div
                 key={step.n}
@@ -290,24 +290,24 @@ export default function HomePage() {
                 {/* Left accent bar — appears on hover */}
                 <span
                   aria-hidden="true"
-                  className="absolute left-0 inset-y-0 w-[2px] rounded-full bg-[#e8c87a] opacity-0 group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-200"
+                  className="absolute left-0 inset-y-0 w-[2px] rounded-full bg-amber opacity-0 group-hover:opacity-100 motion-safe:transition-opacity motion-safe:duration-200"
                 />
 
                 <span
-                  className="text-[#e8c87a] text-5xl font-black leading-none motion-safe:transition-transform motion-safe:duration-200 group-hover:scale-[1.06]"
+                  className="text-amber text-5xl font-black leading-none motion-safe:transition-transform motion-safe:duration-200 group-hover:scale-[1.06]"
                   style={{ fontFamily: "var(--font-serif)" }}
                 >
                   {step.n}
                 </span>
                 <div>
                   <h3
-                    className="text-[#eceef0] text-xl lg:text-2xl font-bold mb-2.5"
+                    className="text-headline text-xl lg:text-2xl font-bold mb-2.5"
                     style={{ fontFamily: "var(--font-serif)" }}
                   >
                     {step.title}
                   </h3>
                   <p
-                    className="text-[#6e7478] text-[0.95rem] leading-[1.7] max-w-lg motion-safe:transition-colors motion-safe:duration-200 group-hover:text-[#9ea2a6]"
+                    className="text-silver-muted text-[0.95rem] leading-[1.7] max-w-lg motion-safe:transition-colors motion-safe:duration-200 group-hover:text-silver-mid"
                     style={{ fontFamily: "var(--font-sans)" }}
                   >
                     {step.body}
@@ -321,7 +321,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Bottom CTA ───────────────────────────────────────────────── */}
-      <footer className="border-t border-[#1a1d20] relative overflow-hidden">
+      <footer className="border-t border-border-dark relative overflow-hidden">
         <GrainOverlay id="footer-grain" />
         <div className="max-w-6xl mx-auto px-6 lg:px-10 pt-20 pb-16 relative" style={{ zIndex: 2 }}>
 
@@ -331,14 +331,14 @@ export default function HomePage() {
             {/* Left — headline + CTA */}
             <div>
               <p
-                className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-6"
+                className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-6"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 Get started
               </p>
 
               <h2
-                className="text-[#eceef0] text-4xl lg:text-5xl font-black tracking-tight leading-[1.08] mb-5"
+                className="text-headline text-4xl lg:text-5xl font-black tracking-tight leading-[1.08] mb-5"
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 Stop re-explaining yourself<br />
@@ -346,7 +346,7 @@ export default function HomePage() {
               </h2>
 
               <p
-                className="text-[#6e7478] text-[0.95rem] leading-relaxed mb-10 max-w-sm"
+                className="text-silver-muted text-[0.95rem] leading-relaxed mb-10 max-w-sm"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 Build a SKILL.md in under two minutes.
@@ -355,7 +355,7 @@ export default function HomePage() {
 
               <Link
                 href="/generate"
-                className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+                className="gradient-silver-btn inline-block text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 Build a Skill →
@@ -365,15 +365,15 @@ export default function HomePage() {
             {/* Right — supporting stats */}
             <div className="hidden lg:flex flex-col gap-8 pt-1">
               {STATS.map((stat) => (
-                <div key={stat.label} className="border-t border-[#1a1d20] pt-6">
+                <div key={stat.label} className="border-t border-border-dark pt-6">
                   <span
-                    className="block text-[#eceef0] text-4xl font-black leading-none mb-1.5"
+                    className="block text-headline text-4xl font-black leading-none mb-1.5"
                     style={{ fontFamily: "var(--font-serif)" }}
                   >
                     {stat.value}
                   </span>
                   <span
-                    className="text-[#4a5056] text-[10px] uppercase tracking-[0.12em]"
+                    className="text-silver-dim text-[10px] uppercase tracking-[0.12em]"
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
                     {stat.label}
@@ -387,13 +387,13 @@ export default function HomePage() {
           {/* Footer bar */}
           <div className="mt-20 pt-6 border-t border-[#141618] flex items-center justify-between flex-wrap gap-4">
             <span
-              className="text-[#3a4048] text-[11px]"
+              className="text-silver-faint text-[11px]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               © 2026 SkillDraft.io
             </span>
             <span
-              className="text-[#3a4048] text-[11px]"
+              className="text-silver-faint text-[11px]"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               agentskills.io standard

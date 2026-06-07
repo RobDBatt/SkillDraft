@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Category } from "@/lib/questions";
 import type { PlatformId } from "@/lib/platforms";
 import { getPlatformById } from "@/lib/platforms";
+import { supabase, extractSkillName } from "@/lib/supabase";
 
 interface SkillOutputProps {
   content: string;
@@ -11,6 +13,7 @@ interface SkillOutputProps {
   platform: PlatformId | null;
   onRegenerate: () => void;
   onStartOver: () => void;
+  isGenerating?: boolean;
 }
 
 const GENERIC_PATH = "~/.claude/skills/[name]/SKILL.md";
@@ -48,14 +51,19 @@ const CATEGORY_TIPS: Record<Category, string[]> = {
   ],
 };
 
+type SaveState = "idle" | "saving" | "saved" | "error";
+
 export default function SkillOutput({
   content,
   category,
   platform,
   onRegenerate,
   onStartOver,
+  isGenerating = false,
 }: SkillOutputProps) {
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
 
   const platformConfig = platform ? getPlatformById(platform) : null;
   const installPath = platformConfig?.installPath ?? GENERIC_PATH;
@@ -67,6 +75,34 @@ export default function SkillOutput({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  }
+
+  async function handleSave() {
+    if (saveState !== "idle") return;
+    setSaveState("saving");
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      router.push("/auth");
+      setSaveState("idle");
+      return;
+    }
+
+    const { error } = await supabase.from("skills").insert({
+      user_id: user.id,
+      name: extractSkillName(content) || category,
+      category,
+      platform: platform ?? null,
+      content,
+      source: "generate",
+    });
+
+    if (error) {
+      setSaveState("error");
+      setTimeout(() => setSaveState("idle"), 3000);
+    } else {
+      setSaveState("saved");
+    }
   }
 
   function handleDownload() {
@@ -87,13 +123,13 @@ export default function SkillOutput({
       <div className="flex items-start justify-between gap-6 mb-8 flex-wrap">
         <div>
           <p
-            className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
+            className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
             style={{ fontFamily: "var(--font-mono)" }}
           >
             Step 5 of 5 — Your skill
           </p>
           <h1
-            className="text-[#eceef0] text-4xl font-black leading-tight"
+            className="text-headline text-4xl font-black leading-tight"
             style={{ fontFamily: "var(--font-serif)" }}
           >
             Your SKILL.md is ready.
@@ -106,14 +142,24 @@ export default function SkillOutput({
           <button
             type="button"
             onClick={onRegenerate}
-            className="text-[#4a5056] hover:text-[#9ea2a6] text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-[#9ea2a6]"
+            disabled={isGenerating}
+            className={`text-xs motion-safe:transition-colors focus-visible:outline-none ${
+              isGenerating
+                ? "text-silver-dim opacity-40 cursor-not-allowed"
+                : "text-silver-dim hover:text-silver-mid focus-visible:text-silver-mid"
+            }`}
           >
-            Regenerate
+            {isGenerating ? "Generating…" : "Regenerate"}
           </button>
           <button
             type="button"
             onClick={onStartOver}
-            className="text-[#4a5056] hover:text-[#9ea2a6] text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-[#9ea2a6]"
+            disabled={isGenerating}
+            className={`text-xs motion-safe:transition-colors focus-visible:outline-none ${
+              isGenerating
+                ? "text-silver-dim opacity-40 cursor-not-allowed"
+                : "text-silver-dim hover:text-silver-mid focus-visible:text-silver-mid"
+            }`}
           >
             Start over
           </button>
@@ -132,11 +178,11 @@ export default function SkillOutput({
             {/* Code block header */}
             <div
               className="px-4 py-2.5 flex items-center gap-2.5"
-              style={{ background: "#0a0d10", borderBottom: "1px solid rgba(245,240,232,0.06)" }}
+              style={{ background: "var(--color-code-header)", borderBottom: "1px solid rgba(245,240,232,0.06)" }}
             >
-              <span className="w-2 h-2 rounded-full bg-[#5a9e6f]" aria-hidden="true" />
+              <span className="w-2 h-2 rounded-full bg-green" aria-hidden="true" />
               <span
-                className="text-[#4a5056] text-[11px]"
+                className="text-silver-dim text-[11px]"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 SKILL.md
@@ -144,9 +190,9 @@ export default function SkillOutput({
             </div>
 
             {/* Code content */}
-            <div className="bg-[#0d1014] px-5 py-5 overflow-x-auto max-h-[560px] overflow-y-auto">
+            <div className="bg-code-bg px-5 py-5 overflow-x-auto max-h-[560px] overflow-y-auto">
               <pre
-                className="text-[#9ea2a6] text-[12.5px] leading-[1.75] whitespace-pre"
+                className="text-silver-mid text-[12.5px] leading-[1.75] whitespace-pre"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 {content}
@@ -155,11 +201,11 @@ export default function SkillOutput({
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-3 mt-4">
+          <div className="flex items-center gap-3 mt-4 flex-wrap">
             <button
               type="button"
               onClick={handleCopy}
-              className="gradient-silver-btn text-sm font-semibold px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a] min-w-[152px] text-center"
+              className="gradient-silver-btn text-sm font-semibold px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink min-w-[152px] text-center"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               {copied ? "Copied ✓" : "Copy to clipboard"}
@@ -167,21 +213,36 @@ export default function SkillOutput({
             <button
               type="button"
               onClick={handleDownload}
-              className="border border-[#1e2428] text-[#6e7478] text-sm px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:border-[#3a4048] hover:text-[#cdd0d3] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6e7478] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+              className="border border-[#1e2428] text-silver-muted text-sm px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Download SKILL.md
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={saveState === "saving" || saveState === "saved"}
+              className="border border-[#1e2428] text-silver-muted text-sm px-5 py-2.5 rounded-[4px] disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {saveState === "saving"
+                ? "Saving…"
+                : saveState === "saved"
+                ? "Saved ✓"
+                : saveState === "error"
+                ? "Save failed"
+                : "Save skill"}
             </button>
           </div>
         </div>
 
         {/* ── Right — Tips panel ────────────────────────────────────── */}
-        <div className="border border-[#1a1d20] rounded-[4px] p-6 flex flex-col gap-7">
+        <div className="border border-border-dark rounded-[4px] p-6 flex flex-col gap-7">
 
           {/* What makes it good */}
           <div>
             <p
-              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.14em] mb-3"
+              className="text-amber text-[10px] font-semibold uppercase tracking-[0.14em] mb-3"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               What makes this skill good
@@ -194,10 +255,10 @@ export default function SkillOutput({
               ].map((point) => (
                 <li
                   key={point}
-                  className="text-[#6e7478] text-xs flex gap-2.5 leading-snug"
+                  className="text-silver-muted text-xs flex gap-2.5 leading-snug"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  <span className="text-[#3a4048] shrink-0 mt-px">—</span>
+                  <span className="text-silver-faint shrink-0 mt-px">—</span>
                   {point}
                 </li>
               ))}
@@ -207,26 +268,26 @@ export default function SkillOutput({
           {/* How to install */}
           <div>
             <p
-              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.14em] mb-3"
+              className="text-amber text-[10px] font-semibold uppercase tracking-[0.14em] mb-3"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               How to install
             </p>
             <code
-              className="text-[#5a9e6f] text-xs block bg-[#080a0c] border border-[#1a1d20] px-3 py-2 rounded-[2px] break-all"
+              className="text-green text-xs block bg-[#080a0c] border border-border-dark px-3 py-2 rounded-[2px] break-all"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               {installPath}
             </code>
             <p
-              className="text-[#6e7478] text-xs mt-2 leading-snug"
+              className="text-silver-muted text-xs mt-2 leading-snug"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               {installNote ?? (
                 <>
                   Drop the file at that path and restart your agent session. Rename
                   the file to match the{" "}
-                  <code className="text-[#9ea2a6]" style={{ fontFamily: "var(--font-mono)" }}>
+                  <code className="text-silver-mid" style={{ fontFamily: "var(--font-mono)" }}>
                     name:
                   </code>{" "}
                   value in the frontmatter.
@@ -238,7 +299,7 @@ export default function SkillOutput({
           {/* Improvement tips */}
           <div>
             <p
-              className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.14em] mb-3"
+              className="text-amber text-[10px] font-semibold uppercase tracking-[0.14em] mb-3"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               Tips to improve it
@@ -247,10 +308,10 @@ export default function SkillOutput({
               {tips.map((tip, i) => (
                 <li
                   key={i}
-                  className="text-[#6e7478] text-xs flex gap-2.5 leading-snug"
+                  className="text-silver-muted text-xs flex gap-2.5 leading-snug"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  <span className="text-[#3a4048] shrink-0 mt-px">—</span>
+                  <span className="text-silver-faint shrink-0 mt-px">—</span>
                   {tip}
                 </li>
               ))}

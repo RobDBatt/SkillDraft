@@ -18,6 +18,8 @@
   --color-border-dark:  #1a1d20; /* default border */
   --color-border-dark2: #252a2e; /* secondary border */
   --color-green:        #5a9e6f; /* success indicator */
+  --color-silver-dim:   #4a5056; /* dim nav links, secondary actions */
+  --color-silver-faint: #3a4048; /* faint dividers, inactive borders */
 
   /* Typography */
   --font-serif: var(--font-playfair), Georgia, serif;

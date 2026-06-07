@@ -30,7 +30,8 @@ function TextInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={question.placeholder}
-      className="w-full bg-transparent border border-[#252a2e] text-[#eceef0] text-sm px-4 py-3 rounded-[4px] placeholder:text-[#3a4048] motion-safe:transition-colors focus:outline-none focus:ring-1 focus:ring-[#9ea2a6] focus:border-[#9ea2a6]"
+      maxLength={2000}
+      className="w-full bg-transparent border border-border-dark2 text-headline text-sm px-4 py-3 rounded-[4px] placeholder:text-silver-faint motion-safe:transition-colors focus:outline-none focus:ring-1 focus:ring-silver-mid focus:border-silver-mid"
       style={{ fontFamily: "var(--font-sans)" }}
     />
   );
@@ -53,7 +54,8 @@ function TextareaInput({
       onChange={(e) => onChange(e.target.value)}
       placeholder={question.placeholder}
       rows={4}
-      className="w-full bg-transparent border border-[#252a2e] text-[#eceef0] text-sm px-4 py-3 rounded-[4px] placeholder:text-[#3a4048] motion-safe:transition-colors focus:outline-none focus:ring-1 focus:ring-[#9ea2a6] focus:border-[#9ea2a6] resize-y"
+      maxLength={2000}
+      className="w-full bg-transparent border border-border-dark2 text-headline text-sm px-4 py-3 rounded-[4px] placeholder:text-silver-faint motion-safe:transition-colors focus:outline-none focus:ring-1 focus:ring-silver-mid focus:border-silver-mid resize-y"
       style={{ fontFamily: "var(--font-sans)" }}
     />
   );
@@ -71,7 +73,7 @@ function SingleSelectRows({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="border-t border-[#1a1d20]">
+    <div className="border-t border-border-dark">
       {question.options?.map((opt) => {
         const selected = value === opt.value;
         return (
@@ -79,19 +81,19 @@ function SingleSelectRows({
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`w-full flex items-center gap-3 py-3 border-b border-[#1a1d20] text-left motion-safe:transition-colors pl-2 focus-visible:outline-none ${
+            className={`w-full flex items-center gap-3 py-3 border-b border-border-dark text-left motion-safe:transition-colors pl-2 focus-visible:outline-none ${
               selected
-                ? "text-[#eceef0] border-l-2 border-l-[#e8c87a] -ml-2 pl-[10px] bg-[#0d1014]"
-                : "text-[#6e7478] hover:text-[#9ea2a6] hover:bg-[#0a0c0e]"
+                ? "text-headline border-l-2 border-l-amber -ml-2 pl-[10px] bg-code-bg"
+                : "text-silver-muted hover:text-silver-mid hover:bg-[#0a0c0e]"
             }`}
           >
             <span
               className={`w-4 h-4 border rounded-full flex-shrink-0 flex items-center justify-center motion-safe:transition-colors ${
-                selected ? "border-[#e8c87a]" : "border-[#2a2e32]"
+                selected ? "border-amber" : "border-[#2a2e32]"
               }`}
               aria-hidden="true"
             >
-              {selected && <span className="w-2 h-2 rounded-full bg-[#e8c87a]" />}
+              {selected && <span className="w-2 h-2 rounded-full bg-amber" />}
             </span>
             <span className="text-sm" style={{ fontFamily: "var(--font-sans)" }}>
               {opt.label}
@@ -122,7 +124,7 @@ function MultiSelectInput({
   const otherChecked = values.includes("other");
 
   return (
-    <div className="border-t border-[#1a1d20]">
+    <div className="border-t border-border-dark">
       {question.options?.map((opt) => {
         const checked = values.includes(opt.value);
         return (
@@ -130,15 +132,15 @@ function MultiSelectInput({
             key={opt.value}
             type="button"
             onClick={() => onToggle(opt.value)}
-            className={`w-full flex items-center gap-3 py-3 border-b border-[#1a1d20] text-left motion-safe:transition-colors pl-2 focus-visible:outline-none ${
+            className={`w-full flex items-center gap-3 py-3 border-b border-border-dark text-left motion-safe:transition-colors pl-2 focus-visible:outline-none ${
               checked
-                ? "text-[#eceef0] border-l-2 border-l-[#e8c87a] -ml-2 pl-[10px] bg-[#0d1014]"
-                : "text-[#6e7478] hover:text-[#9ea2a6] hover:bg-[#0a0c0e]"
+                ? "text-headline border-l-2 border-l-amber -ml-2 pl-[10px] bg-code-bg"
+                : "text-silver-muted hover:text-silver-mid hover:bg-[#0a0c0e]"
             }`}
           >
             <span
               className={`w-4 h-4 border flex-shrink-0 rounded-[2px] flex items-center justify-center motion-safe:transition-colors ${
-                checked ? "border-[#e8c87a] bg-[#e8c87a]" : "border-[#2a2e32]"
+                checked ? "border-amber bg-amber" : "border-[#2a2e32]"
               }`}
               aria-hidden="true"
             >
@@ -162,14 +164,15 @@ function MultiSelectInput({
       })}
 
       {hasOther && otherChecked && (
-        <div className="py-3 pl-7 border-b border-[#1a1d20]">
+        <div className="py-3 pl-7 border-b border-border-dark">
           <input
             type="text"
             value={otherText}
             onChange={(e) => onOtherTextChange(e.target.value)}
             placeholder="Describe..."
+            maxLength={500}
             autoFocus
-            className="w-full bg-transparent border-b border-[#252a2e] text-[#eceef0] text-sm py-1.5 placeholder:text-[#3a4048] motion-safe:transition-colors focus:outline-none focus:border-[#9ea2a6]"
+            className="w-full bg-transparent border-b border-border-dark2 text-headline text-sm py-1.5 placeholder:text-silver-faint motion-safe:transition-colors focus:outline-none focus:border-silver-mid"
             style={{ fontFamily: "var(--font-sans)" }}
           />
         </div>
@@ -217,13 +220,13 @@ export default function QuestionForm({
         <button
           type="button"
           onClick={onBack}
-          className="text-[#4a5056] hover:text-[#9ea2a6] text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-[#9ea2a6]"
+          className="text-silver-dim hover:text-silver-mid text-xs motion-safe:transition-colors focus-visible:outline-none focus-visible:text-silver-mid"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           ← Back
         </button>
         <span
-          className="text-[#e8c87a] text-[10px] font-semibold uppercase tracking-[0.18em]"
+          className="text-amber text-[10px] font-semibold uppercase tracking-[0.18em]"
           style={{ fontFamily: "var(--font-mono)" }}
         >
           Step 3 of 5
@@ -231,13 +234,13 @@ export default function QuestionForm({
       </div>
 
       <h1
-        className="text-[#eceef0] text-4xl font-black leading-tight mb-2"
+        className="text-headline text-4xl font-black leading-tight mb-2"
         style={{ fontFamily: "var(--font-serif)" }}
       >
         {category.label}
       </h1>
       <p
-        className="text-[#6e7478] text-sm mb-10"
+        className="text-silver-muted text-sm mb-10"
         style={{ fontFamily: "var(--font-sans)" }}
       >
         {category.description}
@@ -255,13 +258,13 @@ export default function QuestionForm({
           return (
             <div key={question.id}>
               <label
-                className="block text-[#9ea2a6] text-[13px] mb-2.5 leading-snug"
+                className="block text-silver-mid text-[13px] mb-2.5 leading-snug"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 {question.label}
                 {!question.required && (
                   <span
-                    className="text-[#3a4048] text-[10px] ml-2 uppercase tracking-[0.1em]"
+                    className="text-silver-faint text-[10px] ml-2 uppercase tracking-[0.1em]"
                     style={{ fontFamily: "var(--font-mono)" }}
                   >
                     optional
@@ -328,7 +331,7 @@ export default function QuestionForm({
       <div className="mt-10">
         <button
           type="submit"
-          className="gradient-silver-btn text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9ea2a6] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
+          className="gradient-silver-btn text-sm font-semibold px-6 py-3 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           style={{ fontFamily: "var(--font-sans)" }}
         >
           Generate my skill →
