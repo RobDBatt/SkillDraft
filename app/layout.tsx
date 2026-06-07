@@ -23,10 +23,22 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SkillDraft — Build better SKILL.md files",
+  title: "SkillDraft — Quality-scored SKILL.md files for every AI agent",
   description:
-    "Answer a few targeted questions about your workflow and get a production-ready SKILL.md file for Claude Code, Cursor, Codex, or Gemini CLI.",
+    "Generate production-ready SKILL.md files for Claude Code, Cursor, Windsurf, Codex CLI, and Gemini CLI. Quality scored on 7 dimensions. Security scanned. One-command install.",
   metadataBase: new URL("https://skilldraft.io"),
+  openGraph: {
+    title: "SkillDraft — Quality-scored SKILL.md files for every AI agent",
+    description: "Generate production-ready SKILL.md files for Claude Code, Cursor, Windsurf, Codex CLI, and Gemini CLI. Quality scored, security scanned, one-command install.",
+    url: "https://skilldraft.io",
+    siteName: "SkillDraft",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SkillDraft — Quality-scored SKILL.md files for every AI agent",
+    description: "Generate production-ready SKILL.md files for Claude Code, Cursor, Windsurf, and more. Free, quality scored, security scanned.",
+  },
 };
 
 export default function RootLayout({
