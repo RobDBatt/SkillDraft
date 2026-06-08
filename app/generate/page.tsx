@@ -24,7 +24,7 @@ function ProgressBar({ step }: { step: Step }) {
   return (
     <div className="border-b border-border-dark">
       {/* Continuous amber fill track */}
-      <div className="relative h-[2px] bg-[#141618]">
+      <div className="relative h-[2px] bg-border-dark">
         <div
           className="absolute left-0 top-0 h-full bg-amber motion-safe:transition-all motion-safe:duration-500"
           style={{ width: `${progress}%` }}
@@ -48,7 +48,7 @@ function ProgressBar({ step }: { step: Step }) {
                       ? "text-headline"
                       : done
                       ? "text-silver-faint"
-                      : "text-[#1e2226]"
+                      : "text-silver-faint/50"
                   }`}
                   style={{ fontFamily: "var(--font-mono)" }}
                 >
@@ -184,7 +184,7 @@ export default function GeneratePage() {
       {/* ── Nav — sticky with backdrop blur ──────────────────────────── */}
       <nav
         className="sticky top-0 z-50 border-b border-border-dark backdrop-blur-md"
-        style={{ background: "rgba(10,10,10,0.82)" }}
+        style={{ background: "color-mix(in srgb, var(--color-ink) 82%, transparent)" }}
       >
         <div className="max-w-6xl mx-auto px-6 lg:px-10 h-14 flex items-center justify-between">
           <Link href="/" aria-label="SkillDraft home">

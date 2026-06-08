@@ -158,7 +158,7 @@ export default function PricingPage() {
         </div>
 
         {/* Pro monthly */}
-        <div className="mb-6 border border-amber/30 rounded-[4px] p-6 relative" style={{ background: "rgba(232,200,122,0.03)" }}>
+        <div className="mb-6 border border-amber/30 rounded-[4px] p-6 relative" style={{ background: "var(--accent-soft)" }}>
           <div className="absolute -top-3 left-5">
             <span className="bg-amber text-ink text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-0.5 rounded-[2px]" style={{ fontFamily: "var(--font-mono)" }}>
               Most popular

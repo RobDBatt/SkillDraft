@@ -294,14 +294,14 @@ function ImprovePageInner() {
           <div>
             <div
               className="rounded-[4px] overflow-hidden"
-              style={{ border: "1px solid rgba(245,240,232,0.12)" }}
+              style={{ border: "1px solid var(--color-border-dark)" }}
             >
               {/* Code block header */}
               <div
                 className="px-4 py-2.5 flex items-center gap-2.5"
                 style={{
                   background: "var(--color-code-header)",
-                  borderBottom: "1px solid rgba(245,240,232,0.06)",
+                  borderBottom: "1px solid var(--color-border-dark)",
                 }}
               >
                 <span
@@ -354,7 +354,7 @@ function ImprovePageInner() {
                 type="button"
                 onClick={handleDownload}
                 disabled={isStreaming || !skillContent}
-                className="border border-[#1e2428] text-silver-muted text-sm px-5 py-2.5 rounded-[4px] disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+                className="border border-border-dark text-silver-muted text-sm px-5 py-2.5 rounded-[4px] disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 Download SKILL.md
@@ -363,7 +363,7 @@ function ImprovePageInner() {
                 type="button"
                 onClick={handleSave}
                 disabled={isStreaming || !skillContent || saveState === "saving" || saveState === "saved"}
-                className="border border-[#1e2428] text-silver-muted text-sm px-5 py-2.5 rounded-[4px] disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+                className="border border-border-dark text-silver-muted text-sm px-5 py-2.5 rounded-[4px] disabled:opacity-40 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 {saveState === "saving"

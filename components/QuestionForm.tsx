@@ -84,12 +84,12 @@ function SingleSelectRows({
             className={`w-full flex items-center gap-3 py-3 border-b border-border-dark text-left motion-safe:transition-colors pl-2 focus-visible:outline-none ${
               selected
                 ? "text-headline border-l-2 border-l-amber -ml-2 pl-[10px] bg-code-bg"
-                : "text-silver-muted hover:text-silver-mid hover:bg-[#0a0c0e]"
+                : "text-silver-muted hover:text-silver-mid hover:bg-surface-2"
             }`}
           >
             <span
               className={`w-4 h-4 border rounded-full flex-shrink-0 flex items-center justify-center motion-safe:transition-colors ${
-                selected ? "border-amber" : "border-[#2a2e32]"
+                selected ? "border-amber" : "border-border-dark2"
               }`}
               aria-hidden="true"
             >
@@ -135,12 +135,12 @@ function MultiSelectInput({
             className={`w-full flex items-center gap-3 py-3 border-b border-border-dark text-left motion-safe:transition-colors pl-2 focus-visible:outline-none ${
               checked
                 ? "text-headline border-l-2 border-l-amber -ml-2 pl-[10px] bg-code-bg"
-                : "text-silver-muted hover:text-silver-mid hover:bg-[#0a0c0e]"
+                : "text-silver-muted hover:text-silver-mid hover:bg-surface-2"
             }`}
           >
             <span
               className={`w-4 h-4 border flex-shrink-0 rounded-[2px] flex items-center justify-center motion-safe:transition-colors ${
-                checked ? "border-amber bg-amber" : "border-[#2a2e32]"
+                checked ? "border-amber bg-amber" : "border-border-dark2"
               }`}
               aria-hidden="true"
             >
@@ -148,7 +148,7 @@ function MultiSelectInput({
                 <svg width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden="true">
                   <path
                     d="M1 4L3.5 6.5L9 1"
-                    stroke="#0a0a0a"
+                    stroke="var(--on-accent)"
                     strokeWidth="1.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -319,7 +319,7 @@ export default function QuestionForm({
       {/* Error */}
       {displayedError && (
         <p
-          className="text-[#c55] text-sm mt-6"
+          className="text-[#c0392b] text-sm mt-6"
           style={{ fontFamily: "var(--font-sans)" }}
           role="alert"
         >

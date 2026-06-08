@@ -112,13 +112,13 @@ function InstallItem({
           {/* Path block */}
           <div
             className="rounded-[4px] overflow-hidden mb-4"
-            style={{ border: "1px solid rgba(245,240,232,0.08)" }}
+            style={{ border: "1px solid var(--color-border-dark)" }}
           >
             <div
               className="px-4 py-2 flex items-center justify-between gap-4"
               style={{
                 background: "var(--color-code-header)",
-                borderBottom: "1px solid rgba(245,240,232,0.04)",
+                borderBottom: "1px solid var(--color-border-dark)",
               }}
             >
               <span
@@ -206,8 +206,8 @@ export default function InstallPage() {
         <div
           className="mt-12 rounded-[4px] px-6 py-5 flex gap-4"
           style={{
-            border: "1px solid rgba(245,240,232,0.1)",
-            background: "rgba(232,200,122,0.04)",
+            border: "1px solid var(--color-border-dark)",
+            background: "var(--accent-soft)",
           }}
         >
           <span

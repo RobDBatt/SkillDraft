@@ -179,12 +179,12 @@ export default function SkillOutput({
         <div>
           <div
             className="rounded-[4px] overflow-hidden"
-            style={{ border: "1px solid rgba(245,240,232,0.12)" }}
+            style={{ border: "1px solid var(--color-border-dark)" }}
           >
             {/* Code block header */}
             <div
               className="px-4 py-2.5 flex items-center gap-2.5"
-              style={{ background: "var(--color-code-header)", borderBottom: "1px solid rgba(245,240,232,0.06)" }}
+              style={{ background: "var(--color-code-header)", borderBottom: "1px solid var(--color-border-dark)" }}
             >
               <span className="w-2 h-2 rounded-full bg-green" aria-hidden="true" />
               <span
@@ -219,7 +219,7 @@ export default function SkillOutput({
             <button
               type="button"
               onClick={handleDownload}
-              className="border border-[#1e2428] text-silver-muted text-sm px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              className="border border-border-dark text-silver-muted text-sm px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Download SKILL.md
@@ -228,7 +228,7 @@ export default function SkillOutput({
               type="button"
               onClick={handleSave}
               disabled={saveState === "saving" || saveState === "saved"}
-              className="border border-[#1e2428] text-silver-muted text-sm px-5 py-2.5 rounded-[4px] disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              className="border border-border-dark text-silver-muted text-sm px-5 py-2.5 rounded-[4px] disabled:opacity-50 disabled:cursor-not-allowed motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               {saveState === "saving"
@@ -280,7 +280,7 @@ export default function SkillOutput({
               How to install
             </p>
             <code
-              className="text-green text-xs block bg-[#080a0c] border border-border-dark px-3 py-2 rounded-[2px] break-all"
+              className="text-green text-xs block bg-code-bg border border-border-dark px-3 py-2 rounded-[2px] break-all"
               style={{ fontFamily: "var(--font-mono)" }}
             >
               {installPath}

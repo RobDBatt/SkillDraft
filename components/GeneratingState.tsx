@@ -4,26 +4,26 @@ import { useEffect, useState } from "react";
 
 // Syntax-colored lines matching the code preview aesthetic on the landing page
 const LINES: Array<{ text: string; color: string }> = [
-  { text: "---",                               color: "#3a4048" },
-  { text: "name: your-skill",                  color: "#e8c87a" },
-  { text: "description: |",                    color: "#e8c87a" },
-  { text: "  Triggers when you need to...",    color: "#9ea2a6" },
-  { text: "  Detects intent from keywords...", color: "#9ea2a6" },
-  { text: "  Scoped to your workflow only.",   color: "#9ea2a6" },
-  { text: "---",                               color: "#3a4048" },
-  { text: "",                                  color: "#3a4048" },
-  { text: "# Your Skill",                      color: "#eceef0" },
-  { text: "",                                  color: "#3a4048" },
-  { text: "## When to use this",               color: "#e8c87a" },
-  { text: "- Activated by trigger phrases",    color: "#6e7478" },
-  { text: "- Scoped to your workflow",         color: "#6e7478" },
-  { text: "",                                  color: "#3a4048" },
-  { text: "## Instructions",                   color: "#e8c87a" },
-  { text: "- Follow the rules you defined",    color: "#6e7478" },
-  { text: "- Never do what you said to avoid", color: "#6e7478" },
-  { text: "",                                  color: "#3a4048" },
-  { text: "## Hard stops",                     color: "#e8c87a" },
-  { text: "- Never bypass the gates you set",  color: "#6e7478" },
+  { text: "---",                               color: "var(--color-silver-faint)" },
+  { text: "name: your-skill",                  color: "var(--color-amber)" },
+  { text: "description: |",                    color: "var(--color-amber)" },
+  { text: "  Triggers when you need to...",    color: "var(--color-silver-mid)" },
+  { text: "  Detects intent from keywords...", color: "var(--color-silver-mid)" },
+  { text: "  Scoped to your workflow only.",   color: "var(--color-silver-mid)" },
+  { text: "---",                               color: "var(--color-silver-faint)" },
+  { text: "",                                  color: "var(--color-silver-faint)" },
+  { text: "# Your Skill",                      color: "var(--color-headline)" },
+  { text: "",                                  color: "var(--color-silver-faint)" },
+  { text: "## When to use this",               color: "var(--color-amber)" },
+  { text: "- Activated by trigger phrases",    color: "var(--color-silver-muted)" },
+  { text: "- Scoped to your workflow",         color: "var(--color-silver-muted)" },
+  { text: "",                                  color: "var(--color-silver-faint)" },
+  { text: "## Instructions",                   color: "var(--color-amber)" },
+  { text: "- Follow the rules you defined",    color: "var(--color-silver-muted)" },
+  { text: "- Never do what you said to avoid", color: "var(--color-silver-muted)" },
+  { text: "",                                  color: "var(--color-silver-faint)" },
+  { text: "## Hard stops",                     color: "var(--color-amber)" },
+  { text: "- Never bypass the gates you set",  color: "var(--color-silver-muted)" },
 ];
 
 const MESSAGES = [
@@ -74,12 +74,12 @@ export default function GeneratingState() {
       {/* Code pane */}
       <div
         className="rounded-[4px] overflow-hidden"
-        style={{ border: "1px solid rgba(245,240,232,0.08)" }}
+        style={{ border: "1px solid var(--color-border-dark)" }}
       >
         {/* Header bar */}
         <div
           className="px-4 py-2.5 flex items-center gap-2.5"
-          style={{ background: "var(--color-code-header)", borderBottom: "1px solid rgba(245,240,232,0.06)" }}
+          style={{ background: "var(--color-code-header)", borderBottom: "1px solid var(--color-border-dark)" }}
         >
           <span
             className="w-2 h-2 rounded-full bg-green animate-pulse flex-shrink-0"
@@ -108,7 +108,7 @@ export default function GeneratingState() {
             ))}
             {visibleLines <= LINES.length && (
               <span
-                className="inline-block w-[7px] h-[14px] bg-[#2e2e2e] animate-pulse align-middle"
+                className="inline-block w-[7px] h-[14px] bg-silver-mid animate-pulse align-middle"
                 aria-hidden="true"
               />
             )}

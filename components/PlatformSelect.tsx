@@ -58,12 +58,12 @@ export default function PlatformSelect({
               className={`text-left p-4 border rounded-[4px] motion-safe:transition-all motion-safe:duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink active:scale-[0.98] ${
                 isSelected
                   ? "border-silver-mid bg-code-bg"
-                  : "border-[#1e2428] hover:border-silver-faint hover:bg-code-bg"
+                  : "border-border-dark hover:border-silver-faint hover:bg-code-bg"
               }`}
             >
               <span
                 className={`block text-[13px] font-semibold leading-tight mb-1.5 motion-safe:transition-colors ${
-                  isSelected ? "text-headline" : "text-[#9ea2a6] group-hover:text-[#cdd0d3]"
+                  isSelected ? "text-headline" : "text-silver-mid group-hover:text-headline"
                 }`}
                 style={{ fontFamily: "var(--font-sans)" }}
               >
