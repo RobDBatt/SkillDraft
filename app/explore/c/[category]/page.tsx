@@ -31,6 +31,21 @@ const CATEGORY_META: Record<string, { label: string; headline: string; descripti
     headline: "Project Workflow Skills",
     description: "Feature specs, PR workflows, deployment checklists, and development lifecycle management skills for AI coding agents.",
   },
+  "devops-infrastructure": {
+    label: "DevOps & Infrastructure",
+    headline: "DevOps & Infrastructure Skills",
+    description: "CI/CD pipelines, Terraform modules, Kubernetes manifests, incident runbooks, and deployment automation skills. Install into Claude Code, Cursor, or Windsurf.",
+  },
+  security: {
+    label: "Security",
+    headline: "Security Skills",
+    description: "Secure coding, OWASP Top 10 audits, input validation, secret detection, and dependency scanning skills for AI coding agents.",
+  },
+  "backend-frameworks": {
+    label: "Backend Frameworks",
+    headline: "Backend Framework Skills",
+    description: "FastAPI, Django, Rails, Laravel, NestJS, and Go REST skills — idiomatic endpoints, migrations, service layers, and test patterns for every major backend.",
+  },
   "custom-other": {
     label: "Custom",
     headline: "Custom Skills",

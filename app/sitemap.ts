@@ -8,6 +8,9 @@ const CATEGORIES = [
   "content-writing",
   "data-integrations",
   "project-workflows",
+  "devops-infrastructure",
+  "security",
+  "backend-frameworks",
   "custom-other",
 ] as const;
 

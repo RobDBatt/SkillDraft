@@ -46,6 +46,21 @@ const CATEGORY_TIPS: Record<Category, string[]> = {
     "Add your team's PR template to the output format section.",
     "Run the skill at the start of every feature branch, not just at spec time.",
   ],
+  "devops-infrastructure": [
+    "Paste your actual pipeline YAML into a future regeneration — context prevents generic output.",
+    "Add your cloud provider and region to the hard stops section.",
+    "The rollback step is the most commonly skipped — make it the first hard stop.",
+  ],
+  security: [
+    "Name the specific attack vector you're defending against — generic 'security' is too broad.",
+    "Add two real examples of vulnerable vs. fixed code from your codebase.",
+    "Compliance requirements change what's a warning vs. a hard stop — be explicit.",
+  ],
+  "backend-frameworks": [
+    "Paste your actual file structure so the skill generates matching paths.",
+    "Name your ORM and eager-loading pattern explicitly to prevent N+1 queries.",
+    "If you use a service layer, name the naming convention so generated code matches.",
+  ],
   "custom-other": [
     "Custom skills need precise trigger phrases — vague triggers misfire.",
     "If it activates too broadly, add 'do not use for X' exclusions.",

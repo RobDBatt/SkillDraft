@@ -315,6 +315,160 @@ ANTI-PATTERNS:
   ❌ Writing specs at implementation level without first establishing user goals
   ❌ Marking a task complete before the verification checklist is run`,
 
+  "devops-infrastructure": `════════════════════════════════════════════════════════
+CATEGORY: DevOps & Infrastructure
+════════════════════════════════════════════════════════
+
+This skill automates a specific DevOps or infrastructure task: CI/CD pipeline configuration,
+Infrastructure as Code provisioning, container orchestration, secrets management, or
+incident response runbooks for a specific toolchain.
+
+Category-specific quality requirements:
+
+DESCRIPTION: Name the tool + the operation. "Writes GitHub Actions workflows for Node.js
+monorepo CI with parallel test sharding and automatic preview deploys" is specific.
+Include triggers: "write a pipeline", "set up CI for", "create a workflow that",
+"write a Terraform module for", "provision [resource]", "write a runbook for X".
+
+INSTRUCTIONS section — mandatory sub-sections:
+  ### Tool and environment
+  Name the exact tools, versions, and target environments (dev/staging/prod).
+  State any environment-specific rules.
+  WHY: "Agents default to generic configurations that don't match the actual toolchain,
+  producing pipelines that fail on first run."
+
+  ### Pipeline / provisioning rules
+  State required stages in order. Name the gate between each stage.
+  WHY: "Without explicit stage ordering, agents omit security scans, staging deploys,
+  or health checks — the steps that catch problems before prod."
+
+  ### Hard stops
+  Never deploy to production without all tests passing — a broken prod deploy costs
+  more to fix than the deploy saves.
+  Never apply Terraform/Pulumi changes without a plan/preview review.
+  Never put credentials, API keys, or secrets in pipeline YAML — use secrets managers.
+  Never use 'latest' image or dependency tags — makes deploys non-reproducible.
+  Never delete cloud resources without an explicit confirmation and a backup/snapshot.
+
+OUTPUT FORMAT: Provide a complete, runnable configuration file (YAML for pipelines,
+HCL for Terraform, etc.) with inline comments. Placeholder values in ALL_CAPS_SNAKE_CASE.
+
+ANTI-PATTERNS for this category:
+  ❌ Using 'latest' image tags — makes deploys non-reproducible, breaks rollbacks
+  ❌ Hardcoding secrets in pipeline YAML — exposed in version history even after deletion
+  ❌ Missing rollback step — production incident with no recovery path
+  ❌ Deploying without a health check — silent failure goes undetected until users report it
+  ❌ Combining build + deploy in one stage — prevents targeted rollback of just the deploy
+
+VERIFICATION: Include checks like "no secrets in plain text", "rollback step present",
+"all stages have explicit failure conditions", "health check defined after deploy",
+"no 'latest' tags anywhere in the config".`,
+
+  security: `════════════════════════════════════════════════════════
+CATEGORY: Security
+════════════════════════════════════════════════════════
+
+This skill enforces security practices for a specific domain: input validation, authentication
+flows, dependency auditing, secret detection, secure coding patterns, or compliance reviews
+for a specific language and stack.
+
+Category-specific quality requirements:
+
+DESCRIPTION: Name the security concern + the context. "Audits Express.js API endpoints for
+OWASP Top 10 vulnerabilities — injection, broken auth, and sensitive data exposure" is
+specific. Include triggers: "review this for security", "audit [component]", "check for
+vulnerabilities", "is this safe to deploy", "add auth to X", "harden this endpoint".
+
+INSTRUCTIONS section — mandatory sub-sections:
+  ### Threat model
+  State what the skill protects against — name the attack vector, the exploitable asset,
+  and the impact if exploited.
+  WHY: "Security rules without a threat model produce generic advice that doesn't match
+  the actual risk surface — agents apply it selectively and miss real vulnerabilities."
+
+  ### Security rules
+  State each rule as a binary, testable constraint — not advisory language.
+  Add a "because" annotation naming the specific attack it prevents.
+  WHY: "Agents treat 'consider validating input' as optional — binary directives with
+  named consequences are the only way to get consistent enforcement."
+
+  ### Hard stops
+  Never suggest disabling security controls (CORS, CSP, rate limiting, auth checks) as a
+  workaround — find the root cause instead.
+  Never log request bodies, auth tokens, passwords, session IDs, or PII.
+  Never use MD5 or SHA1 for passwords or security tokens — use bcrypt, Argon2, or PBKDF2.
+  Never recommend storing secrets in source code, committed .env files, or client storage.
+  Never return internal exception messages, stack traces, or database errors to API clients.
+
+OUTPUT FORMAT: Provide a code review template with findings structured by severity
+(CRITICAL / HIGH / MEDIUM / LOW). Include remediation code examples, not just descriptions.
+Show the vulnerable pattern next to the fix.
+
+ANTI-PATTERNS for this category:
+  ❌ "Use HTTPS" without specifying HSTS headers — leaves the site vulnerable to downgrade attacks
+  ❌ Sanitising output without validating input — treats the symptom, not the injection point
+  ❌ JWT expiry as a logout mechanism — JWTs are stateless; revocation requires a blocklist
+  ❌ Catching and swallowing exceptions silently — hides security-relevant failures
+  ❌ Using === for timing-sensitive comparisons (auth tokens) — vulnerable to timing attacks; use crypto.timingSafeEqual
+
+VERIFICATION: Include checks like "no user input reaches a query/command/template unvalidated",
+"no secrets in source code", "all auth-required routes protected",
+"error messages don't expose internals", "no weak hashing algorithms".`,
+
+  "backend-frameworks": `════════════════════════════════════════════════════════
+CATEGORY: Backend Frameworks
+════════════════════════════════════════════════════════
+
+This skill writes backend code (API endpoints, models, services, migrations, background jobs)
+following the conventions of a specific framework: FastAPI, Django, Rails, Laravel, NestJS,
+or Go REST services.
+
+Category-specific quality requirements:
+
+DESCRIPTION: Name the framework + the operation type. "Builds FastAPI endpoints following
+async-first patterns, Pydantic v2 request/response schemas, and the project's service-layer
+architecture" is specific. Include triggers: "add an endpoint for X", "write a model for X",
+"create a service that X", "add a migration for X", "write a background task for X".
+
+INSTRUCTIONS section — mandatory sub-sections:
+  ### Framework conventions
+  State the framework-specific idioms the agent must follow: file structure, naming
+  conventions, import style, and the project's architectural pattern (MVC, service layer, repository).
+  WHY: "Every framework has idiomatic patterns — agents default to their own generalised
+  approach, producing working but non-idiomatic code that gets rejected in review."
+
+  ### Data layer rules
+  Name the ORM, the query approach, and the N+1 prevention strategy (eager loading pattern).
+  State how migrations are managed.
+  WHY: "ORMs let agents produce N+1 queries silently — naming the eager loading function
+  (prefetch_related, includes(), Preload()) is the only way to prevent it."
+
+  ### Request/response contract
+  State how inputs are validated (schema class, decorator, middleware) and how errors
+  are structured in responses.
+  WHY: "Inconsistent error formats across endpoints break every API consumer at once."
+
+  ### Hard stops
+  Never write raw SQL when the ORM supports the operation — breaks the abstraction layer.
+  Never return internal exception messages to the client — use a standardised error format.
+  Never add a column to an existing model without a migration — breaks production deploys.
+  Never use synchronous blocking calls inside an async route handler — starves the event loop.
+
+OUTPUT FORMAT: Show a complete, runnable endpoint file for the target framework — not a
+snippet. Include imports, schema/model definition, route handler, service call, and one
+test stub. This prevents the agent from producing fragments that don't actually run.
+
+ANTI-PATTERNS for this category:
+  ❌ Business logic in route handlers — untestable, mixed concerns; move to a service class
+  ❌ Returning raw ORM model objects — leaks internal fields and bypasses response validation
+  ❌ SELECT * / .all() in ORM queries — use explicit field selection or response schemas
+  ❌ Missing transaction wrapper on multi-step writes — partial failure leaves DB inconsistent
+  ❌ Hardcoding config values in the service — use environment variables and a config module
+
+VERIFICATION: Include checks like "no business logic in route handlers", "all inputs
+validated before touching DB", "migration file exists for model changes",
+"no N+1 pattern introduced", "error response uses standard format".`,
+
   "custom-other": `════════════════════════════════════════════════════════
 CATEGORY: Custom / Other
 ════════════════════════════════════════════════════════
