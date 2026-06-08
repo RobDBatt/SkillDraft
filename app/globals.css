@@ -1,51 +1,49 @@
 @import "tailwindcss";
+@import "./skilldraft-system.css";
 
-/* ─── SkillDraft Design Tokens ───────────────────────────────────────────── */
+/* ─── SkillDraft Design Tokens ───────────────────────────────────────────────
+   Tailwind utility tokens, remapped to the new LIGHT + blue (#4D9CFF) system.
+   Token NAMES are kept stable so existing pages (which use utilities like
+   text-silver-muted / bg-ink / border-border-dark) adopt the new theme without
+   being rewritten. The homepage uses the prototype component classes defined in
+   skilldraft-system.css. ─────────────────────────────────────────────────── */
 @theme {
-  /* Palette */
-  --color-ink:          #0a0a0a; /* page bg */
-  --color-surface:      #0f1214; /* section / card bg */
-  --color-code-bg:      #0d1014; /* code block bg */
-  --color-code-header:  #0a0d10; /* code block header bar */
-  --color-cream:        #f5f0e8; /* legacy — avoid on bg; use for outline only */
-  --color-headline:     #eceef0; /* primary headline text */
-  --color-silver-hi:    #e0e2e4; /* silver gradient highlight */
-  --color-silver-mid:   #9ea2a6; /* silver gradient mid */
-  --color-silver-lo:    #cdd0d3; /* silver gradient shadow */
-  --color-silver-muted: #6e7478; /* secondary body text */
-  --color-amber:        #e8c87a; /* accent — eyebrow, YAML keys, step numbers */
-  --color-muted:        #888888; /* body text on dark */
-  --color-border-dark:  #1a1d20; /* default border */
-  --color-border-dark2: #252a2e; /* secondary border */
-  --color-green:        #5a9e6f; /* success indicator */
-  --color-silver-dim:   #6a7278; /* dim nav links, secondary actions */
-  --color-silver-faint: #505860; /* faint dividers, inactive borders */
+  /* Palette — light theme */
+  --color-ink:          #FAFAF8; /* page bg */
+  --color-surface:      #FFFFFF; /* section / card bg */
+  --color-code-bg:      #F6F6F3; /* code block bg */
+  --color-code-header:  #F6F6F3; /* code block header bar */
+  --color-cream:        #0E1114; /* legacy alias → primary text */
+  --color-headline:     #0E1114; /* primary headline text */
+  --color-silver-hi:    #0E1114; /* legacy silver-gradient highlight → ink */
+  --color-silver-mid:   #535C64; /* secondary text */
+  --color-silver-lo:    #2B3138; /* legacy silver-gradient shadow */
+  --color-silver-muted: #535C64; /* secondary body text */
+  --color-amber:        #4D9CFF; /* accent — eyebrows, keys, highlights */
+  --color-muted:        #535C64; /* body text */
+  --color-border-dark:  rgba(15,18,20,0.11); /* default border */
+  --color-border-dark2: rgba(15,18,20,0.20); /* secondary border */
+  --color-green:        #2E9E5B; /* success indicator (light-mode safe) */
+  --color-silver-dim:   #535C64; /* dim nav links, secondary actions */
+  --color-silver-faint: #8B949C; /* faint dividers, inactive borders */
 
-  /* Typography */
-  --font-serif: var(--font-playfair), Georgia, serif;
-  --font-sans:  var(--font-inter), system-ui, sans-serif;
+  /* Accent helper alias (the brand blue) */
+  --color-accent:       #4D9CFF;
+
+  /* Typography — Space Grotesk everywhere, JetBrains Mono for code */
+  --font-serif: var(--font-space-grotesk), Georgia, serif;
+  --font-sans:  var(--font-space-grotesk), system-ui, sans-serif;
   --font-mono:  var(--font-jetbrains), 'Courier New', monospace;
 
-  /* Border radius */
+  /* Border radius — sharp (final) */
   --radius-sm: 2px;
-  --radius:    4px;
+  --radius:    2px;
 }
 
-/* ─── Base Resets ────────────────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
+/* ─── Base font smoothing ────────────────────────────────────────────────── */
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-ink);
-  color: var(--color-muted);
-  min-height: 100dvh;
 }
 
 /* ─── Typography Utilities ───────────────────────────────────────────────── */
@@ -53,24 +51,19 @@ body {
 .font-sans   { font-family: var(--font-sans); }
 .font-mono   { font-family: var(--font-mono); }
 
-/* ─── Gradient Utilities ─────────────────────────────────────────────────── */
+/* ─── Brand button / text utilities ──────────────────────────────────────────
+   The site's existing CTAs use these classes. Repointed from the old silver
+   gradient to the new primary (near-black on light) so they read correctly. */
 .gradient-silver-text {
-  background: linear-gradient(135deg, #e0e2e4 0%, #9ea2a6 50%, #cdd0d3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: var(--color-headline);
 }
 
 .gradient-silver-btn {
-  background: linear-gradient(135deg, #c8ccce 0%, #a4a8ac 40%, #b8bcbe 100%);
-  color: #0a0a0a;
+  background: var(--color-cta, #0E1114);
+  color: #FAFAF8;
 }
 .gradient-silver-btn:hover {
-  background: linear-gradient(135deg, #d4d8da 0%, #b0b4b8 40%, #c4c8ca 100%);
-}
-
-/* ─── Selection ──────────────────────────────────────────────────────────── */
-::selection {
-  background-color: #e8c87a;
-  color: #0a0a0a;
+  background: #20262c;
 }
