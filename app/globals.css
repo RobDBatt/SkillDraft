@@ -1,5 +1,11 @@
 @import "tailwindcss";
-@import "./skilldraft-system.css";
+/* Import the ported prototype system into the `components` cascade layer so
+   Tailwind's `utilities` layer (declared after `components`) still wins on the
+   existing pages. Without the layer, the prototype's global reset
+   (`* { margin:0; padding:0 }`, `a { color:inherit }`, …) is UNLAYERED and
+   overrides every Tailwind spacing/centering utility — which collapsed the
+   inner pages (Explore, Pricing, etc.) to the left edge with no padding. */
+@import "./skilldraft-system.css" layer(components);
 
 /* ─── SkillDraft Design Tokens ───────────────────────────────────────────────
    Tailwind utility tokens, remapped to the new LIGHT + blue (#4D9CFF) system.
