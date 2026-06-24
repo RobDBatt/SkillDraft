@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# binaries / local artifacts (not for the repo)
+*.zip
+*.xlsx
+
 # claude code
 .claude/
 

@@ -9,7 +9,7 @@ import { Logo } from "@/components/Logo";
 import { HomeMotion } from "@/components/HomeMotion";
 import { CountUp } from "@/components/CountUp";
 import { CopyButton } from "@/components/CopyButton";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { supabaseAdmin, safeSelect } from "@/lib/supabase-admin";
 
 const CATEGORY_LABELS: Record<string, string> = {
   development: "Development",
@@ -65,13 +65,15 @@ function MarqueeRow({ items, reverse }: { items: SkillCard[]; reverse?: boolean 
 
 export default async function HomePage() {
   // Pull a few top public skills for the community marquee (server-side).
-  const { data: previewSkills } = await supabaseAdmin
-    .from("skills")
-    .select("id, name, category, author_display_name, quality_score")
-    .eq("is_public", true)
-    .order("quality_score", { ascending: false, nullsFirst: false })
-    .order("save_count", { ascending: false })
-    .limit(6);
+  const previewSkills = await safeSelect(() =>
+    supabaseAdmin
+      .from("skills")
+      .select("id, name, category, author_display_name, quality_score")
+      .eq("is_public", true)
+      .order("quality_score", { ascending: false, nullsFirst: false })
+      .order("save_count", { ascending: false })
+      .limit(6)
+  );
 
   const realRow: SkillCard[] =
     previewSkills && previewSkills.length >= 4

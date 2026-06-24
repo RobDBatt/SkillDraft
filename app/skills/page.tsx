@@ -7,8 +7,6 @@ import { SiteNav } from "@/components/SiteNav";
 import { supabase, type SkillRow } from "@/lib/supabase";
 import { AgentBadges } from "@/components/AgentTargets";
 
-type Category = string;
-
 const CATEGORY_LABELS: Record<string, string> = {
   development: "Development",
   "frontend-design": "Frontend & Design",

@@ -186,7 +186,7 @@ export default function InstallPage() {
           className="text-silver-muted text-[1rem] leading-relaxed mb-16 max-w-xl"
           style={{ fontFamily: "var(--font-sans)" }}
         >
-          You generated your file. Here's exactly where to put it — for every major AI agent.
+          You generated your file. Here&apos;s exactly where to put it — for every major AI agent.
         </p>
 
         {/* Accordion */}
@@ -225,7 +225,7 @@ export default function InstallPage() {
               name:
             </code>{" "}
             value in the frontmatter must match your folder or file name exactly. If they
-            don't match, some agents won't load the skill correctly.
+            don&apos;t match, some agents won&apos;t load the skill correctly.
           </p>
         </div>
 
@@ -235,7 +235,7 @@ export default function InstallPage() {
             className="text-silver-muted text-sm mb-5"
             style={{ fontFamily: "var(--font-sans)" }}
           >
-            Don't have a skill yet?
+            Don&apos;t have a skill yet?
           </p>
           <Link
             href="/generate"

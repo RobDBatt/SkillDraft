@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/SiteNav";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { supabaseAdmin, safeSelect } from "@/lib/supabase-admin";
 import { AgentBadges } from "@/components/AgentTargets";
 
 const CATEGORY_META: Record<string, { label: string; headline: string; description: string }> = {
@@ -73,14 +73,16 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   const meta = CATEGORY_META[category];
   if (!meta) notFound();
 
-  const { data: skills } = await supabaseAdmin
-    .from("skills")
-    .select("id, name, category, platform, agent_targets, author_display_name, quality_score, copy_count, save_count, is_official, created_at")
-    .eq("is_public", true)
-    .eq("category", category)
-    .order("quality_score", { ascending: false, nullsFirst: false })
-    .order("save_count", { ascending: false })
-    .limit(24);
+  const skills = await safeSelect(() =>
+    supabaseAdmin
+      .from("skills")
+      .select("id, name, category, platform, agent_targets, author_display_name, quality_score, copy_count, save_count, is_official, created_at")
+      .eq("is_public", true)
+      .eq("category", category)
+      .order("quality_score", { ascending: false, nullsFirst: false })
+      .order("save_count", { ascending: false })
+      .limit(24)
+  );
 
   const list = skills ?? [];
 

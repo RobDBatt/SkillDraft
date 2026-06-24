@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SkillDraft — Agent mark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --paper: #FAFAF8; --panel: #FFFFFF;
+    --ink: #0E1114; --ink-dim: #5B636B; --ink-faint: #99A0A7;
+    --line: rgba(15,18,20,.12);
+    --accent: #2F6BFF;
+    --bp: #0D2A4C; --cyan: #BFD9FF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; line-height: 1.5; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  svg { display: block; }
+
+  header { padding: 60px 0 22px; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  header h1 { font-size: 38px; letter-spacing: -.03em; font-weight: 700; }
+  header p { color: var(--ink-dim); font-size: 16px; max-width: 58ch; margin-top: 12px; }
+
+  .sec-label { font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-faint); display: flex; align-items: center; gap: 14px; margin: 30px 0 20px; }
+  .sec-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 20px; }
+  .hero .panel { border: 1px solid var(--line); border-radius: 14px; min-height: 320px; display: grid; place-items: center; position: relative; overflow: hidden; }
+  .hero .panel.light { background: #EAF1FF; }
+  .hero .panel.navy { background: var(--bp); }
+  .hero .panel .tag { position: absolute; left: 16px; top: 14px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .hero .panel.navy .tag { color: var(--cyan); }
+  .stack { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .stack .wm { font-size: 30px; font-weight: 700; letter-spacing: -.025em; }
+  .stack .wm i { font-style: normal; font-weight: 600; color: var(--accent); }
+  .panel.navy .stack .wm { color: #fff; }
+  .panel.navy .stack .wm i { color: var(--cyan); }
+
+  /* blink animation */
+  .eye-letter { transform-box: fill-box; transform-origin: center; transition: transform .13s ease, opacity .12s ease; }
+  .eye-lid { opacity: 0; transition: opacity .1s ease; }
+  svg.blink .eye-letter { transform: scaleY(.06); opacity: .25; }
+  svg.blink .eye-lid { opacity: 1; }
+  .ant-dot { animation: antpulse 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes antpulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+  @media (prefers-reduced-motion: reduce) {
+    .eye-letter, .eye-lid { transition: none; }
+    .ant-dot { animation: none; }
+  }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .swatch { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .swatch .face { height: 150px; display: grid; place-items: center; }
+  .face.tint { background: #EEF3FF; } .face.navy { background: var(--bp); } .face.light { background: var(--panel); }
+  .swatch .cap { border-top: 1px solid var(--line); padding: 11px 14px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); display: flex; justify-content: space-between; }
+
+  .lockups { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .lock { border: 1px solid var(--line); border-radius: 10px; min-height: 130px; display: grid; place-items: center; padding: 26px; }
+  .lock.dark { background: var(--bp); }
+  .row { display: inline-flex; align-items: center; gap: 13px; }
+  .row .wm { font-size: 25px; font-weight: 700; letter-spacing: -.025em; }
+  .row .wm i { font-style: normal; font-weight: 600; color: var(--accent); }
+  .lock.dark .wm { color: #fff; } .lock.dark .wm i { color: var(--cyan); }
+
+  .scale-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .scard { border: 1px solid var(--line); border-radius: 10px; padding: 24px 26px; }
+  .scard.dark { background: var(--bp); border-color: rgba(150,196,255,.18); }
+  .scard .h { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 20px; }
+  .scard.dark .h { color: var(--cyan); }
+  .sizes { display: flex; align-items: flex-end; gap: 26px; }
+  .si { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+  .si .px { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); }
+  .scard.dark .si .px { color: var(--cyan); }
+
+  /* wordmark studies */
+  .wm-studies { display: flex; flex-direction: column; gap: 14px; }
+  .wmrow { border: 1px solid var(--line); border-radius: 10px; padding: 26px 28px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: var(--panel); }
+  .wmrow.dark { background: var(--bp); border-color: rgba(150,196,255,.18); }
+  .wmrow .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); text-align: right; max-width: 30ch; }
+  .wmrow.dark .lbl { color: var(--cyan); }
+  .wm-lg { font-size: 36px; font-weight: 700; letter-spacing: -.035em; line-height: 1; color: var(--ink); white-space: nowrap; }
+  .wmrow.dark .wm-lg { color: #fff; }
+  .wm-lg i { font-style: normal; font-weight: 600; color: var(--ink-dim); }
+  .wmrow.dark .wm-lg i { color: var(--cyan); }
+  /* A — two-tone, Draft in accent */
+  .wmA i { color: var(--accent); font-weight: 700; }
+  /* B — diamond i-dot (dotless ı + brand tick) */
+  .dot-i { position: relative; }
+  .dot-i::after { content: ""; position: absolute; left: 50%; top: .2em; width: .15em; height: .15em; background: var(--accent); transform: translateX(-50%) rotate(45deg); border-radius: .02em; }
+  .panel.navy .dot-i::after, .lock.dark .dot-i::after { background: var(--cyan); }
+  .wmB i { color: var(--accent); font-weight: 700; }
+  /* C — drafting baseline rule */
+  .wmC { display: inline-flex; flex-direction: column; gap: 8px; align-items: stretch; }
+  .wmC .rule { position: relative; height: 2px; background: var(--accent); }
+  .wmC .rule::before, .wmC .rule::after { content: ""; position: absolute; top: -3px; width: 2px; height: 8px; background: var(--accent); }
+  .wmC .rule::before { left: 0; } .wmC .rule::after { right: 0; }
+  /* D — mono .md tag */
+  .md-tag { font-family: var(--mono); font-size: .34em; font-weight: 600; letter-spacing: .04em; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 4px; padding: .28em .42em; vertical-align: .62em; margin-left: .26em; }
+  .wmrow.dark .md-tag { color: var(--cyan); border-color: color-mix(in srgb, var(--cyan) 45%, transparent); }
+
+  footer { padding: 44px 0 70px; color: var(--ink-faint); font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; }
+  @media (max-width: 880px) { .hero, .lockups, .scale-rows { grid-template-columns: 1fr; } .grid3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">SkillDraft · Identity — final mark</div>
+    <h1>Meet the SkillDraft agent.</h1>
+    <p>A little bot whose eyes are the work: they blink between <b style="color:var(--accent)">MD</b> and <b style="color:var(--accent)">AI</b> — markdown, written for your agent. Watch the eyes.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">Primary mark — live</div>
+    <div class="hero">
+      <div class="panel light">
+        <span class="tag">◆ eyes: MD ⇄ AI</span>
+        <div class="stack" id="heroLight"></div>
+      </div>
+      <div class="panel navy">
+        <span class="tag">◆ reversed</span>
+        <div class="stack" id="heroNavy"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">The two states</div>
+    <div class="grid3">
+      <div class="swatch"><div class="face tint" id="stMD"></div><div class="cap"><span>State A · MD</span><span>markdown</span></div></div>
+      <div class="swatch"><div class="face tint" id="stAI"></div><div class="cap"><span>State B · AI</span><span>agent</span></div></div>
+      <div class="swatch"><div class="face navy" id="stBlink"></div><div class="cap"><span>Mid-blink</span><span>lids closed</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">Wordmark studies</div>
+    <div class="wm-studies">
+      <div class="wmrow"><span class="wm-lg wmA"><b>Skill</b><i>Draft</i></span><span class="lbl">A · two-tone · Draft in accent, tightened</span></div>
+      <div class="wmrow"><span class="wm-lg wmB">Sk<span class="dot-i">ı</span>ll<i>Draft</i></span><span class="lbl">B · the “i” dot becomes the brand ◆ tick</span></div>
+      <div class="wmrow"><span class="wmC"><span class="wm-lg wmA"><b>Skill</b><i>Draft</i></span><span class="rule"></span></span><span class="lbl">C · drafting baseline with end ticks</span></div>
+      <div class="wmrow dark"><span class="wm-lg wmA"><b>Skill</b><i>Draft</i><span class="md-tag">.md</span></span><span class="lbl">D · mono .md tag, reversed</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">Lockups</div>
+    <div class="lockups">
+      <div class="lock"><div class="row" id="lkL"></div></div>
+      <div class="lock dark"><div class="row" id="lkD"></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-label">Holds up at favicon size</div>
+    <div class="scale-rows">
+      <div class="scard"><div class="h">Light</div><div class="sizes" id="scL"></div></div>
+      <div class="scard dark"><div class="h">Navy</div><div class="sizes" id="scD"></div></div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">SKILLDRAFT — AGENT MARK · R1</div></footer>
+
+<script>
+  // Build the bot. `anim` adds ids/lids for the blink loop.
+  function bot(size, color, opts) {
+    opts = opts || {};
+    var eyeL = opts.eyeL || 'M', eyeR = opts.eyeR || 'D';
+    var ls = opts.size ? opts.size : 9;
+    var lidL = '<line class="eye-lid" x1="20" y1="33.5" x2="27" y2="33.5"/>';
+    var lidR = '<line class="eye-lid" x1="37" y1="33.5" x2="44" y2="33.5"/>';
+    var letterAttrs = 'text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="'+ls+'" fill="'+color+'" stroke="none"';
+    return '<svg class="bot'+(opts.blink?' blink':'')+'" width="'+size+'" height="'+size+'" viewBox="0 0 64 64">'
+      + '<g fill="none" stroke="'+color+'" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">'
+      + '<path d="M32 14 V8"/><circle class="ant-dot" cx="32" cy="6" r="2.4" fill="'+color+'"/>'
+      + '<path d="M12 30 H8 V38 H12"/><path d="M52 30 H56 V38 H52"/>'
+      + '<rect x="12" y="16" width="40" height="38" rx="10"/>'
+      + '<rect x="18" y="28" width="11" height="11" rx="2.5"/>'
+      + '<rect x="35" y="28" width="11" height="11" rx="2.5"/>'
+      + '<text class="eye-letter eL" x="23.5" y="36.7" '+letterAttrs+'>'+eyeL+'</text>'
+      + '<text class="eye-letter eR" x="40.5" y="36.7" '+letterAttrs+'>'+eyeR+'</text>'
+      + (opts.anim ? lidL + lidR : '')
+      + '<path d="M26 47 H38" stroke-width="2"/>'
+      + '</g></svg>';
+  }
+
+  // static instances
+  document.getElementById('stMD').innerHTML    = bot(86, '#2F6BFF', { eyeL:'M', eyeR:'D' });
+  document.getElementById('stAI').innerHTML    = bot(86, '#2F6BFF', { eyeL:'A', eyeR:'I' });
+  document.getElementById('stBlink').innerHTML = bot(86, '#CFE4FF', { anim:true, blink:true });
+  document.getElementById('lkL').innerHTML = bot(44, '#2F6BFF') + '<span class="wm">Sk<span class="dot-i">ı</span>ll<i>Draft</i></span>';
+  document.getElementById('lkD').innerHTML = bot(44, '#CFE4FF') + '<span class="wm">Sk<span class="dot-i">ı</span>ll<i>Draft</i></span>';
+  [48,32,24,16].forEach(function (s) {
+    document.getElementById('scL').innerHTML += '<div class="si">' + bot(s, '#2F6BFF') + '<span class="px">'+s+'</span></div>';
+    document.getElementById('scD').innerHTML += '<div class="si">' + bot(s, '#CFE4FF') + '<span class="px">'+s+'</span></div>';
+  });
+
+  // animated hero instances
+  document.getElementById('heroLight').innerHTML = bot(150, '#2F6BFF', { anim:true }) + '<span class="wm">Sk<span class="dot-i">ı</span>ll<i>Draft</i></span>';
+  document.getElementById('heroNavy').innerHTML  = bot(150, '#CFE4FF', { anim:true }) + '<span class="wm">Sk<span class="dot-i">ı</span>ll<i>Draft</i></span>';
+
+  // blink loop: close lids, swap eyes, open — alternating MD / AI
+  (function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var svgs = [].slice.call(document.querySelectorAll('#heroLight .bot, #heroNavy .bot'));
+    var states = [['M','D'], ['A','I']];
+    var i = 0;
+    function blink() {
+      svgs.forEach(function (s) { s.classList.add('blink'); });
+      setTimeout(function () {
+        i ^= 1;
+        svgs.forEach(function (s) {
+          s.querySelector('.eL').textContent = states[i][0];
+          s.querySelector('.eR').textContent = states[i][1];
+        });
+      }, 140);
+      setTimeout(function () { svgs.forEach(function (s) { s.classList.remove('blink'); }); }, 290);
+    }
+    setInterval(blink, 2200);
+  })();
+</script>
+
+</body>
+</html>

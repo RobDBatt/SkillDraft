@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>document.documentElement.classList.add('js');</script>
+<title>SkillDraft — Quality-scored SKILL.md files for every AI agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="skilldraft.css?v=3" />
+<link rel="icon" type="image/svg+xml" href="skilldraft-favicon.svg" />
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top">
+      <svg class="bot" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M32 14 V8"></path><circle cx="32" cy="6" r="2.4" fill="currentColor"></circle><path d="M12 30 H8 V38 H12"></path><path d="M52 30 H56 V38 H52"></path><rect x="12" y="16" width="40" height="38" rx="10"></rect><rect x="18" y="28" width="11" height="11" rx="2.5"></rect><rect x="35" y="28" width="11" height="11" rx="2.5"></rect><text class="eye-letter eL" x="23.5" y="36.7" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="9" fill="currentColor" stroke="none">M</text><text class="eye-letter eR" x="40.5" y="36.7" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="9" fill="currentColor" stroke="none">D</text><line class="eye-lid" x1="20" y1="33.5" x2="27" y2="33.5"></line><line class="eye-lid" x1="37" y1="33.5" x2="44" y2="33.5"></line><path d="M26 47 H38" stroke-width="2"></path></g></svg><span class="wm">Sk<span class="dot-i">ı</span>ll<i>Draft</i></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#why">Explore</a>
+      <a href="#how">Pricing</a>
+      <a href="#why">Improve</a>
+      <a href="#how">Collections</a>
+      <a href="#install">Install</a>
+      <a href="#why">FAQ</a>
+    </nav>
+    <div class="nav-spacer"></div>
+    <div class="nav-cta">
+      <a class="btn-quiet btn" href="#why">Sign in</a>
+      <a class="btn btn-primary" href="#start">Generate <span class="arr">→</span></a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="ambient" aria-hidden="true">
+    <span class="tok acc" style="left:6%;  top:16%; --sz:15px; --op:.16; --dur:27s; --delay:-3s;  --dx:8px;">◇ scored</span>
+    <span class="tok"     style="left:21%; top:64%; --sz:13px; --op:.10; --dur:31s; --delay:-12s; --dx:-6px;">## Hard stops</span>
+    <span class="tok"     style="left:13%; top:38%; --sz:13px; --op:.09; --dur:24s; --delay:-6s;  --dx:5px;">name: ts-code-review</span>
+    <span class="tok acc" style="left:34%; top:24%; --sz:22px; --op:.13; --dur:29s; --delay:-18s; --dx:-7px;">❖</span>
+    <span class="tok"     style="left:44%; top:72%; --sz:13px; --op:.08; --dur:33s; --delay:-9s;  --dx:6px;">npx skilldraft install</span>
+    <span class="tok"     style="left:58%; top:14%; --sz:13px; --op:.10; --dur:26s; --delay:-21s; --dx:-5px;">[ ] verified</span>
+    <span class="tok acc" style="left:71%; top:58%; --sz:15px; --op:.15; --dur:28s; --delay:-4s;  --dx:7px;">✓ Cursor</span>
+    <span class="tok"     style="left:64%; top:80%; --sz:13px; --op:.08; --dur:35s; --delay:-15s; --dx:-6px;">description:</span>
+    <span class="tok"     style="left:83%; top:30%; --sz:14px; --op:.09; --dur:30s; --delay:-7s;  --dx:5px;">◈ scanned</span>
+    <span class="tok"     style="left:90%; top:66%; --sz:13px; --op:.07; --dur:32s; --delay:-19s; --dx:-5px;">--- yaml ---</span>
+    <span class="tok acc" style="left:48%; top:42%; --sz:13px; --op:.11; --dur:25s; --delay:-11s; --dx:6px;">◎ install</span>
+    <span class="tok"     style="left:28%; top:88%; --sz:13px; --op:.07; --dur:34s; --delay:-2s;  --dx:7px;">## When NOT to use</span>
+    <span class="tok"     style="left:77%; top:18%; --sz:13px; --op:.08; --dur:27s; --delay:-23s; --dx:-7px;">▤ SKILL.md</span>
+    <span class="tok"     style="left:6%;  top:84%; --sz:13px; --op:.08; --dur:29s; --delay:-14s; --dx:6px;">anti-patterns</span>
+    <span class="tok acc" style="left:18%; top:8%;  --sz:13px; --op:.12; --dur:30s; --delay:-8s;  --dx:-6px;">✓ Claude Code</span>
+    <span class="tok"     style="left:40%; top:54%; --sz:13px; --op:.08; --dur:33s; --delay:-20s; --dx:5px;">use when: "review this"</span>
+    <span class="tok"     style="left:55%; top:25%; --sz:19px; --op:.11; --dur:28s; --delay:-5s;  --dx:-5px;">✦</span>
+    <span class="tok acc" style="left:30%; top:60%; --sz:21px; --op:.13; --dur:31s; --delay:-16s; --dx:6px;">⬢</span>
+    <span class="tok"     style="left:33%; top:78%; --sz:13px; --op:.08; --dur:26s; --delay:-10s; --dx:-6px;">strict mode</span>
+    <span class="tok"     style="left:70%; top:36%; --sz:13px; --op:.07; --dur:34s; --delay:-24s; --dx:7px;">✓ Windsurf</span>
+  </div>
+  <div class="wrap hero-stack">
+    <!-- top: aligned pipeline row on a connecting line -->
+    <div class="hero-pipe" data-reveal style="--d:.06s">
+      <div class="pipe-stages">
+        <span class="pipe-flow" aria-hidden="true"></span>
+        <div class="stage-col s1">
+          <span class="sp"><i>◆</i> 1 · pick</span>
+          <div class="float-card pc-cat">
+            <div class="fc-head">
+              <span class="fc-file"><span class="ico">▤</span> category</span>
+              <span class="fc-chip">Dev ✓</span>
+            </div>
+            <div class="fc-body">
+              <div class="cat-list">
+                <span class="cat sel">Development</span>
+                <span class="cat">Frontend</span>
+                <span class="cat">Content</span>
+                <span class="cat">Data &amp; ML</span>
+                <span class="cat">Project</span>
+                <span class="cat">Custom</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="stage-col s2">
+          <span class="sp"><i>◆</i> 2 · answer</span>
+          <div class="float-card pc-q">
+            <div class="fc-head">
+              <span class="fc-file"><span class="ico">▤</span> answers</span>
+              <span class="fc-chip">5 / 5</span>
+            </div>
+            <div class="fc-body">
+              <div class="fcq-row">› Which dirs are off-limits?</div>
+              <div class="fcq-row">› Named or default exports?</div>
+              <div class="fcq-row sel">› Commit policy <b>never to main</b> ✓</div>
+              <div class="fcq-row sel">› Never modify <b>__tests__/</b> ✓</div>
+              <div class="fcq-row sel">› Strict null checks <b>on</b> ✓</div>
+            </div>
+          </div>
+        </div>
+        <div class="stage-col s3">
+          <span class="sp"><i>◆</i> 3 · generate</span>
+          <div class="code-card pc-skill">
+            <span class="scan" aria-hidden="true"></span>
+            <div class="fc-head">
+              <span class="fc-file"><span class="ico">▤</span> SKILL.md</span>
+              <span class="fc-chip score">92 / 100</span>
+            </div>
+            <div class="code-body"><span class="tk-com">---</span>
+<span class="tk-key">name</span>: ts-code-review
+<span class="tk-key">description</span>: Reviews TS &amp; Next.js —
+  type safety, naming, commit rules.
+<span class="tk-com">---</span>
+
+<span class="tk-h">## Hard stops</span>
+<span class="tk-bul">-</span> Never modify <span class="tk-bad">__tests__/</span> · never commit to main
+
+<span class="tk-h">## Verification</span>
+<span class="tk-bul">-</span> <span class="tk-chk">[ ]</span> No implicit any · named exports only<span class="type-caret"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- lead: headline below the pipeline -->
+    <div class="hero-lead">
+      <div class="hero-eyebrows" data-reveal style="--d:.02s">
+        <span class="eyebrow"><span class="tick">◆</span> SKILL.md generator</span>
+        <span class="pill"><span class="dot"></span> Security scanned</span>
+      </div>
+
+      <h1 data-reveal style="--d:.08s">
+        Your agent.<br />
+        Your rules.<br />
+        <span class="accent">Every session.</span>
+      </h1>
+
+      <p class="hero-sub" data-reveal style="--d:.16s">
+        Answer a few targeted questions about your workflow. Get a
+        production-ready, quality-scored <span class="mono">SKILL.md</span>
+        for every major AI agent.
+      </p>
+
+      <div class="hero-actions" data-reveal style="--d:.22s">
+        <a class="btn btn-primary" href="#start">Build a Skill <span class="arr">→</span></a>
+        <a class="btn btn-ghost" href="#why">Browse community <span class="arr">→</span></a>
+      </div>
+
+      <div class="cmd" data-reveal style="--d:.28s">
+        <span class="prompt">$</span>
+        <span>npx skilldraft install &lt;id&gt;</span>
+        <span class="cmd-note">auto-installs to every detected agent</span>
+        <span class="copy" title="Copy" data-copy="npx skilldraft install &lt;id&gt;">⧉</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ COMMUNITY MARQUEE ============================ -->
+<section class="community" data-screen-label="Community">
+  <div class="wrap community-head">
+    <div class="ch-l">
+      <span class="section-label">Fresh from the community</span>
+      <h3>Skills people are shipping right now.</h3>
+    </div>
+    <a href="#why">Browse all community skills <span>→</span></a>
+  </div>
+
+  <div class="marquee">
+    <div class="marquee-track">
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">ts-code-review</span><span class="sc-score">92</span></div><div class="sc-meta"><span class="sc-cat">Development</span><span class="sc-by">@arjun</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">sql-guardrails</span><span class="sc-score">95</span></div><div class="sc-meta"><span class="sc-cat">Data</span><span class="sc-by">@mira</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">tailwind-audit</span><span class="sc-score">90</span></div><div class="sc-meta"><span class="sc-cat">Frontend</span><span class="sc-by">@lena</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">pr-summarizer</span><span class="sc-score">88</span></div><div class="sc-meta"><span class="sc-cat">Project</span><span class="sc-by">@deniz</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">prompt-linter</span><span class="sc-score">93</span></div><div class="sc-meta"><span class="sc-cat">Custom</span><span class="sc-by">@kai</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">a11y-checker</span><span class="sc-score">91</span></div><div class="sc-meta"><span class="sc-cat">Frontend</span><span class="sc-by">@sam</span></div></div>
+    </div>
+  </div>
+
+  <div class="marquee rev">
+    <div class="marquee-track">
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">release-notes</span><span class="sc-score">88</span></div><div class="sc-meta"><span class="sc-cat">Project</span><span class="sc-by">@wei</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">api-contract</span><span class="sc-score">89</span></div><div class="sc-meta"><span class="sc-cat">Development</span><span class="sc-by">@noa</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">design-tokens</span><span class="sc-score">94</span></div><div class="sc-meta"><span class="sc-cat">Frontend</span><span class="sc-by">@ivy</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">migration-runner</span><span class="sc-score">86</span></div><div class="sc-meta"><span class="sc-cat">Data</span><span class="sc-by">@tom</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">changelog-writer</span><span class="sc-score">87</span></div><div class="sc-meta"><span class="sc-cat">Content</span><span class="sc-by">@rae</span></div></div>
+      <div class="skill-card"><div class="sc-top"><span class="sc-name">test-scaffold</span><span class="sc-score">90</span></div><div class="sc-meta"><span class="sc-cat">Development</span><span class="sc-by">@os</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TRUST STRIP ============================ -->
+<div class="strip">
+  <div class="wrap strip-inner">
+    <span class="si"><span class="g">◎</span> Built on the Anthropic API</span>
+    <span class="sep">/</span>
+    <span class="si"><span class="g">◈</span> Security scanned before publishing</span>
+    <span class="sep">/</span>
+    <span class="si"><span class="g">◇</span> Scored on 7 dimensions</span>
+    <span class="sep">/</span>
+    <span class="si"><span class="g">◻</span> agentskills.io open standard</span>
+    <a href="#why">Community skills <span>→</span></a>
+  </div>
+</div>
+
+<!-- ============================ COMPARISON ============================ -->
+<section class="compare" id="compare" data-screen-label="Comparison">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="section-label">The difference</span>
+      <h2>Most instructions get ignored.<br />A skill doesn't.</h2>
+      <p>A one-line ask your agent forgets by the third message becomes a structured, scored, scanned SKILL.md it follows every session.</p>
+    </div>
+
+    <div class="pipeline">
+      <span class="flow-dot" aria-hidden="true"></span>
+      <!-- input: vague prose -->
+      <div class="stage" data-reveal style="--d:.04s">
+        <span class="stage-tag bad">✕ vague prose</span>
+        <div class="note-card">
+          <span class="ignored">ignored</span>
+          <p class="q">"be careful with the tests, use good naming, and please don't break anything this time"</p>
+          <span class="nm">— pasted into chat · forgotten by msg #3</span>
+        </div>
+      </div>
+
+      <!-- transform steps -->
+      <div class="flow" data-reveal style="--d:.12s">
+        <span class="fl-pill"><i>◆</i> structure</span>
+        <span class="fl-seg"></span>
+        <span class="fl-pill"><i>◆</i> score</span>
+        <span class="fl-seg"></span>
+        <span class="fl-pill"><i>◆</i> scan</span>
+        <span class="fl-arrow">→</span>
+      </div>
+
+      <!-- output: scored skill -->
+      <div class="stage" data-reveal style="--d:.18s">
+        <span class="stage-tag good">✓ production-ready</span>
+        <div class="code-card mini">
+          <div class="code-head">
+            <span class="code-dots"><i></i><i></i><i></i></span>
+            <span class="code-file"><span class="ico">▤</span> ts-code-review.md</span>
+            <span class="score">92 / 100</span>
+          </div>
+          <div class="code-body"><span class="tk-com">---</span>
+<span class="tk-key">name</span>: ts-code-review
+<span class="tk-key">description</span>: Reviews TS &amp; Next.js — type
+  safety, naming, rules. <span class="tk-str">Use when</span>: "review
+  this", "check PR". Not for greenfield.
+<span class="tk-com">---</span>
+<span class="tk-h">## Hard stops</span>
+<span class="tk-bul">-</span> Never modify <span class="tk-bad">__tests__/</span> · never commit to main
+<span class="tk-h">## Verification</span>
+<span class="tk-bul">-</span> <span class="tk-chk">[ ]</span> No implicit any · named exports only</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annot" data-reveal>input: <b>1 line</b> → output: <b>7 sections</b> · hard stops · anti-patterns · checklist · scored <b>92/100</b></div>
+
+    <div class="agent-wall" data-reveal>
+      <span class="aw-label">One file · written natively for every agent</span>
+      <div class="aw-marks">
+        <span>Claude Code</span>
+        <span>Cursor</span>
+        <span>Windsurf</span>
+        <span>Codex CLI</span>
+        <span>Gemini CLI</span>
+        <span>GitHub Copilot</span>
+        <span>ChatGPT</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ WHY ============================ -->
+<section class="section" id="why">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="section-label">Why SkillDraft</span>
+      <h2>Skills that actually work.</h2>
+      <p>Most agent instructions are vague prose that the model quietly ignores. SkillDraft enforces structure, then proves it.</p>
+    </div>
+
+    <div class="features">
+      <div class="feature" data-reveal style="--d:.04s">
+        <span class="fnum">01</span>
+        <div class="ficon">◇</div>
+        <h3>Quality scored</h3>
+        <p>Every skill is rated 0–100 across seven dimensions — description density, why-annotations, when-not-to-use, output template, hard stops, anti-patterns, and a verification checklist. Nothing vague ships.</p>
+      </div>
+      <div class="feature" data-reveal style="--d:.12s">
+        <span class="fnum">02</span>
+        <div class="ficon">◈</div>
+        <h3>Security scanned</h3>
+        <p>Checked for prompt injection, dangerous shell commands, data-exfiltration patterns, and obfuscation before anything is published. Community skills you can actually trust.</p>
+      </div>
+      <div class="feature" data-reveal style="--d:.20s">
+        <span class="fnum">03</span>
+        <div class="ficon">◎</div>
+        <h3>One-command install</h3>
+        <p>The CLI auto-detects which AI agents you have installed and writes the skill to each. Claude Code, Cursor, Windsurf, Codex CLI — one command covers all of them.</p>
+      </div>
+    </div>
+
+    <!-- install band -->
+    <div class="band" id="install" data-reveal>
+      <div class="band-copy">
+        <span class="section-label">Install</span>
+        <h3 style="margin-top:14px">Any community skill, one command.</h3>
+        <p>Auto-detects Claude Code, Cursor, Windsurf, Codex CLI, and Gemini CLI — then writes the file to each agent directory automatically. No copy-paste, no wrong paths.</p>
+      </div>
+      <div class="band-term">
+        <div class="tbar"><i></i> zsh — skilldraft</div>
+        <div class="tbody"><span class="pr">$</span> <span class="wt">npx skilldraft install ts-code-review</span>
+<span class="dm">› detecting agents…</span>
+<span class="ok">✓</span> Claude Code      <span class="dm">~/.claude/skills/</span>
+<span class="ok">✓</span> Cursor           <span class="dm">~/.cursor/rules/</span>
+<span class="ok">✓</span> Windsurf         <span class="dm">~/.windsurf/</span>
+<span class="ok">✓</span> Codex CLI        <span class="dm">~/.codex/</span>
+<span class="ok">✓</span> <span class="wt">installed to 4 agents · 92/100</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ HOW ============================ -->
+<section class="section" id="how" style="padding-top:8px">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="section-label">The process</span>
+      <h2>How it works.</h2>
+      <p>Five steps, under two minutes. The specificity of the questions is what separates production-ready output from generic boilerplate.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step" data-reveal style="--d:.02s">
+        <span class="snum">01</span>
+        <h4>Choose a category</h4>
+        <p>Six workflow types — Development, Frontend, Content, Data, Project, or Custom. Each has its own tailored question set.</p>
+      </div>
+      <div class="step" data-reveal style="--d:.08s">
+        <span class="snum">02</span>
+        <h4>Pick your agent</h4>
+        <p>Claude Code, Cursor, Copilot, ChatGPT, Windsurf, Codex, Gemini, or Universal. Platform drives format, path, and triggers.</p>
+      </div>
+      <div class="step" data-reveal style="--d:.14s">
+        <span class="snum">03</span>
+        <h4>Answer the questions</h4>
+        <p>Three to five domain-specific questions — no generic text boxes. Specificity is what makes the output production-ready.</p>
+      </div>
+      <div class="step" data-reveal style="--d:.20s">
+        <span class="snum">04</span>
+        <h4>Watch it generate</h4>
+        <p>Assembled in real time via the Anthropic API — instructions, hard stops, anti-patterns, checklist — in about ten seconds.</p>
+      </div>
+      <div class="step" data-reveal style="--d:.26s">
+        <span class="snum">05</span>
+        <h4>Install or copy</h4>
+        <p>Drop it in your skills folder, or run <span class="mono">skilldraft install</span> to write it to every detected agent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FINAL CTA ============================ -->
+<section class="cta-final" id="start">
+  <div class="wrap inner">
+    <span class="section-label" data-reveal>Get started</span>
+    <h2 data-reveal style="--d:.06s">Stop re-explaining yourself to your agent.</h2>
+    <p data-reveal style="--d:.12s">Build a SKILL.md in under two minutes. Free, no login required — save and share with an account.</p>
+    <div class="hero-actions" data-reveal style="--d:.18s">
+      <a class="btn btn-primary" href="#top">Build a Skill <span class="arr">→</span></a>
+      <a class="btn btn-ghost" href="#why">Browse skills <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <a class="logo" href="#top"><svg class="bot" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M32 14 V8"></path><circle cx="32" cy="6" r="2.4" fill="currentColor"></circle><path d="M12 30 H8 V38 H12"></path><path d="M52 30 H56 V38 H52"></path><rect x="12" y="16" width="40" height="38" rx="10"></rect><rect x="18" y="28" width="11" height="11" rx="2.5"></rect><rect x="35" y="28" width="11" height="11" rx="2.5"></rect><text class="eye-letter eL" x="23.5" y="36.7" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="9" fill="currentColor" stroke="none">M</text><text class="eye-letter eR" x="40.5" y="36.7" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="9" fill="currentColor" stroke="none">D</text><line class="eye-lid" x1="20" y1="33.5" x2="27" y2="33.5"></line><line class="eye-lid" x1="37" y1="33.5" x2="44" y2="33.5"></line><path d="M26 47 H38" stroke-width="2"></path></g></svg><span class="wm">Sk<span class="dot-i">ı</span>ll<i>Draft</i></span></a>
+    <nav class="footer-links">
+      <a href="#start">Generate</a>
+      <a href="#why">Improve</a>
+      <a href="#why">Explore</a>
+      <a href="#how">Collections</a>
+      <a href="#how">Pricing</a>
+      <a href="#install">Install</a>
+      <a href="#why">FAQ</a>
+    </nav>
+    <div class="footer-meta">
+      <span>© 2026 SkillDraft.io</span>
+      <span>agentskills.io standard</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // entrance: reveal as sections scroll into view (hero reveals on load)
+  (function () {
+    var els = document.querySelectorAll('[data-reveal]');
+    if (!('IntersectionObserver' in window)) { document.documentElement.classList.add('force-visible'); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    els.forEach(function (el) { io.observe(el); });
+    // capture-proof floor: snap only ALREADY-VISIBLE reveals, so below-the-fold
+    // sections still animate as you scroll to them
+    setTimeout(function () {
+      els.forEach(function (el) {
+        if (!el.classList.contains('in') && el.getBoundingClientRect().top < innerHeight * 0.92) el.classList.add('shown');
+      });
+    }, 2000);
+  })();
+
+  // score count-up when a card enters view
+  (function () {
+    function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    function run(el) {
+      var m = el.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+      if (!m) return;
+      var target = +m[1], total = m[2], dur = 1050, t0 = 0;
+      function set(v) { el.textContent = v + ' / ' + total; }
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        set(Math.round(ease(p) * target));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      // guarantee the final value even if rAF is throttled/frozen
+      setTimeout(function () { set(target); }, dur + 250);
+    }
+    if (!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.score').forEach(function (el) { io.observe(el); });
+  })();
+
+  // seamless marquee loop: duplicate each track's contents
+  document.querySelectorAll('.marquee-track').forEach(function (t) { t.innerHTML += t.innerHTML; });
+
+  // logo bot: blink the eyes between MD and AI (nav + footer)
+  (function () {
+    var bots = [].slice.call(document.querySelectorAll('.logo .bot'));
+    if (!bots.length) return;
+    var states = [['M', 'D'], ['A', 'I']], i = 0;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function blink() {
+      bots.forEach(function (b) { b.classList.add('blink'); });
+      setTimeout(function () {
+        i ^= 1;
+        bots.forEach(function (b) {
+          b.querySelector('.eL').textContent = states[i][0];
+          b.querySelector('.eR').textContent = states[i][1];
+        });
+      }, 140);
+      setTimeout(function () { bots.forEach(function (b) { b.classList.remove('blink'); }); }, 290);
+    }
+    if (!reduce) setInterval(blink, 3200);
+    document.querySelectorAll('.logo').forEach(function (l) { l.addEventListener('mouseenter', blink); });
+  })();
+
+  // copy-to-clipboard for inline command chips
+  document.querySelectorAll('[data-copy]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var t = el.getAttribute('data-copy').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+      navigator.clipboard && navigator.clipboard.writeText(t);
+      var old = el.textContent; el.textContent = '✓';
+      setTimeout(function(){ el.textContent = old; }, 1200);
+    });
+  });
+</script>
+
+<!-- ============================ TWEAKS ============================ -->
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "light",
+  "accent": "#4D9CFF",
+  "corners": "sharp",
+  "bg": "glow"
+}/*EDITMODE-END*/;
+
+const ON_ACCENT = { "#5BE08C": "#06210F", "#8B7CF6": "#ffffff", "#4D9CFF": "#ffffff", "#F5A623": "#2a1800" };
+
+function TweaksApp() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  React.useEffect(() => {
+    const r = document.documentElement;
+    r.setAttribute('data-theme', t.theme);
+    r.setAttribute('data-corners', t.corners);
+    r.setAttribute('data-bg', t.bg);
+    r.style.setProperty('--accent', t.accent);
+    r.style.setProperty('--on-accent', ON_ACCENT[t.accent] || '#06210F');
+  }, [t.theme, t.accent, t.corners, t.bg]);
+
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection label="Theme" />
+      <TweakSelect label="Mode" value={t.theme} options={['dark', 'light', 'paper', 'carbon']}
+                  onChange={(v) => setTweak('theme', v)} />
+      <TweakColor label="Accent" value={t.accent}
+                  options={['#5BE08C', '#4D9CFF', '#8B7CF6', '#F5A623']}
+                  onChange={(v) => setTweak('accent', v)} />
+      <TweakSection label="Surfaces" />
+      <TweakRadio label="Corners" value={t.corners} options={['rounded', 'sharp']}
+                  onChange={(v) => setTweak('corners', v)} />
+      <TweakRadio label="Backdrop" value={t.bg} options={['clean', 'glow', 'live', 'grain']}
+                  onChange={(v) => setTweak('bg', v)} />
+    </TweaksPanel>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweaksApp />);
+</script>
+
+</body>
+</html>

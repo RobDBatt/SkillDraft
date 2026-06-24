@@ -1,7 +1,30 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2026-05-27.dahlia",
+// Lazily instantiated via a Proxy: the Stripe client is built on first property
+// access, not at module load. This keeps `next build` (page-data collection)
+// from crashing when STRIPE_SECRET_KEY is absent — e.g. local builds without
+// production secrets. Only routes that actually call Stripe will throw, and
+// only if the key is genuinely missing at runtime.
+let client: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (client) return client;
+
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error("stripe: STRIPE_SECRET_KEY must be set");
+  }
+
+  client = new Stripe(key, { apiVersion: "2026-05-27.dahlia" });
+  return client;
+}
+
+export const stripe = new Proxy({} as Stripe, {
+  get(_target, prop) {
+    const c = getStripe();
+    const value = Reflect.get(c, prop, c);
+    return typeof value === "function" ? value.bind(c) : value;
+  },
 });
 
 // ── Credit pack definitions ───────────────────────────────────────────────────
