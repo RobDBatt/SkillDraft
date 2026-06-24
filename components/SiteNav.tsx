@@ -10,6 +10,7 @@ export function SiteNav() {
 
         <nav className="nav-links">
           <Link href="/explore">Explore</Link>
+          <Link href="/verify">Verify</Link>
           <Link href="/pricing">Pricing</Link>
           <Link href="/improve">Improve</Link>
           <Link href="/collections">Collections</Link>

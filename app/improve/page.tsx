@@ -26,20 +26,30 @@ function ImprovePageInner() {
   const [forkName,     setForkName]     = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
-  // Pre-fill from ?from=<skill-id> (fork flow)
+  // Pre-fill from ?from=<skill-id> (fork flow), or from a /verify handoff.
   useEffect(() => {
     const fromId = searchParams.get("from");
-    if (!fromId) return;
-    fetch(`/api/skills/${fromId}`)
-      .then(r => r.ok ? r.json() : null)
-      .then(data => {
-        if (data?.content) {
-          setInputText(data.content.slice(0, MAX_INPUT));
-          setForkName(data.name ?? null);
-          if (data.agent_targets?.length) setAgentTargets(data.agent_targets);
-        }
-      })
-      .catch(() => null);
+    if (fromId) {
+      fetch(`/api/skills/${fromId}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data?.content) {
+            setInputText(data.content.slice(0, MAX_INPUT));
+            setForkName(data.name ?? null);
+            if (data.agent_targets?.length) setAgentTargets(data.agent_targets);
+          }
+        })
+        .catch(() => null);
+      return;
+    }
+    // Handoff from /verify's "Improve this skill →" CTA.
+    try {
+      const stashed = sessionStorage.getItem("skilldraft-verify-input");
+      if (stashed) {
+        setInputText(stashed.slice(0, MAX_INPUT));
+        sessionStorage.removeItem("skilldraft-verify-input");
+      }
+    } catch {}
   }, [searchParams]);
 
   // Split accumulated stream on the delimiter
