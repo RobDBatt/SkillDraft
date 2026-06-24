@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SkillDraft
 
-## Getting Started
+SkillDraft generates quality-scored `SKILL.md` files for AI coding agents (Claude Code, Cursor, Windsurf, and others). Pick a category, answer a few questions, and get a security-scanned, scored skill you can install in one command — plus a public gallery to explore, save, and remix community skills.
 
-First, run the development server:
+Live at **[skilldraft.io](https://skilldraft.io)**.
+
+## Stack
+
+- **[Next.js 16](https://nextjs.org)** (App Router, Turbopack) + **React 19** + **TypeScript**
+- **[Tailwind CSS v4](https://tailwindcss.com)**
+- **[Supabase](https://supabase.com)** — auth (magic link) + Postgres
+- **[Stripe](https://stripe.com)** — credits + payments
+- **[Anthropic SDK](https://docs.claude.com)** — skill generation & improvement
+- Deployed on **[Vercel](https://vercel.com)**
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env.local` with the following. Public (`NEXT_PUBLIC_*`) vars are exposed to the browser; the rest are server-only.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable | Required | Used for |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | Supabase client (browser auth/queries) |
+| `SUPABASE_SERVICE_ROLE_KEY` | server | Admin client — bypasses RLS in API routes & server components |
+| `ANTHROPIC_API_KEY` | server | Generating and improving skills |
+| `STRIPE_SECRET_KEY` | server | Checkout & credit purchases |
+| `STRIPE_WEBHOOK_SECRET` | server | Verifying Stripe webhook signatures |
+| `NEXT_PUBLIC_SITE_URL` | optional | Absolute URLs (sitemap, OG, redirects); falls back to the deploy URL |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> The server clients (`lib/supabase-admin.ts`, `lib/stripe.ts`) are lazily
+> instantiated, so a build without the server secrets still succeeds — those
+> keys are only required at runtime when a route actually uses them. Read-only
+> public pages degrade to an empty state if Supabase is unreachable.
 
-## Deploy on Vercel
+## Project layout
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/
+  page.tsx              Marketing homepage (animated Pick → Answer → Generate pipeline)
+  generate/             Skill generation wizard
+  improve/              Skill improver
+  explore/              Public gallery + SEO category (/c) and platform (/for) pages
+  collections/          Browse / create / view skill collections
+  teams/                Team & org management
+  pricing/              Credits + Stripe checkout
+  install/ · faq/       Static content pages
+  auth/                 Supabase magic-link auth
+  api/
+    generate · improve  Anthropic streaming endpoints
+    skills/             Public fetch / search / share (used by the CLI)
+    stripe/             Checkout + webhook
+components/             UI (Logo, SiteNav, Pipeline pieces, forms, …)
+lib/                    Clients, prompts, scoring, security scan, rate limiting
+cli/                    `npx skilldraft` — install / search / list skills
+design/                 Design references (homepage prototype, brand spec, build guide)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## CLI
+
+Skills published to the gallery can be installed from the terminal:
+
+```bash
+npx skilldraft install <skill-id>
+```
+
+See `cli/` and the in-app `/install` page for the full command set.
+
+## Design references
+
+The original high-fidelity design prototype and brand spec live in [`design/`](./design):
+
+- `SkillDraft Homepage.html` — homepage prototype (structure + motion)
+- `SkillDraft Logo.html` — brand / logo spec sheet
+- `skilldraft.css` — token-driven design system
+- `HOMEPAGE_HANDOFF.md` — full marketing-homepage design handoff
+- `NEXTJS_GUIDE.md` — Next.js implementation guide for the homepage
+
+These are reference material, not shipped assets — the live UI is implemented in `app/` and `components/`.
