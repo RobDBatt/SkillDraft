@@ -43,6 +43,7 @@ Create a `.env.local` with the following. Public (`NEXT_PUBLIC_*`) vars are expo
 | `ANTHROPIC_API_KEY` | server | Generating and improving skills |
 | `STRIPE_SECRET_KEY` | server | Checkout & credit purchases |
 | `STRIPE_WEBHOOK_SECRET` | server | Verifying Stripe webhook signatures |
+| `ADMIN_EMAILS` | server | Comma-separated allowlist for the internal `/stats` dashboard. Fails closed — unset means no one can access it. |
 | `NEXT_PUBLIC_SITE_URL` | optional | Absolute URLs (sitemap, OG, redirects); falls back to the deploy URL |
 
 > The server clients (`lib/supabase-admin.ts`, `lib/stripe.ts`) are lazily

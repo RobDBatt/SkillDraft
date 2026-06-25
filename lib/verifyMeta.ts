@@ -21,3 +21,14 @@ export function lengthBand(n: number): string {
   if (n < 10_000) return "2k-10k";
   return "10k+";
 }
+
+/** Aggregated /verify funnel stats returned by /api/stats and rendered by /stats. */
+export interface VerifyStats {
+  total: number;
+  passed: number;
+  web: number;
+  api: number;
+  last7d: number;
+  bands: Record<string, number>;
+  flags: Record<string, number>;
+}
