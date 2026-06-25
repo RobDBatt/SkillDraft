@@ -12,6 +12,7 @@ export default function robots(): MetadataRoute.Robots {
           "/skills",
           "/teams",
           "/collections/new",
+          "/stats",
           "/api/",
         ],
       },

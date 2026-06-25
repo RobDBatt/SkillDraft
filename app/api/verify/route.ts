@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scoreSkill, scoreLabel } from "@/lib/scoreSkill";
 import { scanSecurity } from "@/lib/scanSecurity";
+import { recordVerifyEvent } from "@/lib/verifyEvents";
+import { lengthBand } from "@/lib/verifyMeta";
 
 export const runtime = "nodejs";
 
@@ -41,6 +43,17 @@ export async function POST(request: NextRequest) {
 
   const breakdown = scoreSkill(content);
   const scan = scanSecurity(content);
+
+  // Log anonymous metadata for the in-app /stats view (never the content).
+  await recordVerifyEvent({
+    source: "api",
+    score: breakdown.score,
+    passed: scan.passed,
+    band: scoreLabel(breakdown.score),
+    flaggedFor: scan.category,
+    hasFrontmatter: /^---\r?\n/.test(content),
+    lengthBand: lengthBand(content.length),
+  });
 
   return NextResponse.json({
     score: breakdown.score,

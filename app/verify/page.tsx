@@ -12,6 +12,7 @@ import {
   type QualityBreakdown,
 } from "@/lib/scoreSkill";
 import { scanSecurity, type ScanResult } from "@/lib/scanSecurity";
+import { lengthBand } from "@/lib/verifyMeta";
 
 const MAX_INPUT = 50_000;
 
@@ -40,14 +41,6 @@ function barColor(ratio: number): string {
   return "bg-silver-faint";
 }
 
-/** Bucket content length for analytics (avoids sending exact sizes). */
-function lengthBand(n: number): string {
-  if (n < 500) return "<500";
-  if (n < 2_000) return "500-2k";
-  if (n < 10_000) return "2k-10k";
-  return "10k+";
-}
-
 interface Report {
   breakdown: QualityBreakdown;
   scan: ScanResult;
@@ -65,18 +58,26 @@ export default function VerifyPage() {
     if (!content) return;
     const breakdown = scoreSkill(content);
     const scan = scanSecurity(content);
-    // Privacy: only metadata is tracked — never the skill content or name.
-    // The score band is the key signal: skills generated on-site score 85+,
-    // so a spike in "Fair"/"Basic" runs means people are bringing skills
+    // Privacy: only metadata leaves the browser — never the skill content or
+    // name. The score band is the key signal: skills generated on-site score
+    // 85+, so a spike in "Fair"/"Basic" runs means people are bringing skills
     // authored elsewhere (the demand the /verify wedge is testing).
-    track("verify_run", {
+    const meta = {
       passed: scan.passed,
       score: breakdown.score,
       band: scoreLabel(breakdown.score),
       flaggedFor: scan.category ?? "none",
       hasFrontmatter: /^---\r?\n/.test(content),
       length: lengthBand(content.length),
-    });
+    };
+    track("verify_run", meta);
+    // Fire-and-forget: record anonymous metadata for the in-app /stats view.
+    void fetch("/api/verify/log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(meta),
+      keepalive: true,
+    }).catch(() => {});
     setReport({ breakdown, scan, name: extractSkillName(content) || "" });
     // Keep input so the user can edit and re-verify.
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
@@ -150,7 +151,7 @@ export default function VerifyPage() {
                 className="text-silver-faint text-[11px]"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
-                Runs in your browser · nothing is uploaded
+                Runs in your browser · your skill stays local · only an anonymous score is logged
               </p>
               <button
                 type="button"
