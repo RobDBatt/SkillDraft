@@ -218,6 +218,11 @@ export default async function HomePage() {
                 </Link>
               </div>
 
+              <p className="hero-verify" data-reveal style={{ "--d": ".25s" } as React.CSSProperties}>
+                Already have a skill — from an AI agent, a teammate, the community?{" "}
+                <Link href="/verify">Verify any SKILL.md, free →</Link>
+              </p>
+
               <div className="cmd" data-reveal style={{ "--d": ".28s" } as React.CSSProperties}>
                 <span className="prompt">$</span>
                 <span>npx skilldraft install &lt;id&gt;</span>
