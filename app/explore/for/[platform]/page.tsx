@@ -74,7 +74,10 @@ export default async function PlatformPage({ params }: { params: Promise<{ platf
   const CATEGORY_LABELS: Record<string, string> = {
     development: "Development", "frontend-design": "Frontend & Design",
     "content-writing": "Content Writing", "data-integrations": "Data & Integrations",
-    "project-workflows": "Project Workflows", "custom-other": "Custom",
+    "project-workflows": "Project Workflows", "devops-infrastructure": "DevOps & Infrastructure",
+    security: "Security", "backend-frameworks": "Backend Frameworks",
+    "git-version-control": "Git & PR Workflows", "database-sql": "Database & SQL",
+    "custom-other": "Custom",
   };
 
   return (

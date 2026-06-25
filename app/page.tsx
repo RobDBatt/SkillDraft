@@ -18,6 +18,11 @@ const CATEGORY_LABELS: Record<string, string> = {
   "content-writing": "Content",
   "data-integrations": "Data",
   "project-workflows": "Project",
+  "devops-infrastructure": "DevOps",
+  security: "Security",
+  "backend-frameworks": "Backend",
+  "git-version-control": "Git & PR",
+  "database-sql": "Database",
   "custom-other": "Custom",
 };
 
