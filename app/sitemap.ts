@@ -11,6 +11,8 @@ const CATEGORIES = [
   "devops-infrastructure",
   "security",
   "backend-frameworks",
+  "git-version-control",
+  "database-sql",
   "custom-other",
 ] as const;
 

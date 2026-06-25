@@ -27,6 +27,8 @@ export type Category =
   | "devops-infrastructure"
   | "security"
   | "backend-frameworks"
+  | "git-version-control"
+  | "database-sql"
   | "custom-other";
 
 export interface CategoryConfig {
@@ -768,6 +770,190 @@ export const categories: CategoryConfig[] = [
         label: "Any additional context?",
         type: "textarea",
         placeholder: "ORM, test framework, deployment target, team conventions, anything else",
+        required: false,
+      },
+    ],
+  },
+
+  // ── Git & PR Workflows ────────────────────────────────────────────────────────
+  {
+    id: "git-version-control",
+    label: "Git & PR Workflows",
+    icon: "⑂",
+    description: "Commits, pull requests, code review, branching, changelogs",
+    questions: [
+      {
+        id: "focus",
+        label: "What git/PR work is this skill for?",
+        type: "multiselect",
+        required: true,
+        options: [
+          { value: "commit-messages", label: "Commit messages" },
+          { value: "pr-descriptions", label: "Pull request descriptions" },
+          { value: "code-review", label: "Code review / reviewing a PR" },
+          { value: "branching", label: "Branching & merge strategy" },
+          { value: "changelog", label: "Changelog / release notes" },
+          { value: "rebase-history", label: "Rebasing & history cleanup" },
+          { value: "conflict-resolution", label: "Merge conflict resolution" },
+          { value: "hooks", label: "Git hooks (pre-commit, pre-push)" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "convention",
+        label: "What commit / PR convention do you follow?",
+        type: "select",
+        required: true,
+        options: [
+          { value: "conventional-commits", label: "Conventional Commits (feat:, fix:, …)" },
+          { value: "gitmoji", label: "Gitmoji" },
+          { value: "ticket-prefixed", label: "Ticket-prefixed (PROJ-123: …)" },
+          { value: "descriptive", label: "Descriptive / free-form" },
+          { value: "none", label: "No strict convention" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "workflow",
+        label: "What branching workflow?",
+        type: "select",
+        required: true,
+        options: [
+          { value: "trunk-based", label: "Trunk-based (short-lived branches)" },
+          { value: "github-flow", label: "GitHub Flow (branch + PR to main)" },
+          { value: "git-flow", label: "Git Flow (develop / feature / release)" },
+          { value: "feature-branch", label: "Feature branches" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "rules",
+        label: "What rules must Claude follow?",
+        type: "multiselect",
+        required: false,
+        options: [
+          { value: "imperative-mood", label: "Imperative mood in commit subjects ('Add', not 'Added')" },
+          { value: "subject-72", label: "Subject line under ~72 characters" },
+          { value: "link-issue", label: "Link the related issue / ticket" },
+          { value: "body-why", label: "Explain *why* in the body, not just what" },
+          { value: "atomic-commits", label: "One logical change per commit" },
+          { value: "pr-checklist", label: "Include a PR checklist (tests, docs, screenshots)" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "never",
+        label: "What should Claude never do in this skill?",
+        type: "multiselect",
+        required: false,
+        options: [
+          { value: "force-push-shared", label: "Force-push to shared branches (main, develop)" },
+          { value: "commit-secrets", label: "Commit secrets, .env files, or credentials" },
+          { value: "rewrite-pushed", label: "Rebase or amend already-pushed shared history" },
+          { value: "vague-messages", label: "Write vague messages like 'fix' or 'update'" },
+          { value: "commit-to-main", label: "Commit directly to main / master" },
+          { value: "giant-prs", label: "Open giant PRs touching unrelated files" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "extra",
+        label: "Any additional context?",
+        type: "textarea",
+        placeholder: "Your commit format, PR template, required CI checks, team conventions, anything else",
+        required: false,
+      },
+    ],
+  },
+
+  // ── Database & SQL ────────────────────────────────────────────────────────────
+  {
+    id: "database-sql",
+    label: "Database & SQL",
+    icon: "▦",
+    description: "Queries, schema design, migrations, indexing, performance",
+    questions: [
+      {
+        id: "engine",
+        label: "What database are you working with?",
+        type: "select",
+        required: true,
+        options: [
+          { value: "postgres", label: "PostgreSQL" },
+          { value: "mysql", label: "MySQL / MariaDB" },
+          { value: "sqlite", label: "SQLite" },
+          { value: "mssql", label: "SQL Server" },
+          { value: "oracle", label: "Oracle" },
+          { value: "snowflake", label: "Snowflake" },
+          { value: "bigquery", label: "BigQuery" },
+          { value: "mongodb", label: "MongoDB (NoSQL)" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "work",
+        label: "What database work is this skill for?",
+        type: "multiselect",
+        required: true,
+        options: [
+          { value: "queries", label: "Writing & optimising queries" },
+          { value: "schema-design", label: "Schema design" },
+          { value: "migrations", label: "Migrations" },
+          { value: "indexing", label: "Indexing & performance tuning" },
+          { value: "stored-procs", label: "Stored procedures / functions" },
+          { value: "data-modeling", label: "Data modeling / normalization" },
+          { value: "reporting", label: "Reporting & analytics queries" },
+          { value: "orm-review", label: "ORM query review" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "access",
+        label: "How does the app access the database?",
+        type: "select",
+        required: true,
+        options: [
+          { value: "raw-sql", label: "Raw SQL / query builder" },
+          { value: "orm", label: "ORM (Prisma, SQLAlchemy, ActiveRecord, …)" },
+          { value: "mixed", label: "Mixed (ORM + raw SQL for hot paths)" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "conventions",
+        label: "What conventions must Claude follow?",
+        type: "multiselect",
+        required: false,
+        options: [
+          { value: "parameterized", label: "Always parameterize queries (no string concat)" },
+          { value: "explicit-columns", label: "Explicit column lists (no SELECT *)" },
+          { value: "reversible-migrations", label: "Reversible / down migrations required" },
+          { value: "snake-case", label: "snake_case table & column names" },
+          { value: "explain-plans", label: "Provide EXPLAIN plans for new queries" },
+          { value: "wrap-transactions", label: "Wrap multi-statement writes in transactions" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "never",
+        label: "What should Claude never do in this skill?",
+        type: "multiselect",
+        required: false,
+        options: [
+          { value: "string-concat-sql", label: "Build SQL by string-concatenating user input" },
+          { value: "select-star", label: "Use SELECT * in application queries" },
+          { value: "drop-no-backup", label: "Run DROP / TRUNCATE without a backup or confirmation" },
+          { value: "unindexed-fk", label: "Add a foreign key without an index" },
+          { value: "migration-no-down", label: "Write a migration with no rollback path" },
+          { value: "destructive-no-tx", label: "Run destructive updates outside a transaction" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        id: "extra",
+        label: "Any additional context?",
+        type: "textarea",
+        placeholder: "Schema size, ORM, naming conventions, performance constraints, anything else",
         required: false,
       },
     ],

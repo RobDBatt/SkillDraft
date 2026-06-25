@@ -61,6 +61,16 @@ const CATEGORY_TIPS: Record<Category, string[]> = {
     "Name your ORM and eager-loading pattern explicitly to prevent N+1 queries.",
     "If you use a service layer, name the naming convention so generated code matches.",
   ],
+  "git-version-control": [
+    "Paste your real commit/PR template so the skill matches it exactly.",
+    "Name your convention (Conventional Commits, gitmoji) — the format is unforgiving.",
+    "Force-push and secret-commit guards belong in the hard stops — make them explicit.",
+  ],
+  "database-sql": [
+    "Name your engine — Postgres and MySQL differ on syntax and EXPLAIN output.",
+    "Parameterisation and 'no SELECT *' are the highest-value hard stops here.",
+    "If you use an ORM, say which one so the skill reviews its queries, not just raw SQL.",
+  ],
   "custom-other": [
     "Custom skills need precise trigger phrases — vague triggers misfire.",
     "If it activates too broadly, add 'do not use for X' exclusions.",

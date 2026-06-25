@@ -469,6 +469,116 @@ VERIFICATION: Include checks like "no business logic in route handlers", "all in
 validated before touching DB", "migration file exists for model changes",
 "no N+1 pattern introduced", "error response uses standard format".`,
 
+  "git-version-control": `════════════════════════════════════════════════════════
+CATEGORY: Git & PR Workflows
+════════════════════════════════════════════════════════
+
+This skill governs how the agent writes commits, opens and reviews pull requests,
+manages branches, and produces changelogs — enforcing the team's conventions instead
+of the agent's generic defaults.
+
+Category-specific quality requirements:
+
+DESCRIPTION: Name the artifact + the convention. "Writes Conventional Commits and PR
+descriptions for a trunk-based workflow, linking the ticket and summarising the why"
+is specific. Include triggers: "commit this", "write a commit message", "open a PR",
+"review this PR", "write the changelog", "what's a good commit message for X".
+
+INSTRUCTIONS section — mandatory sub-sections:
+  ### Commit / PR format
+  State the exact format: the convention (Conventional Commits, gitmoji, ticket-prefix),
+  subject-line rules (mood, length, capitalisation), and what the body must contain.
+  Give a literal example of a good message.
+  WHY: "Commit conventions are mechanical and unforgiving — one wrong prefix breaks
+  semantic-release and changelog generation. The agent must follow the format exactly,
+  not approximately."
+
+  ### Branching & scope
+  State the branching model and what belongs in a single commit/PR. Define 'atomic'
+  for this repo.
+  WHY: "Agents bundle unrelated changes into one commit/PR by default, making review
+  and revert impossible — the scope rule is what keeps history bisectable."
+
+  ### Review checklist (for review skills)
+  If the skill reviews PRs, give the ordered checklist: correctness, tests, scope,
+  security, then style — and require concrete file:line references.
+
+  ### Hard stops
+  Never force-push to a shared branch (main, develop) — it destroys teammates' history.
+  Never commit secrets, .env files, or credentials — they are unrecoverable once pushed.
+  Never rebase or amend already-pushed shared history — it breaks everyone's clone.
+  Never write a vague subject like "fix" or "update" — it makes the log useless.
+
+OUTPUT FORMAT: For commit/PR skills, show a literal filled-in template (subject + body,
+or PR title + description with checklist), not a prose description of one. The agent
+should be able to copy the structure verbatim.
+
+ANTI-PATTERNS for this category:
+  ❌ "Updated files" / "fix bug" subjects — carry zero information; name what and why
+  ❌ One commit mixing a refactor + a feature + a format pass — unreviewable, unrevertable
+  ❌ PR description that restates the diff — describe intent and risk, not line-by-line
+  ❌ Committing generated files or secrets — bloats history, leaks credentials
+  ❌ Amending/force-pushing a branch others have pulled — corrupts their local history
+
+VERIFICATION: Include checks like "subject follows the convention exactly", "body
+explains why", "ticket/issue linked", "one logical change per commit", "no secrets or
+generated files staged", "no force-push to a shared branch".`,
+
+  "database-sql": `════════════════════════════════════════════════════════
+CATEGORY: Database & SQL
+════════════════════════════════════════════════════════
+
+This skill writes and reviews database work — queries, schema, migrations, indexes —
+for a specific engine (PostgreSQL, MySQL, SQL Server, etc.), enforcing safety and
+performance rules the agent would otherwise skip.
+
+Category-specific quality requirements:
+
+DESCRIPTION: Name the engine + the operation. "Writes and reviews parameterised
+PostgreSQL queries and reversible migrations, enforcing explicit column lists and
+index-aware joins" is specific. Include triggers: "write a query for X", "design a
+table for X", "add a migration for X", "why is this query slow", "review this SQL".
+
+INSTRUCTIONS section — mandatory sub-sections:
+  ### Query safety
+  Require parameterised queries (never string-concatenated input) and explicit column
+  lists (never SELECT *). State the engine's parameter syntax.
+  WHY: "String-concatenated SQL is the #1 injection vector, and SELECT * silently breaks
+  when columns change and pulls unneeded data — both are invisible until they bite."
+
+  ### Schema & migration rules
+  State how migrations are created, that they must be reversible (a down path), and the
+  naming convention for tables/columns. Require an index for every foreign key.
+  WHY: "An irreversible migration can't be rolled back in an incident; an unindexed
+  foreign key turns every join into a sequential scan as the table grows."
+
+  ### Performance
+  Require EXPLAIN/EXPLAIN ANALYZE for new non-trivial queries and name the engine's
+  eager-loading / join strategy. Call out N+1 patterns.
+  WHY: "Queries that pass in dev with 100 rows table-scan in prod with 10M — the EXPLAIN
+  plan is the only way to catch it before it ships."
+
+  ### Hard stops
+  Never build SQL by concatenating user input — always parameterise.
+  Never run DROP or TRUNCATE without an explicit backup or confirmation step.
+  Never write a destructive UPDATE/DELETE outside a transaction.
+  Never ship a migration with no rollback path.
+
+OUTPUT FORMAT: Show the complete, runnable SQL or migration for the target engine —
+including the parameter placeholders, the index statements, and (for migrations) both
+the up and down. Not a fragment.
+
+ANTI-PATTERNS for this category:
+  ❌ SELECT * in application code — breaks on schema change, transfers unused columns
+  ❌ String-interpolated WHERE clauses — SQL injection; parameterise instead
+  ❌ Foreign key with no supporting index — full scans on every join as data grows
+  ❌ Multi-row UPDATE/DELETE with no transaction and no WHERE-clause sanity check
+  ❌ Migration with no down step — can't roll back a bad deploy
+
+VERIFICATION: Include checks like "all inputs parameterised", "explicit column lists,
+no SELECT *", "migration has a reversible down path", "every FK has an index",
+"EXPLAIN reviewed for new queries", "destructive statements wrapped in a transaction".`,
+
   "custom-other": `════════════════════════════════════════════════════════
 CATEGORY: Custom / Other
 ════════════════════════════════════════════════════════

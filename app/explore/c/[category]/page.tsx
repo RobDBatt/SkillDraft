@@ -46,6 +46,16 @@ const CATEGORY_META: Record<string, { label: string; headline: string; descripti
     headline: "Backend Framework Skills",
     description: "FastAPI, Django, Rails, Laravel, NestJS, and Go REST skills — idiomatic endpoints, migrations, service layers, and test patterns for every major backend.",
   },
+  "git-version-control": {
+    label: "Git & PR Workflows",
+    headline: "Git & PR Workflow Skills",
+    description: "Commit-message, pull-request, code-review, branching, and changelog skills that enforce your team's git conventions. Conventional Commits, trunk-based, Git Flow — install into Claude Code, Cursor, or Windsurf.",
+  },
+  "database-sql": {
+    label: "Database & SQL",
+    headline: "Database & SQL Skills",
+    description: "Query optimisation, schema design, migration, and indexing skills for PostgreSQL, MySQL, SQL Server, and more — with parameterised-query and reversible-migration guardrails baked in.",
+  },
   "custom-other": {
     label: "Custom",
     headline: "Custom Skills",
