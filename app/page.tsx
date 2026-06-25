@@ -9,6 +9,7 @@ import { Logo } from "@/components/Logo";
 import { HomeMotion } from "@/components/HomeMotion";
 import { CountUp } from "@/components/CountUp";
 import { CopyButton } from "@/components/CopyButton";
+import { VerifyHeroLink } from "@/components/VerifyHeroLink";
 import { supabaseAdmin, safeSelect } from "@/lib/supabase-admin";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -220,7 +221,7 @@ export default async function HomePage() {
 
               <p className="hero-verify" data-reveal style={{ "--d": ".25s" } as React.CSSProperties}>
                 Already have a skill — from an AI agent, a teammate, the community?{" "}
-                <Link href="/verify">Verify any SKILL.md, free →</Link>
+                <VerifyHeroLink />
               </p>
 
               <div className="cmd" data-reveal style={{ "--d": ".28s" } as React.CSSProperties}>

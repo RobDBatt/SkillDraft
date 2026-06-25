@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import Link from "next/link";
+import { track } from "@vercel/analytics";
 import { SiteNav } from "@/components/SiteNav";
 import { extractSkillName } from "@/lib/supabase";
 import {
@@ -39,6 +40,14 @@ function barColor(ratio: number): string {
   return "bg-silver-faint";
 }
 
+/** Bucket content length for analytics (avoids sending exact sizes). */
+function lengthBand(n: number): string {
+  if (n < 500) return "<500";
+  if (n < 2_000) return "500-2k";
+  if (n < 10_000) return "2k-10k";
+  return "10k+";
+}
+
 interface Report {
   breakdown: QualityBreakdown;
   scan: ScanResult;
@@ -54,11 +63,21 @@ export default function VerifyPage() {
   const handleVerify = useCallback(() => {
     const content = inputText.trim();
     if (!content) return;
-    setReport({
-      breakdown: scoreSkill(content),
-      scan: scanSecurity(content),
-      name: extractSkillName(content) || "",
+    const breakdown = scoreSkill(content);
+    const scan = scanSecurity(content);
+    // Privacy: only metadata is tracked — never the skill content or name.
+    // The score band is the key signal: skills generated on-site score 85+,
+    // so a spike in "Fair"/"Basic" runs means people are bringing skills
+    // authored elsewhere (the demand the /verify wedge is testing).
+    track("verify_run", {
+      passed: scan.passed,
+      score: breakdown.score,
+      band: scoreLabel(breakdown.score),
+      flaggedFor: scan.category ?? "none",
+      hasFrontmatter: /^---\r?\n/.test(content),
+      length: lengthBand(content.length),
     });
+    setReport({ breakdown, scan, name: extractSkillName(content) || "" });
     // Keep input so the user can edit and re-verify.
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   }, [inputText]);
@@ -300,6 +319,7 @@ export default function VerifyPage() {
         <div className="flex items-center gap-3 flex-wrap mb-6">
           <Link
             href={improveHref}
+            onClick={() => track("verify_cta", { action: "improve", band: scoreLabel(score), passed })}
             className="gradient-silver-btn text-sm font-semibold px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-silver-mid focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             style={{ fontFamily: "var(--font-sans)" }}
           >
@@ -307,6 +327,7 @@ export default function VerifyPage() {
           </Link>
           <Link
             href="/explore"
+            onClick={() => track("verify_cta", { action: "explore" })}
             className="border border-border-dark text-silver-muted text-sm px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:border-silver-faint hover:text-silver-lo active:scale-[0.98] focus-visible:outline-none"
             style={{ fontFamily: "var(--font-sans)" }}
           >
