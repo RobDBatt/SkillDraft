@@ -57,6 +57,10 @@ export default function SkillsPage() {
       supabase
         .from("skills")
         .select("*")
+        // Scope to the signed-in user. Without this, the select_public RLS
+        // policy also returns every public skill, so they show up in "My
+        // Skills" as if the user owned them.
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .then(({ data, error }) => {
           if (!error && data) setSkills(data as SkillRow[]);
