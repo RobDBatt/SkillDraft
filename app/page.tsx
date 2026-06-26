@@ -12,6 +12,9 @@ import { CopyButton } from "@/components/CopyButton";
 import { VerifyHeroLink } from "@/components/VerifyHeroLink";
 import { supabaseAdmin, safeSelect } from "@/lib/supabase-admin";
 
+// ISR: rebuild hourly so the homepage skill preview reflects new shared skills.
+export const revalidate = 3600;
+
 const CATEGORY_LABELS: Record<string, string> = {
   development: "Development",
   "frontend-design": "Frontend",

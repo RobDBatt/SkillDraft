@@ -5,6 +5,9 @@ import { SiteNav } from "@/components/SiteNav";
 import { supabaseAdmin, safeSelect } from "@/lib/supabase-admin";
 import { AgentBadges } from "@/components/AgentTargets";
 
+// ISR: rebuild hourly so newly shared/official skills appear without a redeploy.
+export const revalidate = 3600;
+
 const PLATFORM_META: Record<string, { label: string; headline: string; description: string; agentId: string }> = {
   "claude-code": {
     label: "Claude Code",
