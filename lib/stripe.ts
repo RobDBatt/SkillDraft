@@ -32,12 +32,6 @@ export const stripe = new Proxy({} as Stripe, {
 // Changing a pack changes the key (append _v2, etc.) to avoid reusing old prices.
 
 export const PACKS = {
-  starter: {
-    credits: 20,
-    amount:  400,   // cents
-    label:   "Starter",
-    lookupKey: "sd_starter_v1",
-  },
   standard: {
     credits: 75,
     amount:  1200,
