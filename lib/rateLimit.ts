@@ -9,8 +9,9 @@ const RATE_LIMIT = 10;
 const WINDOW_SECONDS = 24 * 60 * 60;
 
 // Hard ceiling on total model runs per day across ALL users (anon + logged-in),
-// as a backstop against runaway spend. Tune via the DAILY_RUN_CAP env var.
-const DEFAULT_DAILY_CAP = 1000;
+// as a backstop against runaway spend. At ~5–7¢/run this caps the daily model
+// bill near $12–18. Override without a redeploy via the DAILY_RUN_CAP env var.
+const DEFAULT_DAILY_CAP = 250;
 
 export function getClientIp(request: NextRequest): string {
   return (
