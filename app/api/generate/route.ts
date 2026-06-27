@@ -136,6 +136,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     const readable = new ReadableStream({
       async start(controller) {
         let full = "";
+        let stopReason: string | null = null;
         try {
           for await (const chunk of stream) {
             if (
@@ -144,10 +145,13 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
             ) {
               full += chunk.delta.text;
               controller.enqueue(encoder.encode(chunk.delta.text));
+            } else if (chunk.type === "message_delta") {
+              stopReason = chunk.delta.stop_reason;
             }
           }
-          // Store the completed result so identical menu inputs reuse it.
-          if (cacheKey && full.length > 0) {
+          // Only cache a clean, complete result — never a truncated (max_tokens)
+          // or refused generation, which would poison the cache for that combo.
+          if (cacheKey && full.length > 0 && stopReason === "end_turn") {
             await putCachedGeneration(cacheKey, full, category, platform);
           }
           controller.close();
