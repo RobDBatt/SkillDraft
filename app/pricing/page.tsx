@@ -8,8 +8,8 @@ import { supabase } from "@/lib/supabase";
 type LoadingKey = "standard" | "power" | "pro" | null;
 
 const PACKS = [
-  { key: "standard", credits: 75,  price: 12, label: "Standard", per: "16¢ / credit", popular: true },
-  { key: "power",    credits: 200, price: 25, label: "Power",    per: "12¢ / credit" },
+  { key: "standard", credits: 80,  price: 12, label: "Standard", per: "15¢ / credit", popular: true },
+  { key: "power",    credits: 200, price: 24, label: "Power",    per: "12¢ / credit" },
 ] as const;
 
 export default function PricingPage() {

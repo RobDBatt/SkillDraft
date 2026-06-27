@@ -33,17 +33,17 @@ export const stripe = new Proxy({} as Stripe, {
 
 export const PACKS = {
   standard: {
-    credits: 75,
+    credits: 80,
     amount:  1200,
     label:   "Standard",
-    lookupKey: "sd_standard_v1",
+    lookupKey: "sd_standard_v2",
     popular: true,
   },
   power: {
     credits: 200,
-    amount:  2500,
+    amount:  2400,
     label:   "Power",
-    lookupKey: "sd_power_v1",
+    lookupKey: "sd_power_v2",
   },
 } as const;
 
