@@ -122,10 +122,12 @@ export function FeedbackWidget() {
                 className="w-full bg-code-bg border border-border-dark rounded-[4px] px-3 py-2 text-sm text-silver-mid placeholder:text-silver-faint focus:outline-none focus:border-silver-faint"
               />
 
-              {/* Honeypot — hidden from real users, catches naive bots. */}
+              {/* Honeypot — hidden from real users, catches naive bots. Name is
+                  deliberately non-semantic so browser/password-manager autofill
+                  won't populate it and drop a real submission. */}
               <input
                 type="text"
-                name="company"
+                name="contact_reason_alt"
                 tabIndex={-1}
                 autoComplete="off"
                 aria-hidden="true"
