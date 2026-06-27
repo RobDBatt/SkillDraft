@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { getClientIp, checkRateLimit } from "@/lib/rateLimit";
+import { getClientIp, checkRateLimit, checkDailyCap } from "@/lib/rateLimit";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const SYSTEM_PROMPT = `You are an expert editor of SKILL.md files for AI coding agents.
@@ -81,6 +81,16 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     );
   }
 
+  // ── Global spend backstop: cap total runs/day across all users. Checked
+  //    before per-user gating so a capacity block never costs anyone a credit.
+  const cap = await checkDailyCap();
+  if (!cap.allowed) {
+    return NextResponse.json(
+      { error: "We've hit today's improvement limit. Please try again tomorrow." },
+      { status: 503 }
+    );
+  }
+
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
 
   if (token) {
@@ -97,7 +107,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     }
   } else {
     const ip = getClientIp(request);
-    const { allowed } = checkRateLimit(ip);
+    const { allowed } = await checkRateLimit(ip);
     if (!allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded. Sign in and buy credits for unlimited access." },

@@ -7,7 +7,7 @@ import { getSystemPrompt } from "@/lib/prompts";
 import { buildUserMessage, type Answers } from "@/lib/buildMessage";
 import type { Category } from "@/lib/questions";
 import type { PlatformId } from "@/lib/platforms";
-import { getClientIp, checkRateLimit } from "@/lib/rateLimit";
+import { getClientIp, checkRateLimit, checkDailyCap } from "@/lib/rateLimit";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
@@ -16,6 +16,16 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
   if (!apiKey) {
     return NextResponse.json(
       { error: "Service temporarily unavailable." },
+      { status: 503 }
+    );
+  }
+
+  // ── Global spend backstop: cap total runs/day across all users. Checked
+  //    before per-user gating so a capacity block never costs anyone a credit.
+  const cap = await checkDailyCap();
+  if (!cap.allowed) {
+    return NextResponse.json(
+      { error: "We've hit today's generation limit. Please try again tomorrow." },
       { status: 503 }
     );
   }
@@ -37,7 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     }
   } else {
     const ip = getClientIp(request);
-    const { allowed } = checkRateLimit(ip);
+    const { allowed } = await checkRateLimit(ip);
     if (!allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded. Sign in and buy credits for unlimited access." },
