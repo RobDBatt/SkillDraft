@@ -65,16 +65,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
   }
 
-  const { error } = await supabaseAdmin.from("feedback").insert({
-    kind,
-    message,
-    email,
-    user_id: userId,
-    user_agent: request.headers.get("user-agent")?.slice(0, 500) ?? null,
-  });
-
-  if (error) {
-    console.error("[/api/feedback] insert failed:", error);
+  // try/catch on top of the error check: supabaseAdmin is a lazy proxy that
+  // throws synchronously when the service key is missing/misconfigured —
+  // without this, that surfaces as an opaque empty-body 500 instead of JSON.
+  try {
+    const { error } = await supabaseAdmin.from("feedback").insert({
+      kind,
+      message,
+      email,
+      user_id: userId,
+      user_agent: request.headers.get("user-agent")?.slice(0, 500) ?? null,
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error("[/api/feedback] insert failed:", err);
     return NextResponse.json(
       { error: "Could not submit. Please try again." },
       { status: 500 }
