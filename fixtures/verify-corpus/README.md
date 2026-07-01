@@ -6,30 +6,40 @@ fixtures, not app content** — nothing here ships to users.
 
 ## Why this exists
 
-Scoring this corpus (2026-07-01 baseline, pre-recalibration) showed the rubric
-is self-referential: it rewards SkillDraft's house structure, which real-world
-skills — including Anthropic's own reference skills — don't use:
+Scoring this corpus (2026-07-01, pre-recalibration) showed the original rubric
+was self-referential: it rewarded only SkillDraft's house structure, which
+real-world skills — including Anthropic's own reference skills — don't use.
+The recalibration (same day) added wild-style fallback tiers per dimension,
+fixed a folded-YAML description-parsing bug that zeroed the description score
+for `description: >` frontmatter, and capped frontmatter-less files at 10.
 
-| File | Score | Band |
-|---|---|---|
-| anthropic-pptx *(fetch)* | 46 | Basic |
-| anthropic-docx *(fetch)* | 41 | Basic |
-| anthropic-xlsx *(fetch)* | 39 | Basic |
-| superpowers-brainstorming | 39 | Basic |
-| anthropic-mcp-builder | 37 | Basic |
-| anthropic-skill-creator | 29 | Basic |
-| anthropic-webapp-testing | 22 | Basic |
-| superpowers-test-driven-development | 19 | Basic |
-| anthropic-internal-comms | 15 | Basic |
-| anthropic-pdf *(fetch)* | 15 | Basic |
-| anthropic-brand-guidelines | 10 | Basic |
-| anthropic-frontend-design | 10 | Basic |
-| template | 0 | Basic |
-| SkillDraft's own seeded official skills | 90–100 | Excellent |
+Scores before → after recalibration (`node scripts/score-corpus.mjs`):
 
-Recalibration goal: strong real-world skills should land Fair/Good without
-inflating scores for genuinely thin files. Re-score this corpus after any
-`scoreSkill` change and update this table.
+| File | Before | After | Band after |
+|---|---|---|---|
+| anthropic-pptx *(fetch)* | 46 | 63 | Fair |
+| anthropic-docx *(fetch)* | 41 | 61 | Fair |
+| anthropic-xlsx *(fetch)* | 39 | 59 | Fair |
+| superpowers-test-driven-development | 19 | 52 | Fair |
+| anthropic-skill-creator | 29 | 51 | Fair |
+| superpowers-brainstorming | 39 | 50 | Fair |
+| anthropic-pdf *(fetch)* | 15 | 38 | Basic |
+| anthropic-mcp-builder | 37 | 37 | Basic |
+| anthropic-internal-comms | 15 | 30 | Basic |
+| anthropic-webapp-testing | 22 | 30 | Basic |
+| anthropic-frontend-design | 10 | 15 | Basic (prose essay — no structure to credit) |
+| anthropic-brand-guidelines | 10 | 10 | Basic (thin; delegates to scripts) |
+| template | 0 | 0 | Basic |
+| non-skill markdown / empty / garbage | 0–4 | 0–8 | Basic (frontmatter cap) |
+| SkillDraft seeded official skills | 71–100¹ | **91–100** | Excellent |
+
+¹ Pre-fix, 13 of 15 seeded skills lost the full 25 description points to the
+folded-YAML parsing bug.
+
+Calibration stance: strong real-world skills land **Fair**; **Good/Excellent
+still requires the full house structure** (explicit When-NOT-to-use, hard
+stops, anti-patterns, checklist). Re-score this corpus after any `scoreSkill`
+change and update this table.
 
 ## Provenance & licenses
 
