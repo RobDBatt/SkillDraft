@@ -1,8 +1,11 @@
 /**
- * Automated SKILL.md quality scorer.
+ * Automated SKILL.md structure scorer.
  *
- * Scores a skill file 0–100 against the 7-dimension rubric derived from
- * benchmarking against anthropics/skills reference files.
+ * Scores a skill file 0–100 against SkillDraft's 7-dimension structural rubric.
+ * NOTE: this measures conformance to SkillDraft's house structure, not general
+ * quality — real-world skills (including anthropics/skills reference files)
+ * score 10–46 because they use a procedural style with none of these sections.
+ * Calibration corpus + baseline: fixtures/verify-corpus/.
  *
  * Pure function — safe to call client-side or server-side.
  */

@@ -48,3 +48,9 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# source-available fixtures, fetched on demand — see fixtures/verify-corpus/fetch-restricted.sh
+fixtures/verify-corpus/anthropic-docx.md
+fixtures/verify-corpus/anthropic-pdf.md
+fixtures/verify-corpus/anthropic-pptx.md
+fixtures/verify-corpus/anthropic-xlsx.md
