@@ -10,6 +10,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Before pushing: `npm run typecheck && npm run lint && npm test`. CI (`.github/workflows/ci.yml`) runs the same three on every PR.
 - `npm test` runs `scripts/check-invariants.mjs` — machine-checked project rules (each caught a real bug once). If a check fails, fix the code, not the check, unless the rule itself is deliberately changing.
 - Generated files have shipped with NUL-byte corruption before. The invariant script checks for this; keep that check green.
+- A full `next build` (unlike typecheck/lint/test) needs `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local` — the browser Supabase client throws at prerender without them. Both are public values; fetch them via the Supabase MCP tools (`get_project_url`, `get_publishable_keys`). `.env*` is gitignored.
+- Remote sessions cannot reach `*.vercel.app`, `skilldraft.io`, or `supabase.co` directly (network policy blocks CONNECT) — don't try to drive preview deployments from a session; test against a local `next start` instead.
 
 # Money & pricing
 
