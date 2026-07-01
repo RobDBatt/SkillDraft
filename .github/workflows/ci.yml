@@ -1,0 +1,33 @@
+name: CI
+
+# Typecheck + lint + project invariant checks on every PR and master push.
+# The production build itself is covered by Vercel's deploy check, so it is
+# deliberately not repeated here — this workflow stays fast (<2 min).
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Invariant checks
+        run: npm test
