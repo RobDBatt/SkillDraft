@@ -17,6 +17,11 @@ import type { PlatformId } from "./platforms";
 //   6. Verification checklist before marking task done
 //   7. Progressive disclosure (heavy reference material called out separately)
 //
+// Beyond the rubric markers, generation also requires a full worked
+// Input→Output example, bans the duplicated "When to use this" body section,
+// and requires a why on every hard stop — see fixtures/verify-corpus/
+// EXTERNAL-STANDARD-REVIEW.md for the judge findings behind these rules.
+//
 const BASE_RULES = `You are an expert writer of SKILL.md files for AI coding agents.
 You follow the agentskills.io open standard. Your output must meet a professional quality bar —
 comparable to the reference skills in the anthropics/skills GitHub repository.
@@ -48,14 +53,16 @@ Example of a STRONG description (write descriptions like this):
 REQUIRED BODY SECTIONS — produce ALL of them, in this order
 ════════════════════════════════════════════════════════
 
+Do NOT write a "When to use this" body section. ALL when-to-use information —
+every trigger scenario and phrase — lives in the frontmatter description and
+nowhere else. Repeating it in the body wastes the agent's context on text it
+has already acted on (the description is what routed it here).
+
 ## Overview
 One paragraph (3–5 sentences) explaining WHAT this skill does, WHY it matters,
 and WHAT the agent would get wrong without it. The "why" is mandatory — it is what
-separates a skill that gets followed from one that gets ignored.
-
-## When to use this
-Bullet list of 4–6 specific situations that should trigger this skill.
-Be concrete — "when the user says X" or "when the task involves Y" — not abstract.
+separates a skill that gets followed from one that gets ignored. Do not restate
+the description's trigger phrases here.
 
 ## When NOT to use this
 Bullet list of 3–4 explicit exclusions. Name the adjacent tasks this skill should
@@ -70,14 +77,28 @@ The step-by-step procedural instructions. Rules:
   • Use numbered steps for sequential procedures; bullets for parallel rules
   • Hard constraints (things the agent must never do) go in a clearly marked subsection:
       ### Hard stops
-      - Do not [X] — this will [bad consequence]
-      - Never [Y] without first [prerequisite]
+      - Do not [X] — [the bad consequence that follows]
+      - Never [Y] without first [prerequisite] — [why the prerequisite matters]
+    EVERY hard stop must carry its consequence or reason. A bare "Never X" is
+    incomplete — agents follow rules they understand and quietly rationalize
+    around rules they don't. This applies MOST in safety-critical domains, not
+    least: the higher the stakes, the more the rule needs its why.
 
 ## Output format
 This section must contain a LITERAL TEMPLATE — not a prose description of the format.
 The agent will pattern-match against this template. Write the actual structure with
 placeholder values, comments, or real examples. If the output is code, show the code
 pattern. If the output is a document, show the document skeleton.
+
+## Worked example
+ONE complete, end-to-end example pairing a realistic input with the exact output
+the skill should produce, in the Output format's structure. Label the halves:
+  **Input:** [a realistic artifact the skill receives — a diff, a component,
+  a query, a brief]
+  **Output:** [the exact deliverable, fully written out — not elided]
+This is the highest-leverage section for output quality: agents imitate a
+worked example more reliably than they follow rules. Keep it short but real —
+a small input, a complete output.
 
 ## Anti-patterns
 A table or bullet list of specific wrong approaches with the reason each one fails.
@@ -93,10 +114,17 @@ A short checklist (4–6 items) the agent should mentally run through before
 declaring the task complete. Each item should be a yes/no question or a confirmable
 binary check. This section prevents premature completion.
 
+Checklist items must verify OUTCOMES — evidence the agent can check after the
+work is done. Do NOT restate instructions from above in checkbox form ("All
+UPDATE/DELETE have WHERE clauses" duplicating the identical rule adds tokens
+but no verification value). Good items check side effects and end states the
+rules don't state directly: "existing tests still pass", "the output parses/
+compiles/renders", "nothing outside the requested scope was modified".
+
 Example:
   - [ ] Output matches the template in the Output format section
-  - [ ] Hard stops in the Instructions section were not violated
-  - [ ] [domain-specific check]
+  - [ ] [an end-state check the instructions don't literally state]
+  - [ ] [domain-specific evidence check]
 
 ════════════════════════════════════════════════════════
 OUTPUT RULES
@@ -177,9 +205,9 @@ INSTRUCTIONS section — mandatory sub-sections:
   State whether to use controlled or uncontrolled patterns and why.
 
   ### Hard stops
-  Do not use arbitrary color values — use only the defined design tokens.
-  Do not skip accessibility attributes — every interactive element needs role, aria-label, or equivalent.
-  Do not create a new component if an equivalent already exists in the design system.
+  Do not use arbitrary color values — they bypass the design tokens, so theming and dark mode silently break.
+  Do not skip accessibility attributes — every interactive element needs role, aria-label, or equivalent, because keyboard and screen-reader users cannot operate the component without them.
+  Do not create a new component if an equivalent already exists — duplicates fork the design system and drift apart under maintenance.
 
 OUTPUT FORMAT: Show a complete component file template including imports, props interface,
 component function, accessibility attributes, and export. Use placeholder values.
@@ -263,9 +291,9 @@ INSTRUCTIONS section — mandatory sub-sections:
   WHY: "Agents will run unbounded queries and mutate data without explicit guards."
 
   ### Hard stops
-  Do not run DELETE or UPDATE without a WHERE clause.
-  Do not expose raw error messages containing schema or connection details.
-  Do not load more than [N] rows without pagination.
+  Do not run DELETE or UPDATE without a WHERE clause — a missing filter rewrites every row in the table.
+  Do not expose raw error messages containing schema or connection details — they hand attackers a map of the database.
+  Do not load more than [N] rows without pagination — unbounded reads exhaust memory and rate limits exactly when the data grows.
 
 OUTPUT FORMAT: Show the actual query/pipeline/script template with placeholder identifiers
 and inline comments marking where the agent should adapt values.
@@ -304,9 +332,9 @@ INSTRUCTIONS section — mandatory sub-sections:
   WHY: "Agents rush to completion — explicit gates force confirmation loops."
 
   ### Hard stops
-  Do not start implementation before the spec is confirmed.
-  Do not merge without [required checks].
-  Do not skip the [specific gate] phase — state the consequence of skipping.
+  Do not start implementation before the spec is confirmed — unconfirmed specs are how the wrong thing gets built quickly.
+  Do not merge without [required checks] — the checks exist because each one has caught a real failure class before.
+  Do not skip the [specific gate] phase — state the concrete consequence of skipping it.
 
 OUTPUT FORMAT: Provide a literal template for the deliverable (spec document, PR description,
 deployment checklist). The agent fills in the template — it does not generate free-form.
@@ -395,11 +423,15 @@ INSTRUCTIONS section — mandatory sub-sections:
 
   ### Hard stops
   Never suggest disabling security controls (CORS, CSP, rate limiting, auth checks) as a
-  workaround — find the root cause instead.
-  Never log request bodies, auth tokens, passwords, session IDs, or PII.
-  Never use MD5 or SHA1 for passwords or security tokens — use bcrypt, Argon2, or PBKDF2.
-  Never recommend storing secrets in source code, committed .env files, or client storage.
-  Never return internal exception messages, stack traces, or database errors to API clients.
+  workaround — it trades a visible bug for an invisible vulnerability; find the root cause instead.
+  Never log request bodies, auth tokens, passwords, session IDs, or PII — logs outlive the
+  request and are readable by everyone with log access.
+  Never use MD5 or SHA1 for passwords or security tokens — both are brute-forceable at
+  commodity GPU speed; use bcrypt, Argon2, or PBKDF2.
+  Never recommend storing secrets in source code, committed .env files, or client storage —
+  anything committed or shipped to the client must be treated as already leaked.
+  Never return internal exception messages, stack traces, or database errors to API clients —
+  they disclose schema, paths, and versions that make targeted attacks easier.
 
 OUTPUT FORMAT: Provide a code review template with findings structured by severity
 (CRITICAL / HIGH / MEDIUM / LOW). Include remediation code examples, not just descriptions.
@@ -560,10 +592,10 @@ INSTRUCTIONS section — mandatory sub-sections:
   plan is the only way to catch it before it ships."
 
   ### Hard stops
-  Never build SQL by concatenating user input — always parameterise.
-  Never run DROP or TRUNCATE without an explicit backup or confirmation step.
-  Never write a destructive UPDATE/DELETE outside a transaction.
-  Never ship a migration with no rollback path.
+  Never build SQL by concatenating user input — it is the primary injection vector; always parameterise.
+  Never run DROP or TRUNCATE without an explicit backup or confirmation step — the data is unrecoverable the moment the statement commits.
+  Never write a destructive UPDATE/DELETE outside a transaction — a partial failure leaves the data half-changed with no way back.
+  Never ship a migration with no rollback path — an incident with an irreversible migration cannot be rolled back, only patched forward under pressure.
 
 OUTPUT FORMAT: Show the complete, runnable SQL or migration for the target engine —
 including the parameter placeholders, the index statements, and (for migrations) both
