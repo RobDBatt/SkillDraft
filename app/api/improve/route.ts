@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { getClientIp, checkRateLimit } from "@/lib/rateLimit";
+import { getClientIp, checkRateLimit, checkDailyCap } from "@/lib/rateLimit";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const SYSTEM_PROMPT = `You are an expert editor of SKILL.md files for AI coding agents.
@@ -82,6 +82,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
   }
 
   const token = request.headers.get("Authorization")?.replace("Bearer ", "");
+  let creditUserId: string | null = null;
 
   if (token) {
     const { data: { user } } = await supabaseAdmin.auth.getUser(token);
@@ -95,15 +96,31 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
         { status: 402 }
       );
     }
+    creditUserId = user.id;
   } else {
     const ip = getClientIp(request);
-    const { allowed } = checkRateLimit(ip);
+    const { allowed } = await checkRateLimit(ip);
     if (!allowed) {
       return NextResponse.json(
         { error: "Rate limit exceeded. Sign in and buy credits for unlimited access." },
         { status: 429, headers: { "X-RateLimit-Remaining": "0" } }
       );
     }
+  }
+
+  // ── Global spend backstop: cap total runs/day across all users. Placed after
+  //    the per-user gate so the counter can't be inflated past a user's rate
+  //    limit or credit balance and cheaply exhausted to deny service. Refund the
+  //    credit if a logged-in user is turned away here.
+  const cap = await checkDailyCap();
+  if (!cap.allowed) {
+    if (creditUserId) {
+      await supabaseAdmin.rpc("add_credits", { p_user_id: creditUserId, p_amount: 1 });
+    }
+    return NextResponse.json(
+      { error: "We've hit today's improvement limit. Please try again tomorrow." },
+      { status: 503 }
+    );
   }
 
   let body: { skill: string };
