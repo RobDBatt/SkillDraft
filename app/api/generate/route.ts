@@ -9,6 +9,19 @@ import type { Category } from "@/lib/questions";
 import type { PlatformId } from "@/lib/platforms";
 import { getClientIp, checkRateLimit, checkDailyCap } from "@/lib/rateLimit";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { cacheKeyFor, getCachedGeneration, putCachedGeneration } from "@/lib/generationCache";
+
+// Wrap a complete string in a one-shot text stream so a cache hit matches the
+// streamed response shape of a live generation.
+function streamText(text: string): ReadableStream {
+  const encoder = new TextEncoder();
+  return new ReadableStream({
+    start(controller) {
+      controller.enqueue(encoder.encode(text));
+      controller.close();
+    },
+  });
+}
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
 export async function POST(request: NextRequest): Promise<NextResponse | Response> {
@@ -63,14 +76,14 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     );
   }
 
-  let body: { category: Category; platform: PlatformId | null; answers: Answers };
+  let body: { category: Category; platform: PlatformId | null; answers: Answers; fresh?: boolean };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  const { category, platform = null, answers } = body;
+  const { category, platform = null, answers, fresh = false } = body;
 
   if (!category || !answers) {
     return NextResponse.json(
@@ -94,27 +107,52 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     return NextResponse.json({ error: message }, { status: 422 });
   }
 
+  const system = getSystemPrompt(category, platform);
+
+  // ── Lazy cache: identical menu-only inputs reuse a stored result (no model
+  //    call, ~$0). Free-text inputs aren't cacheable (key is null). "fresh"
+  //    (regenerate) skips the lookup but still refreshes the stored copy.
+  const cacheKey = cacheKeyFor(category, platform, answers, system);
+  if (cacheKey && !fresh) {
+    const cached = await getCachedGeneration(cacheKey);
+    if (cached !== null) {
+      return new Response(streamText(cached), {
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
+    }
+  }
+
   const client = new Anthropic({ apiKey });
 
   try {
     const stream = client.messages.stream({
       model: "claude-sonnet-4-6",
       max_tokens: 4096,
-      system: getSystemPrompt(category, platform),
+      system,
       messages: [{ role: "user", content: userMessage }],
     });
 
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
+        let full = "";
+        let stopReason: string | null = null;
         try {
           for await (const chunk of stream) {
             if (
               chunk.type === "content_block_delta" &&
               chunk.delta.type === "text_delta"
             ) {
+              full += chunk.delta.text;
               controller.enqueue(encoder.encode(chunk.delta.text));
+            } else if (chunk.type === "message_delta") {
+              stopReason = chunk.delta.stop_reason;
             }
+          }
+          // Only cache a clean, complete result — never a truncated (max_tokens)
+          // or refused generation, which would poison the cache for that combo.
+          if (cacheKey && full.length > 0 && stopReason === "end_turn") {
+            await putCachedGeneration(cacheKey, full, category, platform);
           }
           controller.close();
         } catch (err) {

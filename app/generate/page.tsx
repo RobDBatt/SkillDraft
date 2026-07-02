@@ -122,7 +122,7 @@ export default function GeneratePage() {
     setAnswers((prev) => ({ ...prev, [id]: value }));
   }
 
-  async function generate() {
+  async function generate(options?: { fresh?: boolean }) {
     if (isGenerating) return;
     setIsGenerating(true);
     setStep(4);
@@ -140,6 +140,7 @@ export default function GeneratePage() {
           category: selectedCategory,
           platform: selectedPlatform,
           answers,
+          fresh: options?.fresh === true,
         }),
       });
       if (!res.ok) {
@@ -273,7 +274,7 @@ export default function GeneratePage() {
             content={skillContent}
             category={selectedCategory!}
             platform={selectedPlatform}
-            onRegenerate={generate}
+            onRegenerate={() => generate({ fresh: true })}
             onStartOver={handleStartOver}
             isGenerating={isGenerating}
           />

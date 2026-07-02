@@ -1,0 +1,99 @@
+// Lazy cache for menu-only generations. Identical menu selections produce the
+// same prompt and therefore an interchangeable SKILL.md, so we store the first
+// result and serve it for ~$0 on repeat. Requests with any free-text are unique
+// and skip the cache entirely.
+
+import { createHash } from "crypto";
+import { getCategoryById, type Category } from "@/lib/questions";
+import type { PlatformId } from "@/lib/platforms";
+import type { Answers } from "@/lib/buildMessage";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+
+// Bump to invalidate every cached output. The system prompt text is also folded
+// into each key, so most prompt edits self-invalidate; bump this for changes to
+// the user-message format (buildMessage) that the system prompt doesn't capture.
+const PROMPT_VERSION = "v1";
+
+function isEmpty(raw: string | string[] | undefined): boolean {
+  return raw === undefined || raw === "" || (Array.isArray(raw) && raw.length === 0);
+}
+
+/**
+ * Cacheable only when every answer comes from the fixed menus — no free-text.
+ * A filled text/textarea field, an "other" selection, or an "<id>_other"
+ * companion makes the output unique, so those requests bypass the cache.
+ */
+function isCacheable(category: Category, answers: Answers): boolean {
+  const config = getCategoryById(category);
+  if (!config) return false;
+
+  for (const q of config.questions) {
+    const raw = answers[q.id];
+    if (isEmpty(raw)) continue;
+    if (q.type === "text" || q.type === "textarea") return false;
+    if (Array.isArray(raw)) {
+      if (raw.includes("other")) return false;
+    } else if (raw === "other") {
+      return false;
+    }
+  }
+  for (const [k, v] of Object.entries(answers)) {
+    if (k.endsWith("_other") && typeof v === "string" && v.trim() !== "") return false;
+  }
+  return true;
+}
+
+// Order-independent canonical form so e.g. [ts, react] and [react, ts] collide.
+function canonical(category: Category, platform: PlatformId | null, answers: Answers): string {
+  const config = getCategoryById(category)!;
+  const parts = [`c=${category}`, `p=${platform ?? ""}`];
+  for (const q of config.questions) {
+    const raw = answers[q.id];
+    if (isEmpty(raw)) continue;
+    parts.push(`${q.id}=${Array.isArray(raw) ? [...raw].sort().join(",") : raw}`);
+  }
+  return parts.join("|");
+}
+
+/** Stable cache key for a menu-only request, or null if it isn't cacheable. */
+export function cacheKeyFor(
+  category: Category,
+  platform: PlatformId | null,
+  answers: Answers,
+  systemPrompt: string
+): string | null {
+  if (!isCacheable(category, answers)) return null;
+  const material = [PROMPT_VERSION, systemPrompt, canonical(category, platform, answers)].join("\n");
+  return createHash("sha256").update(material).digest("hex");
+}
+
+export async function getCachedGeneration(key: string): Promise<string | null> {
+  try {
+    const { data, error } = await supabaseAdmin.rpc("get_generation_cache", { p_key: key });
+    if (error) throw error;
+    return typeof data === "string" && data.length > 0 ? data : null;
+  } catch (err) {
+    // Treat any failure as a miss — fall through to a normal generation.
+    console.error("[generationCache] get failed:", err);
+    return null;
+  }
+}
+
+export async function putCachedGeneration(
+  key: string,
+  content: string,
+  category: Category,
+  platform: PlatformId | null
+): Promise<void> {
+  try {
+    const { error } = await supabaseAdmin.rpc("put_generation_cache", {
+      p_key: key,
+      p_content: content,
+      p_category: category,
+      p_platform: platform,
+    });
+    if (error) throw error;
+  } catch (err) {
+    console.error("[generationCache] put failed:", err);
+  }
+}
