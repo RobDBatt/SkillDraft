@@ -29,7 +29,7 @@
 *.xlsx
 
 # claude code
-.claude/
+.claude/settings.local.json
 
 # debug
 npm-debug.log*
