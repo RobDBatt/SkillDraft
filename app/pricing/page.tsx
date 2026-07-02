@@ -5,12 +5,11 @@ import Link from "next/link";
 import { SiteNav } from "@/components/SiteNav";
 import { supabase } from "@/lib/supabase";
 
-type LoadingKey = "starter" | "standard" | "power" | "pro" | null;
+type LoadingKey = "standard" | "power" | "pro" | null;
 
 const PACKS = [
-  { key: "starter",  credits: 20,  price: 4,  label: "Starter",  per: "20¢ / credit" },
-  { key: "standard", credits: 75,  price: 12, label: "Standard", per: "16¢ / credit", popular: true },
-  { key: "power",    credits: 200, price: 25, label: "Power",    per: "12¢ / credit" },
+  { key: "standard", credits: 80,  price: 12, label: "Standard", per: "15¢ / credit", popular: true },
+  { key: "power",    credits: 200, price: 24, label: "Power",    per: "12¢ / credit" },
 ] as const;
 
 export default function PricingPage() {
@@ -198,7 +197,7 @@ export default function PricingPage() {
         <p className="text-silver-dim text-[11px] uppercase tracking-[0.14em] mb-4" style={{ fontFamily: "var(--font-mono)" }}>
           One-time top-ups
         </p>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           {PACKS.map(pack => (
             <div key={pack.key} className="border border-border-dark rounded-[4px] p-5 flex flex-col gap-4">
               <div>

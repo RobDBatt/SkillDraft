@@ -366,6 +366,27 @@ export default function SkillOutput({
 
         </div>
       </div>
+
+      {/* ── Support — shown once the skill has finished generating ───────── */}
+      {!isGenerating && content && (
+        <div className="mt-10 pt-6 border-t border-border-dark flex flex-col items-center gap-2.5 text-center">
+          <p
+            className="text-silver-muted text-xs"
+            style={{ fontFamily: "var(--font-sans)" }}
+          >
+            Saved you some time? Help keep SkillDraft running.
+          </p>
+          <a
+            href="https://buymeacoffee.com/battbotstu0"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 border border-amber/40 text-amber text-sm font-semibold px-5 py-2.5 rounded-[4px] motion-safe:transition-all motion-safe:duration-200 hover:bg-amber/10 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+            style={{ fontFamily: "var(--font-sans)" }}
+          >
+            <span aria-hidden="true">☕</span> Buy me a coffee
+          </a>
+        </div>
+      )}
     </div>
   );
 }
