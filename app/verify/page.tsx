@@ -268,7 +268,9 @@ export default function VerifyPage() {
               </span>
             </div>
             <p className="text-silver-muted text-xs leading-relaxed mt-2">
-              Scored against a 7-dimension rubric benchmarked on Anthropic&apos;s reference skills.
+              A structure score: SkillDraft&apos;s 7-dimension rubric rewards explicit triggers,
+              hard stops, anti-patterns, and checklists — not general prose quality. Well-written
+              skills in other styles can score low here.
             </p>
           </div>
         </div>

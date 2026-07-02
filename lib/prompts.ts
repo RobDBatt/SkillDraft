@@ -1,13 +1,14 @@
 // Category-specific system prompts for the Anthropic API call.
-// Benchmarked against Anthropic's own reference skills (skill-creator, test-driven-development)
-// and the agentskills.io open specification. Target: 8–9/10 on the quality rubric.
+// The structure below is SkillDraft's house style (inspired by anthropics/skills
+// and the agentskills.io spec — but NOT how those reference skills are actually
+// written; they score 10–46/100 on our own rubric, see fixtures/verify-corpus).
 
 import type { Category } from "./questions";
 import type { PlatformId } from "./platforms";
 
 // ─── Base rules (shared across all categories) ────────────────────────────────
 //
-// The seven quality markers from the benchmarking study:
+// The seven structural quality markers the rubric scores:
 //   1. Dense description (40-50 words, multi-scenario trigger coverage)
 //   2. "Why" annotation on every key instruction
 //   3. Dedicated "When NOT to use this" section with concrete examples
