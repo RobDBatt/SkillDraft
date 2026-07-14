@@ -3,6 +3,7 @@
 // community marquee | trust strip | comparison | features + install band |
 // how-it-works | closing CTA | footer.
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteNav } from "@/components/SiteNav";
 import { Logo } from "@/components/Logo";
@@ -11,6 +12,10 @@ import { CountUp } from "@/components/CountUp";
 import { CopyButton } from "@/components/CopyButton";
 import { VerifyHeroLink } from "@/components/VerifyHeroLink";
 import { supabaseAdmin, safeSelect } from "@/lib/supabase-admin";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "https://skilldraft.io" },
+};
 
 // ISR: rebuild hourly so the homepage skill preview reflects new shared skills.
 export const revalidate = 3600;
@@ -94,8 +99,49 @@ export default async function HomePage() {
         }))
       : SAMPLE_ROW_A;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://skilldraft.io/#organization",
+        name: "SkillDraft",
+        url: "https://skilldraft.io",
+        logo: "https://skilldraft.io/icon.svg",
+        email: "hi@skilldraft.io",
+        description:
+          "SkillDraft generates quality-scored, security-scanned SKILL.md files for every major AI coding agent.",
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://skilldraft.io/#website",
+        name: "SkillDraft",
+        url: "https://skilldraft.io",
+        publisher: { "@id": "https://skilldraft.io/#organization" },
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://skilldraft.io/#software",
+        name: "SkillDraft",
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "Web",
+        url: "https://skilldraft.io",
+        description:
+          "Generate production-ready SKILL.md files for Claude Code, Cursor, Windsurf, Codex CLI, and Gemini CLI. Every skill is scored on 7 quality dimensions and security scanned before publishing.",
+        publisher: { "@id": "https://skilldraft.io/#organization" },
+        offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <SiteNav />
 
       <main id="top">

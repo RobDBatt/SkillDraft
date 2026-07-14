@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Explore Skills — SkillDraft",
   description:
     "Browse community-shared SKILL.md files. Find skills for development, frontend, content writing, data integrations, and more — copy any skill directly to your AI agent.",
+  alternates: { canonical: "https://skilldraft.io/explore" },
   openGraph: {
     title: "Explore Skills — SkillDraft",
     description:

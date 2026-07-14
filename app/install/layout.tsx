@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Installation Guide — SkillDraft",
   description:
     "Step-by-step installation paths for every AI agent: Claude Code, Cursor, GitHub Copilot, ChatGPT, Windsurf, Codex CLI, and Gemini CLI.",
+  alternates: { canonical: "https://skilldraft.io/install" },
   openGraph: {
     title: "Installation Guide — SkillDraft",
     description:

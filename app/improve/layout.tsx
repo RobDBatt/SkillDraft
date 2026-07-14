@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Improve a SKILL.md — SkillDraft",
   description:
     "Paste your existing SKILL.md and get an AI-powered rewrite with sharper instructions, better structure, tighter constraints — plus a summary of every change made.",
+  alternates: { canonical: "https://skilldraft.io/improve" },
   openGraph: {
     title: "Improve a SKILL.md — SkillDraft",
     description:

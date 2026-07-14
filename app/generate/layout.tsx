@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Generate a SKILL.md — SkillDraft",
   description:
     "Answer targeted questions about your workflow and get a production-ready SKILL.md for Claude Code, Cursor, ChatGPT, Windsurf, Codex CLI, and Gemini CLI in under two minutes.",
+  alternates: { canonical: "https://skilldraft.io/generate" },
   openGraph: {
     title: "Generate a SKILL.md — SkillDraft",
     description:

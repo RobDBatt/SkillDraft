@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "FAQ — SkillDraft",
   description:
     "Everything you need to know about SKILL.md files and SkillDraft — what they are, how they work, and how to install them on every major AI agent.",
+  alternates: { canonical: "https://skilldraft.io/faq" },
   openGraph: {
     title: "FAQ — SkillDraft",
     description:
