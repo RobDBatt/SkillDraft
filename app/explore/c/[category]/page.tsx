@@ -77,6 +77,9 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   return {
     title: `${meta.headline} — SkillDraft`,
     description: meta.description,
+    // Per-page canonical — without this the page inherits /explore's canonical
+    // from the parent layout and gets treated as a duplicate of /explore.
+    alternates: { canonical: `https://skilldraft.io/explore/c/${category}` },
     openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/c/${category}` },
   };
 }
