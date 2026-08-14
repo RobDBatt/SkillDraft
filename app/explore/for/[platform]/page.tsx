@@ -39,6 +39,12 @@ const PLATFORM_META: Record<string, { label: string; headline: string; descripti
     description: "Agent skills built for Gemini CLI. Compatible with the agentskills.io open standard — install once, use across coding sessions.",
     agentId: "gemini-cli",
   },
+  "github-copilot": {
+    label: "GitHub Copilot",
+    headline: "GitHub Copilot Skills",
+    description: "SKILL.md agent skills for GitHub Copilot. Drop them in .github/skills/ and they load in the cloud coding agent, Copilot CLI, and VS Code agent mode.",
+    agentId: "copilot",
+  },
 };
 
 export async function generateStaticParams() {
@@ -52,6 +58,9 @@ export async function generateMetadata({ params }: { params: Promise<{ platform:
   return {
     title: `${meta.headline} — SkillDraft`,
     description: meta.description,
+    // Per-page canonical — without this the page inherits /explore's canonical
+    // from the parent layout and gets treated as a duplicate of /explore.
+    alternates: { canonical: `https://skilldraft.io/explore/for/${platform}` },
     openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/for/${platform}` },
   };
 }

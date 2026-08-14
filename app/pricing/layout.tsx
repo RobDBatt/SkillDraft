@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Pricing — SkillDraft",
   description:
     "Start free with 5 credits. Buy more when you need them, or go Pro for 50 credits a month.",
+  alternates: { canonical: "https://skilldraft.io/pricing" },
   openGraph: {
     title: "Pricing — SkillDraft",
     description:
