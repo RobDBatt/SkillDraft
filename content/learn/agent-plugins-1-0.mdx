@@ -1,0 +1,71 @@
+---
+title: "Agent Plugins 1.0: Your SKILL.md Now Ships With Its Tools"
+description: "Agent Plugins 1.0 packages Agent Skills and MCP servers into one installable folder. The plugin.json manifest, the directory layout, who backs it, and the four things v1 deliberately leaves out."
+slug: "agent-plugins-1-0"
+date: "2026-08-20"
+---
+
+A skill tells an agent *how* to do something. An MCP server gives it the *tools* to actually do it. Until August 2026 you shipped those separately and hoped the user wired both up. [Agent Plugins 1.0.0](https://github.com/agentplugins/agent-plugins-spec) puts them in one folder with one manifest.
+
+The spec landed **6 August 2026**. GitHub shipped client support on **12 August** across VS Code, Copilot CLI, the Copilot SDK, and the Copilot app. Other launch clients are ChatGPT, Codex, Cursor, and Kiro.
+
+## A plugin is a directory with a manifest
+
+```
+my-plugin/
+├── plugin.json
+├── skills/
+│   └── summarize/
+│       ├── SKILL.md
+│       ├── scripts/
+│       └── references/
+├── mcp.json
+├── com.example.client/
+└── LICENSE
+```
+
+`plugin.json` requires exactly two fields:
+
+```json
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "deploy-runbook"
+}
+```
+
+`name` runs 1–64 characters, lowercase alphanumeric plus hyphens and periods, with no consecutive `--` or `..`. Everything else — `version`, `description`, `author`, `homepage`, `repository`, `license`, `keywords` — is optional.
+
+Two details in there are easy to miss. The `skills/` location is **fixed and not configurable**, and discovery only looks at immediate children that contain a `SKILL.md` — no recursion. And clients **must not fetch the schema** while loading a plugin; they match the `$schema` string against versions they already support locally. A plugin that points at a schema version your client doesn't know is not a plugin your client will resolve by going and reading it.
+
+`mcp.json` declares servers under `mcpServers`, with three transport types: `stdio`, `streamable-http`, and `sse` (legacy, optional). Clients have to support at least one of the first two.
+
+Client-specific material goes in reverse-domain directories — `com.github.copilot/` — and any client that doesn't implement a namespace ignores it without complaining. That's the part that makes this actually portable: one folder can carry Copilot's hooks and Cursor's config side by side, and neither client errors on the other's.
+
+## The governance is the interesting part
+
+Core maintainers come from Amazon, Anysphere (Cursor), Microsoft, OpenAI, and Vercel, with Google joining as a core maintainer. The charter forbids any single vendor from holding a majority of seats.
+
+That last clause is doing real work. [Agent Skills](/learn/agent-skills-open-standard) became a standard by adoption — Anthropic published a format, others implemented it, and it worked out. Agent Plugins started as a governed standard with a structural rule against capture. Those are different bets, and the second one is the one I'd expect to survive a vendor changing its mind.
+
+## What v1 deliberately leaves out, and why it matters
+
+Here is the thing I'd want to know before installing anything from a marketplace. Version 1.0.0 defines:
+
+- **no permission model or sandboxing** — the spec notes clients differ in inherited environment and PATH behavior, and declines to define filesystem, network, or process isolation
+- **no signing or verification** — no signatures, no checksums, no attestation
+- **no secrets mechanism** — the spec is blunt that configured `env` values are "visible package data, not a portable secret mechanism," and that plugins **must not** embed credentials
+- **no credential references** — no OAuth configuration, nothing portable
+
+All four are listed as future work. The spec does constrain paths: package paths must resolve inside the plugin root, and symlinks may resolve within the root but not escape it. Command arguments and environment values are explicitly treated as opaque strings and get no such containment.
+
+So consider what a plugin now is. A skill on its own is instructions your agent follows with your permissions — [already a prompt-injection surface with a delivery mechanism](/verify). A plugin bundles that with an MCP server, which is a process that runs. One `npx` install now brings both, from a marketplace, with no signature and no sandbox.
+
+I don't think that's a reason to avoid plugins. It is a reason to read `mcp.json` before you install one, and to treat "it's in the marketplace" as meaning nothing about safety. The scanning problem got harder in August and the tooling has not caught up — including ours, which scans skill content and does not yet inspect a bundled MCP server's command line.
+
+## What this changes for skill authors
+
+Not much yet, and that's deliberate. Commands, hooks, agents, rules, and LSP servers all stayed out of v1 — the spec says they're excluded "until their formats converge." A well-written `SKILL.md` is still the unit of work. Plugins are the distribution wrapper around it.
+
+The practical move is to keep writing to the [portable subset](/learn/agent-skills-open-standard) and add a `plugin.json` when you have a tool to ship alongside the instructions. If you don't have an MCP server, a plugin buys you a manifest and nothing else.
+
+SkillDraft [generates the skill](/generate); the plugin folder is four lines of JSON around it.
