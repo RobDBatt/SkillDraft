@@ -30,7 +30,7 @@ const SKILL_MD_FAQS = [
   {
     id: "multiple-platforms",
     q: "Can I use the same SKILL.md on multiple platforms?",
-    a: "Yes — if you select \"Universal\" when generating, SkillDraft produces a file that works across Claude Code, Cursor, Codex, Gemini CLI, and Windsurf. GitHub Copilot and ChatGPT use different formats and need separate files.",
+    a: "Yes — if you select \"Universal\" when generating, SkillDraft produces a file that works across Claude Code, GitHub Copilot, Cursor, Codex, Gemini CLI, and Windsurf. Copilot adopted the same SKILL.md standard during 2026 (it even reads .claude/skills directories). ChatGPT still uses a different format and needs a separate file.",
   },
   {
     id: "how-many",

@@ -7,7 +7,7 @@
 // Optional env:
 //   SEED_USER_ID    owner user_id for the rows (defaults to the account that
 //                   owns the most existing skills)
-//   VERIFY_BASE_URL base URL for the /api/verify scorer (default https://www.skilldraft.io)
+//   VERIFY_BASE_URL base URL for the /api/verify scorer (default https://skilldraft.io)
 //
 // Each skill is scored + security-scanned through the live /api/verify endpoint,
 // so the stored quality_score is real, and a skill that fails the scan is skipped.
@@ -31,7 +31,7 @@ const AGENT_TARGETS = ["claude-code", "cursor", "windsurf", "codex", "gemini-cli
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const verifyBase = process.env.VERIFY_BASE_URL ?? "https://www.skilldraft.io";
+const verifyBase = process.env.VERIFY_BASE_URL ?? "https://skilldraft.io";
 
 if (!url || !key) {
   console.error("Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in the environment.");

@@ -19,9 +19,10 @@ const VERSION  = "0.1.0";
 // ── Agent path detection ──────────────────────────────────────────────────────
 
 const AGENT_PATHS = {
-  "claude-code": join(homedir(), ".claude", "skills"),
-  "codex":       join(homedir(), ".codex",  "skills"),
-  "gemini-cli":  join(homedir(), ".gemini", "skills"),
+  "claude-code": join(homedir(), ".claude",  "skills"),
+  "codex":       join(homedir(), ".codex",   "skills"),
+  "gemini-cli":  join(homedir(), ".gemini",  "skills"),
+  "copilot":     join(homedir(), ".copilot", "skills"),
 };
 
 // Cursor / Windsurf are project-local — look from cwd upward
@@ -45,6 +46,8 @@ function detectAgents() {
 
   if (existsSync(join(root, ".cursor")))   found.push({ agent: "cursor",   skillsDir: join(root, ".cursor",   "rules"), type: "project" });
   if (existsSync(join(root, ".windsurf"))) found.push({ agent: "windsurf", skillsDir: join(root, ".windsurf", "rules"), type: "project" });
+  // Copilot project skills live in .github/skills (also read by the cloud coding agent)
+  if (existsSync(join(root, ".github")))   found.push({ agent: "copilot",  skillsDir: join(root, ".github",   "skills"), type: "project" });
 
   return found;
 }
@@ -71,7 +74,7 @@ async function install(skillId) {
   const agents = detectAgents();
   if (agents.length === 0) {
     console.log("\n⚠  No supported agents detected.");
-    console.log("   Install Claude Code, Cursor, Windsurf, Codex CLI, or Gemini CLI first.");
+    console.log("   Install Claude Code, GitHub Copilot, Cursor, Windsurf, Codex CLI, or Gemini CLI first.");
     console.log(`\n   You can copy the skill content from: https://skilldraft.io/explore`);
     process.exit(0);
   }
@@ -124,7 +127,7 @@ function listAgents() {
   const agents = detectAgents();
   console.log("\n📋  Detected agents:\n");
   if (agents.length === 0) {
-    console.log("  None found. Install Claude Code, Cursor, Windsurf, Codex CLI, or Gemini CLI.");
+    console.log("  None found. Install Claude Code, GitHub Copilot, Cursor, Windsurf, Codex CLI, or Gemini CLI.");
     return;
   }
   for (const { agent, skillsDir, type } of agents) {
@@ -155,7 +158,7 @@ function help() {
     npx skilldraft list
 
   SUPPORTED AGENTS
-    Claude Code, Cursor, Windsurf, Codex CLI, Gemini CLI
+    Claude Code, GitHub Copilot, Cursor, Windsurf, Codex CLI, Gemini CLI
 
   MORE
     https://skilldraft.io/explore

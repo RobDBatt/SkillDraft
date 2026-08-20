@@ -1,0 +1,66 @@
+---
+title: "copilot-instructions.md vs Agent Skills: Which Should You Use?"
+description: "GitHub Copilot now has two customization layers — the always-on copilot-instructions.md file and on-demand agent skills. When to use each, and how to migrate."
+slug: "copilot-instructions-vs-skills"
+date: "2026-08-19"
+---
+
+Before agent skills, Copilot had one main repo-level customization tool: `.github/copilot-instructions.md`, a single file injected into *every* Copilot conversation in the repo. Skills don't replace it — they solve a different problem. Knowing which layer to use keeps both effective.
+
+## The core difference: always-on vs on-demand
+
+**`copilot-instructions.md` is unconditional.** Everything in it is loaded every session, whether you're writing SQL, fixing CSS, or drafting a README. That's exactly right for facts that are always true: what the project is, how to build it, what the test command is.
+
+**Agent skills are conditional.** A skill in `.github/skills/` loads only when its description matches the task (or when you invoke it with `/skill-name`). That's exactly right for specialized workflows: release processes, API conventions, migration recipes, database review rules.
+
+| | copilot-instructions.md | Agent skills |
+|---|---|---|
+| Loaded | every session | only when relevant |
+| Scope | one file per repo | one folder per workflow, as many as you need |
+| Supporting files | no | yes — scripts, templates, examples ride along |
+| Context cost | paid on every request | paid only when triggered |
+| Portability | Copilot-only | open standard — Claude Code, Cursor, Codex, Gemini CLI |
+| Explicit invocation | no | `/skill-name` in a prompt |
+
+## The failure mode skills fix
+
+Teams used to cram everything into `copilot-instructions.md` because it was the only option. The result was a 500-line file where release steps sat next to CSS conventions next to SQL style rules — all of it consuming context on every single request, most of it irrelevant to the task at hand. Long, unconditional instruction files also dilute themselves: the more rules you inject unconditionally, the less weight any single rule carries.
+
+Skills fix this by making context conditional. Ten tightly-scoped skills cost nothing until one is needed, and the one that loads arrives complete — with its scripts and examples.
+
+## What belongs where
+
+Keep in `copilot-instructions.md`:
+
+- What the project is and how it's structured
+- Build, test, and run commands
+- Universal conventions (language version, package manager, formatting tool)
+- Things that must hold in *every* interaction
+
+Move to skills:
+
+- Multi-step workflows (releases, migrations, scaffolding)
+- Domain conventions that only apply to some tasks (API design, database changes, frontend components)
+- Anything with supporting files — templates, example code, checklists
+- Anything you'd want in another agent too, since SKILL.md is portable and `copilot-instructions.md` isn't
+
+## Migrating: a 20-minute exercise
+
+1. Open your `copilot-instructions.md` and label each section *always* or *sometimes*.
+2. Leave the *always* sections where they are — trimmed of everything else, the file gets sharper.
+3. For each *sometimes* section, create `.github/skills/<workflow-name>/SKILL.md` with frontmatter:
+
+```markdown
+---
+name: db-migrations
+description: Database migration rules for this repo. Use when creating,
+  editing, or reviewing migration files or schema changes.
+---
+```
+
+4. Paste the section content below the frontmatter, then add the two things unconditional files never needed: trigger phrases in the description, and a "when NOT to use this" note in the body.
+5. Verify with `/skills list` in the Copilot CLI, or ask Copilot "what skills do you have?"
+
+Step 4 is where hand-migrated skills usually fall short — an instruction block that lived in an always-on file was never written to *trigger*. [SkillDraft's generator](/generate) rebuilds the section as a properly structured skill (trigger-dense description, scope constraints, hard stops) and scores the result, which is faster than learning the routing rules by trial and error.
+
+For the full picture of how Copilot skills work, see the [complete guide to Copilot SKILL.md](/learn/github-copilot-skills-guide).

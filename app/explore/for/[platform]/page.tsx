@@ -42,7 +42,7 @@ const PLATFORM_META: Record<string, { label: string; headline: string; descripti
   "github-copilot": {
     label: "GitHub Copilot",
     headline: "GitHub Copilot Skills",
-    description: "SKILL.md agent skills for GitHub Copilot. Drop them in .github/skills/ and they load in the cloud coding agent, Copilot CLI, and VS Code agent mode.",
+    description: "SKILL.md agent skills for GitHub Copilot. Drop them in .github/skills/ and they load in the Copilot cloud agent, code review, Copilot CLI, the Copilot app, and agent mode in VS Code and JetBrains IDEs.",
     agentId: "copilot",
   },
 };

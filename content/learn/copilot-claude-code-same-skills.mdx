@@ -1,0 +1,49 @@
+---
+title: "Use the Same SKILL.md in Claude Code and GitHub Copilot"
+description: "Copilot reads .claude/skills directories natively. How to share one skill file between Claude Code and GitHub Copilot, what differs between the two, and what to avoid."
+slug: "copilot-claude-code-same-skills"
+date: "2026-08-19"
+---
+
+Since GitHub Copilot adopted the [Agent Skills open standard](https://github.com/agentskills/agentskills), the most useful detail for mixed teams is this: **Copilot reads `.claude/skills` directories natively.** A skill you wrote for Claude Code works in Copilot with zero changes — same file, same folder, no duplication.
+
+## Why this works
+
+Both agents implement the same specification. A skill is a directory with a `SKILL.md` inside; the file has YAML frontmatter with a required `name` and `description`, followed by Markdown instructions. Both agents route on the description: when it matches the task, the skill loads into context.
+
+Copilot's supported project locations are `.github/skills`, `.claude/skills`, and `.agents/skills` — so a repo that already has Claude Code skills is already a repo with Copilot skills.
+
+## The practical setup for a mixed team
+
+If some of your team uses Claude Code and some uses Copilot:
+
+**Option 1 — keep `.claude/skills` (least work).** Existing Claude Code repos need no changes. Copilot users get every skill immediately. The only cost is optics: the directory is named after one vendor.
+
+**Option 2 — move to `.agents/skills` (vendor-neutral).** Copilot reads it, and it signals that skills are agent-agnostic team infrastructure. Verify the other agents your team uses also read this path before moving.
+
+**Option 3 — `.github/skills` (GitHub-centric).** The canonical Copilot location, and where GitHub's own tooling (like `gh skill install`) points. Claude Code doesn't read this path by default, so only choose it if Copilot is your primary agent.
+
+For personal skills the story is similar: Copilot reads `~/.copilot/skills` and `~/.agents/skills`, while Claude Code uses `~/.claude/skills`. There's no shared default here, so cross-agent personal skills are easiest managed with a tool — `npx skilldraft install` detects every agent on your machine and installs to each one's directory in one command.
+
+## What actually differs between the agents
+
+The file format is shared; the runtime isn't. Keep these differences in mind when writing one skill for both:
+
+| | Claude Code | GitHub Copilot |
+|---|---|---|
+| Project skill paths | `.claude/skills` | `.github/skills`, `.claude/skills`, `.agents/skills` |
+| Personal skill paths | `~/.claude/skills` | `~/.copilot/skills`, `~/.agents/skills` |
+| Explicit invocation | mention the skill, or slash command | `/skill-name` in the prompt |
+| Sub-agents | yes — skills can say "spawn a subagent for X" | no equivalent instruction |
+| Surfaces | terminal | cloud agent, code review, CLI, Copilot app, VS Code + JetBrains agent mode |
+
+The sub-agent row is the one that bites. A Claude Code skill that instructs "delegate the audit to a subagent" is meaningless to Copilot. For shared skills, write instructions any agent can execute: read files, follow rules, produce output in a given format.
+
+## Rules for writing a truly portable skill
+
+1. **Stick to the standard frontmatter** — `name`, `description`, optionally `license`. Vendor-specific frontmatter keys may be ignored or rejected by other agents.
+2. **Don't reference agent-specific tools.** "Use the Read tool" is Claude Code dialect. Say "read the file" and let each agent map it.
+3. **State environment assumptions.** Tool access differs across agents — if the skill needs shell access or network, say so, and describe a fallback.
+4. **Test the description against both routers.** Both agents route on description matching, and dense trigger phrases win in both. One well-written description serves both.
+
+SkillDraft's **Universal** target does this automatically — it generates a skill constrained to the portable subset that works across Claude Code, Copilot, Cursor, Windsurf, Codex CLI, and Gemini CLI. [Generate one](/generate), or read the [Copilot setup guide](/learn/github-copilot-skills-setup) if you're placing files by hand.

@@ -1,0 +1,120 @@
+---
+title: "GitHub Copilot Skills: The Complete Guide to SKILL.md"
+description: "How agent skills work in GitHub Copilot — where SKILL.md files go, the required frontmatter, how Copilot decides to load them, and how to invoke them explicitly."
+slug: "github-copilot-skills-guide"
+date: "2026-08-19"
+---
+
+GitHub Copilot now supports agent skills — folders of instructions, scripts, and resources that Copilot loads when they're relevant to the task at hand. Skills follow the same open [Agent Skills specification](https://github.com/agentskills/agentskills) used by Claude Code, Codex CLI, Gemini CLI, and a growing list of other agents, which means a skill you write once can travel with you across tools.
+
+This guide covers everything you need to write, install, and trigger skills in Copilot.
+
+## Where Copilot skills work
+
+Agent skills are supported in three Copilot surfaces:
+
+- **The Copilot cloud coding agent** — the agent that works on GitHub issues and pull requests for you
+- **Copilot CLI** — the terminal agent
+- **Agent mode in VS Code**
+
+Visual Studio's Copilot has also added agent skills support, so skills defined in your repository reach the whole team regardless of editor.
+
+## Anatomy of a skill
+
+A skill is a directory containing a `SKILL.md` file, plus any supporting files the skill needs (scripts, templates, reference docs):
+
+```text
+.github/skills/
+  api-conventions/
+    SKILL.md
+    examples/
+      good-endpoint.ts
+```
+
+The `SKILL.md` file itself is Markdown with YAML frontmatter:
+
+```markdown
+---
+name: api-conventions
+description: REST API conventions for this repo. Use when creating or
+  modifying API endpoints, route handlers, or API middleware.
+---
+
+## Endpoint rules
+
+- All routes live in src/api/, one file per resource
+- Every handler validates input with zod before touching the database
+...
+```
+
+Two frontmatter fields are required:
+
+| Field | Rules |
+|---|---|
+| `name` | Required. Lowercase, hyphens for spaces, and it should match the skill's directory name. |
+| `description` | Required. What the skill does *and when Copilot should use it*. This is the routing signal. |
+| `license` | Optional. License that applies to the skill. |
+
+## Where to put skills
+
+Copilot looks in two kinds of locations:
+
+**Project skills** live in your repository and apply to that repo for everyone who works in it:
+
+- `.github/skills/`
+- `.claude/skills/`
+- `.agents/skills/`
+
+Yes — Copilot reads `.claude/skills` directly. If your team already maintains Claude Code skills in the repo, Copilot picks them up without any migration.
+
+**Personal skills** live in your home directory and apply across all your projects:
+
+- `~/.copilot/skills/`
+- `~/.agents/skills/`
+
+GitHub has said organization-level and enterprise-level skills are coming.
+
+## How Copilot decides to load a skill
+
+When Copilot starts a task, it scans the frontmatter descriptions of available skills. If a description matches the task, Copilot injects the full `SKILL.md` into its context and follows the instructions — including running any scripts or reading any reference files bundled in the skill directory.
+
+This makes the `description` field the single most important line in the file. A vague description ("Helpful API guidelines") won't trigger. A dense one ("Use when creating or modifying API endpoints, route handlers, or API middleware") will.
+
+You can also invoke a skill explicitly by name in your prompt:
+
+```text
+Use the /api-conventions skill to add a DELETE endpoint for projects.
+```
+
+## Managing skills in the Copilot CLI
+
+The CLI ships with a set of `/skills` commands:
+
+- `/skills list` — show every skill Copilot can currently see
+- `/skills info skill-name` — details on one skill, including where it's loaded from
+- `/skills add` — register an extra directory to load skills from
+- `/skills reload` — pick up skills added mid-session without restarting
+- `/skills remove skill-directory` — remove a directly-added skill
+
+You can also install skills from any GitHub repository with `gh skill` in the GitHub CLI, which records provenance metadata (source repo, ref, and tree SHA) in the installed skill's frontmatter.
+
+## Where to find existing skills
+
+- [anthropics/skills](https://github.com/anthropics/skills) — Anthropic's public skill collection
+- [github/awesome-copilot](https://github.com/github/awesome-copilot) — GitHub's community collection
+- [microsoft/skills](https://github.com/microsoft/skills) — Microsoft's catalog for Azure and Microsoft SDK work
+- [SkillDraft's explore gallery](/explore/for/github-copilot) — community skills with quality scores and security scans
+
+## Common mistakes
+
+**Directory name doesn't match `name`.** Copilot expects the frontmatter `name` to match the folder. If they diverge, tooling like `/skills info` gets confused.
+
+**Description describes the content, not the trigger.** "TypeScript style guide" tells Copilot what's inside, not when to load it. Add the trigger: "Use when writing or reviewing TypeScript in this repo."
+
+**One giant skill.** Skills load whole. A 2,000-line mega-skill burns context on every trigger. Split by workflow — one skill for API conventions, one for testing, one for commit hygiene.
+
+**No "when NOT to use" section.** Without negative scope, broad skills fire on everything and dilute the agent's attention.
+
+## Generate one instead
+
+Hand-writing a well-scoped SKILL.md with dense trigger phrases, hard stops, and anti-patterns takes practice. [SkillDraft's generator](/generate) produces a quality-scored, security-scanned skill for Copilot (or any other agent) from a few questions — and the [install guide](/install) covers the exact paths for every platform.

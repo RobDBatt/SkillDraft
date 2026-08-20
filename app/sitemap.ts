@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getAllArticles } from "@/lib/learn";
 
 const BASE = "https://skilldraft.io";
 
@@ -22,6 +23,7 @@ const PLATFORMS = [
   "windsurf",
   "codex",
   "gemini-cli",
+  "github-copilot",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -82,6 +84,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${BASE}/learn`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
   ];
 
   const categoryPages: MetadataRoute.Sitemap = CATEGORIES.map((cat) => ({
@@ -98,5 +106,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...categoryPages, ...platformPages];
+  const articlePages: MetadataRoute.Sitemap = getAllArticles().map((a) => ({
+    url: `${BASE}/learn/${a.slug}`,
+    lastModified: new Date(a.date),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...categoryPages, ...platformPages, ...articlePages];
 }
