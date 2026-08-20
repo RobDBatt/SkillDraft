@@ -1,0 +1,62 @@
+---
+title: "The Agent Skills Standard: One SKILL.md for Every AI Coding Agent"
+description: "SKILL.md is now an open standard supported by Claude Code, GitHub Copilot, Codex CLI, Gemini CLI, and more. What the spec requires, who supports it, and how to write portable skills."
+slug: "agent-skills-open-standard"
+date: "2026-08-19"
+---
+
+For most of the AI-coding era, every agent had its own customization format: Claude Code had skills, Cursor had `.mdc` rules, Copilot had `copilot-instructions.md`, ChatGPT had custom instructions. Teaching your workflow to two agents meant maintaining two files that drifted apart.
+
+That's largely over. The [Agent Skills specification](https://github.com/agentskills/agentskills) is an open standard, and the list of agents implementing it now includes Claude Code, GitHub Copilot, Codex CLI, and Gemini CLI — with GitHub's 2026 rollout — across the Copilot cloud agent, code review, Copilot CLI, the Copilot app, and agent mode in VS Code and JetBrains IDEs — being the biggest single adoption to date.
+
+## What the standard actually specifies
+
+A skill is a **directory** containing:
+
+- `SKILL.md` — required. YAML frontmatter plus Markdown instructions.
+- Any supporting files — optional. Scripts, templates, reference docs, examples.
+
+The frontmatter has two required fields and one optional:
+
+```markdown
+---
+name: commit-hygiene          # required: lowercase, hyphenated, matches the directory
+description: Commit message and branch naming rules. Use when committing,
+  amending, or writing PR descriptions.   # required: what + WHEN
+license: MIT                  # optional
+---
+```
+
+Everything below the frontmatter is plain Markdown the agent follows when the skill loads. The loading model is shared across implementations: the agent scans descriptions, and when one matches the current task, the whole skill — instructions and supporting files — enters the agent's context.
+
+## Who reads what
+
+| Agent | Project path | Personal path |
+|---|---|---|
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| GitHub Copilot | `.github/skills/`, `.claude/skills/`, `.agents/skills/` | `~/.copilot/skills/`, `~/.agents/skills/` |
+| Codex CLI | — | `~/.codex/skills/` |
+| Gemini CLI | — | `~/.gemini/skills/` |
+
+Two things stand out. First, Copilot reads Claude Code's directory — cross-agent compatibility isn't theoretical, it's shipping. Second, `.agents/skills` and `~/.agents/skills` are emerging as the vendor-neutral home for teams that don't want to name a directory after one vendor.
+
+Cursor and Windsurf still use their own rule formats (`.cursor/rules/*.mdc`, `.windsurf/rules/*.md`), but the content model is close enough that a well-written skill converts mechanically — which is what SkillDraft's per-platform output does.
+
+## Why an open standard matters here
+
+**Skills become infrastructure, not vendor config.** A `.agents/skills` directory in your repo is documentation that executes — any compliant agent, present or future, can use it. Teams switching agents (or running several) stop paying a migration tax.
+
+**Ecosystems compound.** Public skill collections now exist on every side of the vendor line: [anthropics/skills](https://github.com/anthropics/skills), [github/awesome-copilot](https://github.com/github/awesome-copilot), [microsoft/skills](https://github.com/microsoft/skills), and community galleries like [SkillDraft's](/explore). A skill published once is installable everywhere — GitHub's `gh skill` command even records provenance (source repo, ref, tree SHA) when it installs one.
+
+**Security scrutiny concentrates.** Skills are instructions your agent will follow with your permissions — a malicious skill is a prompt injection with a delivery mechanism. A single standard means scanners and reviews work across every agent at once. It's why SkillDraft [security-scans gallery skills](/verify) rather than treating skill files as inert text.
+
+## Writing to the portable subset
+
+If you want one file to serve every agent:
+
+1. **Standard frontmatter only.** `name`, `description`, `license`. Vendor-specific keys break portability.
+2. **Description carries the routing.** Every implementation triggers on description matching. Front-load the exact phrases a user would type.
+3. **No agent-specific runtime features.** Sub-agent orchestration (Claude Code) and slash-invocation syntax (Copilot) don't translate. Instructions should be executable by "an agent that can read files and follow rules."
+4. **Declare environment assumptions.** Shell access, network, installed tools — agents differ. State what the skill needs and what to do without it.
+
+Or generate the portable version directly: SkillDraft's **Universal** target [produces a skill](/generate) constrained to exactly this subset, scored for quality and scanned for injection patterns. For agent-specific details, see the [Copilot guide](/learn/github-copilot-skills-guide) and the [Claude Code / Copilot sharing guide](/learn/copilot-claude-code-same-skills).

@@ -32,8 +32,9 @@ export const platforms: PlatformConfig[] = [
   {
     id: "github-copilot",
     label: "GitHub Copilot",
-    installPath: ".github/copilot-instructions.md",
-    installNote: "Copilot reads one global instructions file per repo.",
+    installPath: ".github/skills/[name]/SKILL.md",
+    installNote:
+      "Copilot agent skills work in the Copilot cloud agent, code review, Copilot CLI, the Copilot app, and agent mode in VS Code and JetBrains IDEs. Personal skills go in ~/.copilot/skills/.",
   },
   {
     id: "chatgpt",
@@ -59,7 +60,7 @@ export const platforms: PlatformConfig[] = [
   {
     id: "universal",
     label: "Universal",
-    installPath: "Compatible with Claude Code, Cursor, Windsurf, Codex, Gemini CLI",
+    installPath: "Compatible with Claude Code, GitHub Copilot, Cursor, Windsurf, Codex, Gemini CLI",
     installNote: "Uses the most compatible format across all agents.",
   },
 ];

@@ -17,6 +17,7 @@ export function SiteNav() {
           <Link href="/skills">My Skills</Link>
           <Link href="/teams">Teams</Link>
           <Link href="/install">Install</Link>
+          <Link href="/learn">Learn</Link>
           <Link href="/faq">FAQ</Link>
         </nav>
 

@@ -1,0 +1,95 @@
+---
+title: "Where to Put GitHub Copilot Skills: .github/skills vs ~/.copilot/skills"
+description: "Project skills vs personal skills in GitHub Copilot — the exact directories, when to use each, and how to verify Copilot actually loaded your SKILL.md."
+slug: "github-copilot-skills-setup"
+date: "2026-08-19"
+---
+
+Copilot loads agent skills from two kinds of locations: repository directories that travel with the project, and home-directory folders that follow you everywhere. Choosing the right one is mostly a question of *who should get the behavior*.
+
+## The directories
+
+**Project skills** — checked into the repo, applied for everyone who works in it (including the Copilot cloud coding agent working on your issues):
+
+```text
+.github/skills/<skill-name>/SKILL.md
+.claude/skills/<skill-name>/SKILL.md
+.agents/skills/<skill-name>/SKILL.md
+```
+
+**Personal skills** — in your home directory, applied across all your projects:
+
+```text
+~/.copilot/skills/<skill-name>/SKILL.md
+~/.agents/skills/<skill-name>/SKILL.md
+```
+
+Organization-level and enterprise-level skills aren't available yet, but GitHub has said they're coming.
+
+## Which location should you use?
+
+| You want... | Put it in |
+|---|---|
+| Repo conventions the whole team (and the cloud agent) should follow | `.github/skills/` |
+| A skill shared between Claude Code and Copilot users on one team | `.claude/skills/` (both agents read it) |
+| A vendor-neutral choice for a polyglot team | `.agents/skills/` |
+| Personal workflow habits — commit style, debugging routine | `~/.copilot/skills/` |
+| Personal skills you also want Claude Code, Codex, etc. to see | `~/.agents/skills/` |
+
+The `.claude/skills` row deserves emphasis: Copilot reads Claude Code's project skill directory natively. If your team already maintains skills for Claude Code, you don't need to copy anything — Copilot users get them for free. The same applies in reverse if you standardize on `.agents/skills`.
+
+## Setting up a project skill, step by step
+
+1. Create the directory — the folder name must match the `name` field in frontmatter:
+
+```bash
+mkdir -p .github/skills/release-checklist
+```
+
+2. Add `SKILL.md` with the two required frontmatter fields:
+
+```markdown
+---
+name: release-checklist
+description: Release process for this repo. Use when preparing a release,
+  bumping versions, tagging, or writing release notes.
+---
+
+## Release steps
+...
+```
+
+3. Commit it. The Copilot cloud agent, code review, Copilot CLI, the Copilot app, and agent mode in VS Code and JetBrains IDEs will all pick it up on their next session in the repo.
+
+## Verifying the skill loaded
+
+In the Copilot CLI:
+
+```text
+/skills list          # every skill Copilot can see
+/skills info release-checklist   # source location + status for one skill
+```
+
+If you added the skill mid-session, run `/skills reload` — otherwise it won't appear until the next session.
+
+You can also just ask: "What skills do you have?" — Copilot lists what's loaded.
+
+## Installing skills from other repositories
+
+The GitHub CLI can install skills published in any repo:
+
+```bash
+gh skill install owner/repo/skill-name
+```
+
+Installed skills get provenance metadata written into their frontmatter — the source repository, ref, and tree SHA — so you can always trace where a skill came from. That matters, because skills are instructions your agent will follow; treat third-party skills like third-party code. (SkillDraft [security-scans every skill](/verify) in its gallery for prompt-injection patterns for exactly this reason.)
+
+## Troubleshooting
+
+**Skill never triggers.** The `description` is almost always the culprit — it must contain the phrases you actually type. See the [complete Copilot skills guide](/learn/github-copilot-skills-guide) for description-writing rules.
+
+**Works in CLI, not in cloud agent.** Personal skills (`~/.copilot/skills`) only exist on your machine. The cloud coding agent runs on GitHub's infrastructure and only sees *project* skills committed to the repo.
+
+**Two skills with the same name.** If a project skill and personal skill share a name, behavior gets unpredictable. Keep names unique; `/skills info` shows which file won.
+
+Want the file generated for you, scored, and scanned? [Generate a Copilot skill](/generate) and pick GitHub Copilot as the target — SkillDraft outputs it with the right frontmatter and the right path.

@@ -26,10 +26,16 @@ const PLATFORMS = [
     note: "Place in your project root. Rename the file to match your skill name. Cursor reads .mdc files from the .cursor/rules/ directory automatically.",
   },
   {
-    id: "copilot",
-    name: "GitHub Copilot",
-    path: ".github/copilot-instructions.md",
-    note: "Paste your skill content into this file. Copilot uses a single instructions file per repo — if one already exists, append your skill content to it.",
+    id: "copilot-project",
+    name: "GitHub Copilot — Project-level",
+    path: ".github/skills/[skill-name]/SKILL.md",
+    note: "Place the folder in your repo — the Copilot cloud agent, code review, Copilot CLI, the Copilot app, and agent mode in VS Code and JetBrains IDEs all load it. Copilot also reads .claude/skills, so one file can serve both agents. Invoke explicitly with /skill-name in a prompt.",
+  },
+  {
+    id: "copilot-personal",
+    name: "GitHub Copilot — Personal",
+    path: "~/.copilot/skills/[skill-name]/SKILL.md",
+    note: "Personal skills apply across all your projects. Rename the folder to match the name: value in your skill's frontmatter. Run /skills reload in the Copilot CLI to pick up new skills mid-session.",
   },
   {
     id: "chatgpt",

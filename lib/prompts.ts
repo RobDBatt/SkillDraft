@@ -662,10 +662,12 @@ Note: The description field is still the primary routing signal — write it wit
   "github-copilot": `════════════════════════════════════════════════════════
 PLATFORM: GitHub Copilot
 ════════════════════════════════════════════════════════
-Install path: .github/copilot-instructions.md
-Format: Plain Markdown — no YAML frontmatter. Copilot reads one global instructions file per repo.
-Note: Because Copilot applies this to every session, scope the skill tightly. The "When NOT to use this"
-section is especially important — name the tasks Copilot should ignore from this skill.`,
+Install path: .github/skills/[name]/SKILL.md (project) or ~/.copilot/skills/[name]/SKILL.md (personal)
+Format: Standard agentskills.io SKILL.md — YAML frontmatter with name (lowercase, hyphenated,
+matching the directory) and description required. Copilot also reads .claude/skills and .agents/skills.
+Triggering: Copilot loads the skill when the description matches the task, and users can invoke it
+explicitly with /skill-name in a prompt — so the description density rules apply in full.
+Note: Works in the Copilot cloud agent, code review, Copilot CLI, the Copilot app, and agent mode in VS Code and JetBrains IDEs.`,
 
   chatgpt: `════════════════════════════════════════════════════════
 PLATFORM: ChatGPT
@@ -700,7 +702,7 @@ Triggering: Description-based semantic matching.`,
   universal: `════════════════════════════════════════════════════════
 PLATFORM: Universal (multi-agent)
 ════════════════════════════════════════════════════════
-This skill must work across Claude Code, Cursor, Windsurf, Codex CLI, and Gemini CLI.
+This skill must work across Claude Code, GitHub Copilot, Cursor, Windsurf, Codex CLI, and Gemini CLI.
 Use standard agentskills.io SKILL.md frontmatter. Avoid platform-specific syntax.
 Write instructions that are meaningful regardless of which agent loads the skill.
 Note: Universal skills should be slightly more explicit about context than single-platform skills,
