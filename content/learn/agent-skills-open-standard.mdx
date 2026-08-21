@@ -42,6 +42,12 @@ Two things stand out. First, Copilot reads Claude Code's directory — cross-age
 
 Cursor and Windsurf still use their own rule formats (`.cursor/rules/*.mdc`, `.windsurf/rules/*.md`), but the content model is close enough that a well-written skill converts mechanically — which is what SkillDraft's per-platform output does.
 
+## Skills now have a distribution format too
+
+On 6 August 2026 a second standard shipped on top of this one: [Agent Plugins 1.0](/learn/agent-plugins-1-0), which packages a `skills/` directory and an `mcp.json` into a single installable folder with a `plugin.json` manifest. Amazon, Anysphere, Microsoft, OpenAI, Vercel and Google are core maintainers.
+
+It does not change how you write a `SKILL.md`. It changes how you ship one — and because a plugin can carry an MCP server alongside the instructions, it changes what you're accepting when you install someone else's.
+
 ## Why an open standard matters here
 
 **Skills become infrastructure, not vendor config.** A `.agents/skills` directory in your repo is documentation that executes — any compliant agent, present or future, can use it. Teams switching agents (or running several) stop paying a migration tax.
