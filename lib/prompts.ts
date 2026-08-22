@@ -654,10 +654,14 @@ Note: Claude Code supports sub-agent orchestration — you may reference "spawn 
   cursor: `════════════════════════════════════════════════════════
 PLATFORM: Cursor
 ════════════════════════════════════════════════════════
-Install path: .cursor/rules/[name].mdc
-Format: MDC — YAML frontmatter with description. Rules can be always-on or file-pattern-matched.
-Triggering: Cursor rules activate based on description matching or file globs.
-Note: The description field is still the primary routing signal — write it with the same density as Claude Code.`,
+Install path: .cursor/skills/[name]/SKILL.md
+  (also discovered from .agents/skills/, and from ~/.cursor/skills/ or ~/.agents/skills/ globally)
+Format: Standard agentskills.io SKILL.md — name + description frontmatter. The name MUST match
+the containing folder name. Cursor added Agent Skills in 2.4.
+Triggering: Cursor injects each skill's name and description at startup and the agent picks by
+relevance; users can also invoke one explicitly by typing / in Agent chat.
+Note: do NOT emit Cursor rule format here. Cursor rules (.cursor/rules/*.mdc, with globs and
+alwaysApply) are a separate system for short standing constraints. This is a skill, not a rule.`,
 
   "github-copilot": `════════════════════════════════════════════════════════
 PLATFORM: GitHub Copilot
@@ -670,20 +674,35 @@ explicitly with /skill-name in a prompt — so the description density rules app
 Note: Works in the Copilot cloud agent, code review, Copilot CLI, the Copilot app, and agent mode in VS Code and JetBrains IDEs.`,
 
   chatgpt: `════════════════════════════════════════════════════════
-PLATFORM: ChatGPT
+PLATFORM: ChatGPT — FRONTMATTER OVERRIDE, READ CAREFULLY
 ════════════════════════════════════════════════════════
 Install path: Settings → Customize ChatGPT → Custom instructions
-Format: Plain text or minimal markdown. No YAML frontmatter. Applied to every conversation.
-Note: ChatGPT custom instructions are always-on — write the instructions as standing rules
-the model should follow permanently, not as a task-triggered workflow.`,
+
+*** This platform OVERRIDES the FRONTMATTER REQUIREMENTS section above. ***
+ChatGPT custom instructions are pasted into a plain textarea. YAML frontmatter is not parsed
+and would be read as literal text by the model, so:
+  • Do NOT emit a --- frontmatter block.
+  • Do NOT emit name: or description: fields.
+  • Begin the output directly with the first body heading.
+Everything else above still applies — the body sections, the "When NOT to use this" list, the
+hard stops, the anti-patterns, the verification checklist.
+
+Format: plain markdown, no frontmatter. Applied to every conversation.
+Triggering: none — there is no routing step. Custom instructions are always loaded, so the
+trigger-density rules for descriptions are irrelevant here.
+Note: write standing rules the model follows permanently, not a task-triggered workflow. Because
+the text is unconditional, keep it short; every word is paid for on every message.`,
 
   windsurf: `════════════════════════════════════════════════════════
 PLATFORM: Windsurf
 ════════════════════════════════════════════════════════
-Install path: .windsurf/rules/[name].md
-Format: Markdown with frontmatter. Similar to Cursor MDC rules.
-Triggering: Rules can be always-on or file-pattern-matched.
-Note: Same description density requirements as Claude Code — Windsurf's semantic routing rewards specificity.`,
+Install path: .agents/skills/[name]/SKILL.md
+  (Cascade also reads ~/.agents/skills/, and .claude/skills/ when Claude Code config reading is on)
+Format: Standard agentskills.io SKILL.md — name + description frontmatter.
+Triggering: Cascade picks the skill up automatically from the description.
+Note: do NOT emit Windsurf rule format here. Windsurf rules (.windsurf/rules/) are a separate
+system for short behavioural constraints. Skills are the right home for a workflow that carries
+supporting files, and supporting files placed beside SKILL.md become available when it triggers.`,
 
   codex: `════════════════════════════════════════════════════════
 PLATFORM: Codex CLI

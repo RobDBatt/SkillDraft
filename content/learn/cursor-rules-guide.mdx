@@ -49,6 +49,16 @@ One more sharp edge worth knowing: **User Rules — the global ones in Cursor's 
 
 For any rule that is not `alwaysApply: true`, the `description` field is the entire basis on which the agent decides to load it. A description like `"Database rules"` gives the router nothing to match against. It needs the phrasings a developer would actually type — *"add a migration"*, *"change the schema"*, *"review this table"* — and, ideally, a clause naming what the rule should not handle.
 
-That is the same routing problem SKILL.md files have in Claude Code and Copilot, and it is where hand-written rules usually fall down: the content is fine, the description was written as a label rather than as a trigger. [SkillDraft's generator](/generate) writes for Cursor's `.mdc` format directly and scores the description density, which is quicker than tuning it by trial and error.
+That is the same routing problem SKILL.md files have in Claude Code and Copilot, and it is where hand-written rules usually fall down: the content is fine, the description was written as a label rather than as a trigger.
+
+## Rules are not Cursor's only option — skills are the other half
+
+Cursor 2.4 added Agent Skills alongside rules, and the two are separate systems with separate directories. A skill is a folder containing a `SKILL.md`, discovered from `.cursor/skills/` or `.agents/skills/` in the project, or `~/.cursor/skills/` and `~/.agents/skills/` globally. Its frontmatter is `name` (which must match the folder name) and `description`, with optional `paths`, `disable-model-invocation`, `icon`, `color`, and `metadata`.
+
+The practical split: a rule is a short standing constraint, and a skill is a workflow that can carry supporting files — scripts, templates, checklists — that ride along and become available when it triggers. Cursor ships a built-in `/migrate-to-skills` skill for moving between them.
+
+Skills are also where portability lives. The `.agents/skills/` path is a cross-agent convention — Codex CLI, Gemini CLI, and Windsurf all read it too, so one folder can serve every agent on your machine. `.mdc` rules are Cursor-only by construction.
+
+[SkillDraft's generator](/generate) writes SKILL.md files and scores the description density, which is the part that decides whether the agent ever loads it. For Cursor, that output belongs in `.cursor/skills/<name>/SKILL.md`, not in `.cursor/rules/`.
 
 If you also work in Claude Code or Copilot, the same underlying file travels further than you'd expect — see [the Agent Skills standard](/learn/agent-skills-open-standard) and [using one SKILL.md in both Claude Code and Copilot](/learn/copilot-claude-code-same-skills).
