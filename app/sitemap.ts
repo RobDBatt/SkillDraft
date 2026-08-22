@@ -3,29 +3,6 @@ import { getAllArticles } from "@/lib/learn";
 
 const BASE = "https://skilldraft.io";
 
-const CATEGORIES = [
-  "development",
-  "frontend-design",
-  "content-writing",
-  "data-integrations",
-  "project-workflows",
-  "devops-infrastructure",
-  "security",
-  "backend-frameworks",
-  "git-version-control",
-  "database-sql",
-  "custom-other",
-] as const;
-
-const PLATFORMS = [
-  "claude-code",
-  "cursor",
-  "windsurf",
-  "codex",
-  "gemini-cli",
-  "github-copilot",
-] as const;
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -92,20 +69,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const categoryPages: MetadataRoute.Sitemap = CATEGORIES.map((cat) => ({
-    url: `${BASE}/explore/c/${cat}`,
-    lastModified: now,
-    changeFrequency: "daily",
-    priority: 0.8,
-  }));
-
-  const platformPages: MetadataRoute.Sitemap = PLATFORMS.map((platform) => ({
-    url: `${BASE}/explore/for/${platform}`,
-    lastModified: now,
-    changeFrequency: "daily",
-    priority: 0.8,
-  }));
-
+  // /explore/c/* and /explore/for/* are deliberately NOT listed. There are 14
+  // public skills spread across 17 such URLs, so each renders ~320 characters
+  // of which most is the shared "Browse by category / platform" nav — the same
+  // boilerplate on more than half the site's URLs. Google discovered every one
+  // and indexed none (24 "Discovered — currently not indexed" on 2026-08-22),
+  // and the crawl budget they consumed kept the substantive /learn articles
+  // out of the index as well. They stay crawlable and internally linked; they
+  // just don't get advertised. Put them back when the skill corpus is large
+  // enough that a category page stands on its own.
   const articlePages: MetadataRoute.Sitemap = getAllArticles().map((a) => ({
     url: `${BASE}/learn/${a.slug}`,
     lastModified: new Date(a.date),
@@ -113,5 +85,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...categoryPages, ...platformPages, ...articlePages];
+  return [...staticPages, ...articlePages];
 }

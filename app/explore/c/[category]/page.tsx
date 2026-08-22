@@ -80,6 +80,15 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     // Per-page canonical — without this the page inherits /explore's canonical
     // from the parent layout and gets treated as a duplicate of /explore.
     alternates: { canonical: `https://skilldraft.io/explore/c/${category}` },
+    // noindex until these pages carry real content. With 14 public skills
+    // across 17 category + platform URLs, each renders ~320 chars of which
+    // most is the shared "Browse by category / platform" nav — near-duplicate
+    // boilerplate on half the site's URLs. Google discovered all of them and
+    // indexed none (24 "Discovered — currently not indexed" as of 2026-08-22),
+    // and the wasted crawl budget kept the substantive /learn articles out of
+    // the index too. follow:true keeps the skills themselves reachable.
+    // Remove this once a category has enough skills to stand on its own.
+    robots: { index: false, follow: true },
     openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/c/${category}` },
   };
 }

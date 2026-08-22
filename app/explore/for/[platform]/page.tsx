@@ -61,6 +61,11 @@ export async function generateMetadata({ params }: { params: Promise<{ platform:
     // Per-page canonical — without this the page inherits /explore's canonical
     // from the parent layout and gets treated as a duplicate of /explore.
     alternates: { canonical: `https://skilldraft.io/explore/for/${platform}` },
+    // noindex until these pages carry real content — see the matching note in
+    // app/explore/c/[category]/page.tsx. These are the same 14 public skills
+    // re-sliced by platform, so they overlap the category pages almost
+    // entirely. follow:true keeps the skills themselves reachable.
+    robots: { index: false, follow: true },
     openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/for/${platform}` },
   };
 }
