@@ -27,7 +27,9 @@ export const platforms: PlatformConfig[] = [
   {
     id: "cursor",
     label: "Cursor",
-    installPath: ".cursor/rules/[name].mdc",
+    installPath: ".cursor/skills/[name]/SKILL.md",
+    installNote:
+      "Cursor discovers skills from .cursor/skills/ or .agents/skills/ in the project, and ~/.cursor/skills/ or ~/.agents/skills/ globally. The folder name must match the skill's name field. Cursor rules (.cursor/rules/*.mdc) are a separate system for short standing constraints — a SKILL.md does not belong there.",
   },
   {
     id: "github-copilot",
@@ -45,7 +47,9 @@ export const platforms: PlatformConfig[] = [
   {
     id: "windsurf",
     label: "Windsurf",
-    installPath: ".windsurf/rules/[name].md",
+    installPath: ".agents/skills/[name]/SKILL.md",
+    installNote:
+      "Windsurf's Cascade reads skills from .agents/skills/ and ~/.agents/skills/, and from .claude/skills/ when Claude Code config reading is enabled. Windsurf rules (.windsurf/rules/) are a separate system for short behavioural constraints — use a skill when the workflow needs supporting files.",
   },
   {
     id: "codex",
