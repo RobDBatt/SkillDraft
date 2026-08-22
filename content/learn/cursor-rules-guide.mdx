@@ -1,0 +1,54 @@
+---
+title: "Cursor Rules: How .cursor/rules Works and What Replaced .cursorrules"
+description: "Cursor rules live in .cursor/rules as .mdc files. The three frontmatter fields that decide when a rule loads, the four rule types, migrating off legacy .cursorrules, and why Cursor also reads CLAUDE.md."
+slug: "cursor-rules-guide"
+date: "2026-08-22"
+---
+
+Cursor rules live in `.cursor/rules` as `.mdc` files, version-controlled with the repo. Three frontmatter fields — `description`, `globs`, and `alwaysApply` — decide when each one loads. The old root-level `.cursorrules` file still works, but Cursor has marked it legacy and slated it for removal.
+
+## Three fields, four behaviours
+
+There is no `type:` field. The rule type is implied by which of the three fields you set:
+
+| Behaviour | Set this | Loads when |
+|---|---|---|
+| Always Apply | `alwaysApply: true` | every chat session, unconditionally |
+| Apply Intelligently | `alwaysApply: false` + `description` | the agent judges the description relevant |
+| Apply to Specific Files | `alwaysApply: false` + `globs` | you touch a file matching the pattern |
+| Apply Manually | neither `description` nor `globs` | only when you `@`-mention it |
+
+```markdown
+---
+description: Database migration rules. Use when creating, editing, or
+  reviewing migration files, schema changes, or anything under db/migrations.
+globs: db/migrations/**
+alwaysApply: false
+---
+```
+
+Cursor's docs recommend keeping a rule under 500 lines. I would treat that as a hard ceiling rather than a target — a 500-line always-apply rule is paid for on every request, and long unconditional instruction files dilute themselves. Ten scoped rules cost nothing until one is needed.
+
+## .cursorrules works, and is on its way out
+
+Cursor's own guidance calls the root `.cursorrules` file legacy and says it will be deprecated. The migration is four steps: run **New Cursor Rule** from the command palette, paste your existing content in, set the type to **Always Apply** — which matches how `.cursorrules` behaved — and delete the old file.
+
+Do the split while you are in there. A `.cursorrules` file was, by construction, one always-on blob, because that was the only thing the format could express. Most of them contain two or three sections that only matter for particular file types, and those become `globs` rules that stop costing you context on every unrelated request.
+
+## Cursor reads CLAUDE.md, and that changes how you should organise this
+
+This is the part most Cursor guides leave out. Cursor picks up a `CLAUDE.md` file from your project root automatically, and applies it to every conversation **regardless of any `alwaysApply` setting**. It also reads `AGENTS.md` — plain markdown, no frontmatter required — from the root or from any subdirectory, which is how you scope guidance to a package inside a monorepo.
+
+So a repo can carry three overlapping layers at once: `.cursor/rules/*.mdc`, `AGENTS.md`, and `CLAUDE.md`. If your team runs Cursor and Claude Code side by side, the practical consequence is that shared conventions belong in `AGENTS.md` or `CLAUDE.md`, where both tools read them, and only Cursor-specific routing — the globs, the manual rules — belongs in `.mdc`.
+
+What I have not been able to determine is precedence. Cursor's documentation says `CLAUDE.md` is always applied and says `alwaysApply: true` is always applied, but does not say which wins when the two contradict each other. If you are relying on one to override the other, test it rather than assume.
+
+One more sharp edge worth knowing: **User Rules — the global ones in Cursor's settings — do not apply to Inline Edit (Cmd/Ctrl+K).** They only reach the Agent. If a rule seems to be ignored, check whether you are testing it in the surface that actually loads it.
+
+## The description is the routing signal
+
+For any rule that is not `alwaysApply: true`, the `description` field is the entire basis on which the agent decides to load it. A description like `"Database rules"` gives the router nothing to match against. It needs the phrasings a developer would actually type — *"add a migration"*, *"change the schema"*, *"review this table"* — and, ideally, a clause naming what the rule should not handle.
+
+That is the same routing problem SKILL.md files have in Claude Code and Copilot, and it is where hand-written rules usually fall down: the content is fine, the description was written as a label rather than as a trigger. [SkillDraft's generator](/generate) writes for Cursor's `.mdc` format directly and scores the description density, which is quicker than tuning it by trial and error.
+
+If you also work in Claude Code or Copilot, the same underlying file travels further than you'd expect — see [the Agent Skills standard](/learn/agent-skills-open-standard) and [using one SKILL.md in both Claude Code and Copilot](/learn/copilot-claude-code-same-skills).
