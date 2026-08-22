@@ -101,16 +101,61 @@ const read = (p) => readFileSync(p, "utf8");
     const capCall = src.indexOf("await checkDailyCap()");
     const deduct = src.indexOf('rpc("deduct_credit"');
     const rateLimit = src.indexOf("await checkRateLimit(");
-    const refund = src.indexOf('rpc("add_credits"');
+    // The refund now goes through the refundCredit() helper rather than a bare
+    // add_credits call, so look for the helper invocation inside the cap block.
+    const refund = src.indexOf("await refundCredit();", capCall);
+    const capReturn = src.indexOf("return NextResponse.json(", capCall);
 
     if (capCall === -1) fail(`${route}: checkDailyCap imported but never awaited`);
     else if (deduct === -1 || deduct > capCall)
       fail(`${route}: credit deduction must run BEFORE the daily cap check`);
     else if (rateLimit === -1 || rateLimit > capCall)
       fail(`${route}: anon rate limit must run BEFORE the daily cap check`);
-    else if (refund === -1 || refund < capCall)
-      fail(`${route}: cap block must refund the deducted credit (add_credits after cap check)`);
+    else if (refund === -1 || refund > capReturn)
+      fail(`${route}: cap block must refund the deducted credit before returning`);
     else ok(`${route}: gate → cap → refund ordering holds`);
+  }
+}
+
+// ── 3b. Failed work must not keep the user's credit ──────────────────────────
+// The credit is deducted before the model call, so every failure exit after it
+// has to give the credit back. Only the daily-cap block did, which meant a
+// model error charged a credit and returned nothing — the user saw "Network
+// error" and was silently billed. Hit in production 2026-08-22, when the
+// Anthropic balance ran out and every generation failed this way.
+{
+  console.log("\nCredit refunded on failure:");
+  for (const route of ["app/api/generate/route.ts", "app/api/improve/route.ts"]) {
+    const src = read(route);
+    if (!src.includes('rpc("deduct_credit"')) {
+      skip(`${route}: no credit deduction`);
+      continue;
+    }
+
+    if (!src.includes("const refundCredit = async ()")) {
+      fail(`${route}: no refundCredit() helper — every post-deduction exit needs one`);
+      continue;
+    }
+
+    // The model call fails inside the stream, after the response headers are
+    // already sent, so this catch is the only place the credit can be returned.
+    const streamErr = src.indexOf("stream error:");
+    const controllerErr = src.indexOf("controller.error(err)", streamErr);
+    const refundInStream = src.indexOf("await refundCredit();", streamErr);
+    if (streamErr === -1 || controllerErr === -1)
+      fail(`${route}: expected a stream error handler calling controller.error`);
+    else if (refundInStream === -1 || refundInStream > controllerErr)
+      fail(`${route}: stream error must refund the credit BEFORE controller.error`);
+    else ok(`${route}: stream error refunds the credit`);
+
+    // The synchronous SDK failure path (502) must refund too.
+    const sdkErr = src.indexOf("] Anthropic error:");
+    const sdkReturn = src.indexOf("return NextResponse.json(", sdkErr);
+    const refundInSdk = src.indexOf("await refundCredit();", sdkErr);
+    if (sdkErr === -1) skip(`${route}: no synchronous Anthropic catch`);
+    else if (refundInSdk === -1 || refundInSdk > sdkReturn)
+      fail(`${route}: Anthropic catch must refund the credit before returning 502`);
+    else ok(`${route}: Anthropic error refunds the credit`);
   }
 }
 

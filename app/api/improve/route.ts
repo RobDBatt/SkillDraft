@@ -108,15 +108,22 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     }
   }
 
+  // ── Every failure exit below this point must give the credit back: the user
+  //    paid and got nothing. Only the daily-cap block did this before, so a
+  //    model error, a malformed body or an oversized payload all silently kept
+  //    the credit. No-op for anonymous callers, who have none to refund.
+  const refundCredit = async () => {
+    if (!creditUserId) return;
+    await supabaseAdmin.rpc("add_credits", { p_user_id: creditUserId, p_amount: 1 });
+  };
+
   // ── Global spend backstop: cap total runs/day across all users. Placed after
   //    the per-user gate so the counter can't be inflated past a user's rate
   //    limit or credit balance and cheaply exhausted to deny service. Refund the
   //    credit if a logged-in user is turned away here.
   const cap = await checkDailyCap();
   if (!cap.allowed) {
-    if (creditUserId) {
-      await supabaseAdmin.rpc("add_credits", { p_user_id: creditUserId, p_amount: 1 });
-    }
+    await refundCredit();
     return NextResponse.json(
       { error: "We've hit today's improvement limit. Please try again tomorrow." },
       { status: 503 }
@@ -127,12 +134,14 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
   try {
     body = await request.json();
   } catch {
+    await refundCredit();
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
   const { skill } = body;
 
   if (!skill || typeof skill !== "string") {
+    await refundCredit();
     return NextResponse.json(
       { error: "Missing required field: skill." },
       { status: 400 }
@@ -141,12 +150,14 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
 
   const trimmed = skill.trim();
   if (trimmed.length === 0) {
+    await refundCredit();
     return NextResponse.json(
       { error: "Skill content cannot be empty." },
       { status: 400 }
     );
   }
   if (trimmed.length > 10_000) {
+    await refundCredit();
     return NextResponse.json(
       { error: "Skill content exceeds the 10,000 character limit." },
       { status: 413 }
@@ -163,11 +174,23 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
       messages: [{ role: "user", content: `Improve this SKILL.md:\n\n${trimmed}` }],
     });
 
+    // Pull the first event before committing to a streamed response. The SDK
+    // surfaces API errors (auth, billing, bad model) on first read rather than
+    // at .stream(), so without this they land inside the ReadableStream — after
+    // the 200 headers are already sent. The route then can't set a status, Next
+    // renders a 10KB HTML error page, and the client gets an unparseable body
+    // instead of JSON. Draining one event moves those failures to the catch
+    // below, where a real 502 is still possible.
+    const iterator = stream[Symbol.asyncIterator]();
+    const first = await iterator.next();
+
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
         try {
-          for await (const chunk of stream) {
+          // Resume from the already-drained first event, then continue.
+          for (let step = first; !step.done; step = await iterator.next()) {
+            const chunk = step.value;
             if (
               chunk.type === "content_block_delta" &&
               chunk.delta.type === "text_delta"
@@ -178,6 +201,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
           controller.close();
         } catch (err) {
           console.error("[/api/improve] stream error:", err);
+          await refundCredit();
           controller.error(err);
         }
       },
@@ -188,6 +212,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     });
   } catch (err) {
     console.error("[/api/improve] Anthropic error:", err);
+    await refundCredit();
     return NextResponse.json(
       { error: "Improvement failed. Please try again." },
       { status: 502 }
