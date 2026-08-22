@@ -108,15 +108,22 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     }
   }
 
+  // ── Every failure exit below this point must give the credit back: the user
+  //    paid and got nothing. Only the daily-cap block did this before, so a
+  //    model error, a malformed body or an oversized payload all silently kept
+  //    the credit. No-op for anonymous callers, who have none to refund.
+  const refundCredit = async () => {
+    if (!creditUserId) return;
+    await supabaseAdmin.rpc("add_credits", { p_user_id: creditUserId, p_amount: 1 });
+  };
+
   // ── Global spend backstop: cap total runs/day across all users. Placed after
   //    the per-user gate so the counter can't be inflated past a user's rate
   //    limit or credit balance and cheaply exhausted to deny service. Refund the
   //    credit if a logged-in user is turned away here.
   const cap = await checkDailyCap();
   if (!cap.allowed) {
-    if (creditUserId) {
-      await supabaseAdmin.rpc("add_credits", { p_user_id: creditUserId, p_amount: 1 });
-    }
+    await refundCredit();
     return NextResponse.json(
       { error: "We've hit today's improvement limit. Please try again tomorrow." },
       { status: 503 }
@@ -127,12 +134,14 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
   try {
     body = await request.json();
   } catch {
+    await refundCredit();
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
   const { skill } = body;
 
   if (!skill || typeof skill !== "string") {
+    await refundCredit();
     return NextResponse.json(
       { error: "Missing required field: skill." },
       { status: 400 }
@@ -141,12 +150,14 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
 
   const trimmed = skill.trim();
   if (trimmed.length === 0) {
+    await refundCredit();
     return NextResponse.json(
       { error: "Skill content cannot be empty." },
       { status: 400 }
     );
   }
   if (trimmed.length > 10_000) {
+    await refundCredit();
     return NextResponse.json(
       { error: "Skill content exceeds the 10,000 character limit." },
       { status: 413 }
@@ -178,6 +189,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
           controller.close();
         } catch (err) {
           console.error("[/api/improve] stream error:", err);
+          await refundCredit();
           controller.error(err);
         }
       },
@@ -188,6 +200,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     });
   } catch (err) {
     console.error("[/api/improve] Anthropic error:", err);
+    await refundCredit();
     return NextResponse.json(
       { error: "Improvement failed. Please try again." },
       { status: 502 }
