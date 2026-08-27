@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 import { FeedbackWidget } from "@/components/FeedbackWidget";
 import "./globals.css";
 
@@ -61,6 +62,14 @@ export default function RootLayout({
         {children}
         <FeedbackWidget />
         <Analytics />
+
+        {/* Ahrefs Web Analytics (privacy-friendly, cookieless). Key is the
+            public data-key for the Skilldraft Ahrefs project. */}
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="EGGHTdnY5Ctq9vYRa31PuA"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
