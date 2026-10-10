@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Explore Skills — SkillDraft",
   description:
-    "Browse community-shared SKILL.md files. Find skills for development, frontend, content writing, data integrations, and more — copy any skill directly to your AI agent.",
+    "Browse community-shared SKILL.md files. Find skills for development, frontend, content writing, and more. Copy any skill to your AI agent.",
   alternates: { canonical: "https://skilldraft.io/explore" },
   openGraph: {
     title: "Explore Skills — SkillDraft",
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
       "Browse community-shared SKILL.md files. Find skills for development, frontend, content writing, data integrations, and more.",
     url: "https://skilldraft.io/explore",
     type: "website",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary",

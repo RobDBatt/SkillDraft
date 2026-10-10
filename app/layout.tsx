@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SkillDraft — Quality-scored SKILL.md files for every AI agent",
+  title: "SkillDraft — Quality-scored SKILL.md files for any AI agent",
   description:
     "Generate production-ready SKILL.md files for Claude Code, Cursor, Windsurf, Codex CLI, and Gemini CLI. Quality scored on 7 dimensions and security scanned.",
   metadataBase: new URL("https://skilldraft.io"),

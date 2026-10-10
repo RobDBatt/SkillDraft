@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticle(slug);
   if (!article) return {};
   return {
-    title: `${article.meta.title} | SkillDraft`,
+    title: { absolute: article.meta.seoTitle ?? `${article.meta.title} | SkillDraft` },
     description: article.meta.description,
     alternates: { canonical: `https://skilldraft.io/learn/${slug}` },
     openGraph: {
@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "article",
       publishedTime: article.meta.date,
       url: `https://skilldraft.io/learn/${slug}`,
+      images: ["/opengraph-image"],
     },
   };
 }

@@ -89,7 +89,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     // the index too. follow:true keeps the skills themselves reachable.
     // Remove this once a category has enough skills to stand on its own.
     robots: { index: false, follow: true },
-    openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/c/${category}` },
+    openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/c/${category}`, images: ["/opengraph-image"] },
   };
 }
 

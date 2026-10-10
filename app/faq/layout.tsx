@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       "Everything you need to know about SKILL.md files and SkillDraft — what they are, how they work, and how to install them on every major AI agent.",
     url: "https://skilldraft.io/faq",
     type: "website",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary",

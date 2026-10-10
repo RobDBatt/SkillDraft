@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       "Browse public collections of SKILL.md files grouped by theme. Official and community-curated sets you can copy straight to your AI agent.",
     url: "https://skilldraft.io/collections",
     type: "website",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary",

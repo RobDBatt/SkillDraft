@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Improve a SKILL.md — SkillDraft",
   description:
-    "Paste your existing SKILL.md and get an AI-powered rewrite with sharper instructions, better structure, tighter constraints — plus a summary of every change made.",
+    "Paste your existing SKILL.md and get an AI-powered rewrite with sharper instructions, better structure, and tighter constraints, plus a summary of every change.",
   alternates: { canonical: "https://skilldraft.io/improve" },
   openGraph: {
     title: "Improve a SKILL.md — SkillDraft",
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       "Paste your existing SKILL.md and get an AI-powered rewrite with sharper instructions, better structure, tighter constraints — plus a summary of every change made.",
     url: "https://skilldraft.io/improve",
     type: "website",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary",

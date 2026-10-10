@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       "Step-by-step installation paths for every AI agent: Claude Code, Cursor, GitHub Copilot, ChatGPT, Windsurf, Codex CLI, and Gemini CLI.",
     url: "https://skilldraft.io/install",
     type: "website",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary",
