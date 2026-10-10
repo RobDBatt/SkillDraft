@@ -113,9 +113,23 @@ function FaqItem({ id, q, a }: { id: string; q: string; a: string }) {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [...SKILL_MD_FAQS, ...SKILLDRAFT_FAQS].map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 export default function FaqPage() {
   return (
     <div className="bg-ink min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD).replace(/</g, "\\u003c") }}
+      />
       <SiteNav />
 
       <main className="max-w-6xl mx-auto px-6 lg:px-10 pt-20 pb-24">

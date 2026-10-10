@@ -34,8 +34,23 @@ export default async function LearnArticlePage({ params }: Props) {
   const article = await getArticle(slug);
   if (!article) notFound();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.meta.title,
+    description: article.meta.description,
+    datePublished: article.meta.date,
+    mainEntityOfPage: `https://skilldraft.io/learn/${slug}`,
+    author: { "@type": "Organization", name: "SkillDraft", url: "https://skilldraft.io" },
+    publisher: { "@type": "Organization", name: "SkillDraft", url: "https://skilldraft.io" },
+  };
+
   return (
     <div className="min-h-screen bg-ink flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       <SiteNav />
       <main className="flex-1 px-6 lg:px-10 pt-10 pb-24 max-w-3xl mx-auto w-full">
         <nav
