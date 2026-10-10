@@ -35,7 +35,7 @@ const SKILL_MD_FAQS = [
   {
     id: "how-many",
     q: "How many skills should I have?",
-    a: "Start with one per major workflow — a code review skill, a scaffolding skill, a commit message skill. Most developers end up with 3–8 skills. Too many skills with overlapping triggers can cause conflicts — use SkillDraft's conflict checker (coming in v2) to detect clashes.",
+    a: "Start with one per major workflow — a code review skill, a scaffolding skill, a commit message skill. Most developers end up with 3–8 skills. Too many skills with overlapping trigger phrases can conflict, so keep each skill's description specific.",
   },
 ];
 
@@ -53,17 +53,17 @@ const SKILLDRAFT_FAQS = [
   {
     id: "data-stored",
     q: "Is my data stored anywhere?",
-    a: "No. SkillDraft does not store your answers or generated skill files. Each generation is a stateless API call. Nothing is saved to a database.",
+    a: "Only what you choose to save. Skills you save to your account are stored so you can find them later under My Skills. Generations that use only the multiple-choice options may be cached so repeat requests return faster; anything you type in free text is never cached.",
   },
   {
     id: "is-free",
     q: "Is SkillDraft free?",
-    a: "Yes — v1 is completely free with no account required. There is a limit of 10 generations per day per IP address to prevent abuse.",
+    a: "You can try it free. Without an account you can run up to 10 generations or improvements per day per IP address. Signing up gives you 5 free credits, where 1 credit is one generation or one improvement. After that you can buy credit packs (they never expire) or subscribe to Pro for 50 credits a month at 10¢ per credit. Verifying a SKILL.md is free.",
   },
   {
-    id: "v2",
-    q: "What's coming in v2?",
-    a: "A skill grader that scores your generated file and flags issues, a conflict checker that detects clashing rules and trigger phrases within a skill, and a cross-skill conflict checker for teams managing multiple skills. Pro tier with saved skill libraries and bulk generation is also planned.",
+    id: "scoring",
+    q: "How are skills scored and checked?",
+    a: "Every generated skill gets a 0–100 quality score across 7 dimensions and a security scan for prompt injection, dangerous commands, and data exfiltration. You can run the same checks on any SKILL.md, from any source, on the Verify page. It's free and needs no account.",
   },
 ];
 
@@ -113,9 +113,23 @@ function FaqItem({ id, q, a }: { id: string; q: string; a: string }) {
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [...SKILL_MD_FAQS, ...SKILLDRAFT_FAQS].map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 export default function FaqPage() {
   return (
     <div className="bg-ink min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD).replace(/</g, "\\u003c") }}
+      />
       <SiteNav />
 
       <main className="max-w-6xl mx-auto px-6 lg:px-10 pt-20 pb-24">
