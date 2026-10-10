@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Pricing — SkillDraft",
   description:
-    "Start free with 5 credits. Buy more when you need them, or go Pro for 50 credits a month.",
+    "Start free with 5 credits. Buy more when you need them, or go Pro for 50 credits a month. See the per-credit price for every credit pack.",
   alternates: { canonical: "https://skilldraft.io/pricing" },
   openGraph: {
     title: "Pricing — SkillDraft",
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
       "Start free with 5 credits. Buy more when you need them, or go Pro for 50 credits a month.",
     url: "https://skilldraft.io/pricing",
     type: "website",
+    images: ["/opengraph-image"],
   },
   twitter: {
     card: "summary",

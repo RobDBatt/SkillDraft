@@ -6,8 +6,16 @@ import { getAllArticles } from "@/lib/learn";
 export const metadata: Metadata = {
   title: "Learn — Agent Skills Guides | SkillDraft",
   description:
-    "Practical guides to SKILL.md agent skills: GitHub Copilot, Claude Code, Cursor, and the agentskills open standard. Setup paths, frontmatter, triggering, and migration.",
+    "Practical guides to SKILL.md agent skills: GitHub Copilot, Claude Code, Cursor, and the agentskills open standard. Setup, frontmatter, triggering, migration.",
   alternates: { canonical: "https://skilldraft.io/learn" },
+  openGraph: {
+    title: "Learn — Agent Skills Guides | SkillDraft",
+    description:
+      "Practical guides to SKILL.md agent skills: GitHub Copilot, Claude Code, Cursor, and the agentskills open standard.",
+    url: "https://skilldraft.io/learn",
+    type: "website",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function LearnIndexPage() {

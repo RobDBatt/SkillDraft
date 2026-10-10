@@ -11,6 +11,8 @@ const CONTENT_DIR = path.join(process.cwd(), "content", "learn");
 export interface ArticleMeta {
   title: string;
   description: string;
+  /** Title tag, kept to 60 chars; `title` is the on-page H1. */
+  seoTitle?: string;
   slug: string;
   date: string;
 }

@@ -458,7 +458,18 @@ function ImprovePageInner() {
 
 export default function ImprovePage() {
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-ink px-6 pt-16">
+          <h1
+            className="text-headline text-3xl font-black leading-tight"
+            style={{ fontFamily: "var(--font-serif)" }}
+          >
+            Improve your SKILL.md
+          </h1>
+        </main>
+      }
+    >
       <ImprovePageInner />
     </Suspense>
   );

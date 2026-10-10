@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: { params: Promise<{ platform:
     // re-sliced by platform, so they overlap the category pages almost
     // entirely. follow:true keeps the skills themselves reachable.
     robots: { index: false, follow: true },
-    openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/for/${platform}` },
+    openGraph: { title: `${meta.headline} — SkillDraft`, description: meta.description, url: `https://skilldraft.io/explore/for/${platform}`, images: ["/opengraph-image"] },
   };
 }
 
